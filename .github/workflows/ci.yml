@@ -56,8 +56,8 @@ jobs:
         image: postgres:16-alpine
         env:
           POSTGRES_DB: portfolio_test
-          POSTGRES_USER: portfolio_user
-          POSTGRES_PASSWORD: portfolio_secret
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
         ports:
           - 5432:5432
         options: >-
@@ -89,8 +89,8 @@ jobs:
         working-directory: apps/portfolio-api-java
         env:
           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/portfolio_test
-          SPRING_DATASOURCE_USERNAME: portfolio_user
-          SPRING_DATASOURCE_PASSWORD: portfolio_secret
+          SPRING_DATASOURCE_USERNAME: postgres
+          SPRING_DATASOURCE_PASSWORD: postgres
         run: ./gradlew build --no-daemon
 
       - name: Build da imagem Docker
