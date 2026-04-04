@@ -279,7 +279,7 @@ Confirmar:
 * aplicação respondendo ao healthcheck;
 * logs estruturados sendo emitidos;
 * banco acessível pela aplicação;
-* worker operacional;
+* `portfolio-api-java` operacional;
 * Prometheus e Grafana acessíveis conforme política de proteção;
 * logs chegando ao Loki, quando aplicável.
 
@@ -287,7 +287,7 @@ Confirmar:
 
 Confirmar:
 
-* worker conseguiu iniciar;
+* `portfolio-api-java` conseguiu iniciar;
 * consulta ao banco funcional;
 * nenhum erro crítico recorrente no processamento;
 * itens publicados continuam acessíveis no front.
@@ -319,7 +319,7 @@ O deploy deve ser tratado como falho quando ocorrer qualquer uma das situações
 * banco não responde à aplicação;
 * migrations deixam a aplicação inconsistente;
 * conteúdo deixa de ser carregado;
-* worker entra em falha contínua com impacto operacional relevante.
+* serviço Java entra em falha contínua com impacto operacional relevante.
 
 ---
 
@@ -366,7 +366,7 @@ Durante e após o deploy, os seguintes sinais devem ser observados:
 * falhas de conexão com banco;
 * erro de migração;
 * falhas de leitura de variáveis de ambiente;
-* erro no worker do Learning in Public;
+* erro no backend Java do Learning in Public;
 * falhas do proxy reverso.
 
 ### Métricas
@@ -375,7 +375,7 @@ Durante e após o deploy, os seguintes sinais devem ser observados:
 * tempo de resposta;
 * taxa de erro;
 * restart inesperado de containers;
-* falha recorrente do worker.
+* falha recorrente do `portfolio-api-java`.
 
 ### Objetivo
 
@@ -388,7 +388,7 @@ Detectar regressão cedo e reduzir tempo de diagnóstico.
 Se o deploy falhar, a sequência inicial deve ser:
 
 1. confirmar em qual etapa ocorreu a falha;
-2. distinguir problema de pipeline, aplicação, banco, worker ou proxy;
+2. distinguir problema de pipeline, aplicação, banco, backend Java ou proxy;
 3. consultar logs do container afetado;
 4. validar healthcheck do serviço afetado;
 5. verificar conectividade com PostgreSQL;
@@ -438,7 +438,7 @@ O deploy deve ser pequeno, frequente e validável.
 * HTTPS válido
 * Home funcional
 * conteúdo sincronizado
-* worker operacional
+* `portfolio-api-java` operacional
 * logs e métricas disponíveis
 
 ---

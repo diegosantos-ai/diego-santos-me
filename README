@@ -2,6 +2,8 @@
 
 ![Next.js](https://img.shields.io/badge/Next.js-app-000000?logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-typed-3178C6?logo=typescript\&logoColor=white)
+![Java](https://img.shields.io/badge/Java_21-backend-007396?logo=java\&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-framework-6DB33F?logo=spring-boot\&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-data-4169E1?logo=postgresql\&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-compose-2496ED?logo=docker\&logoColor=white)
 ![Nginx](https://img.shields.io/badge/Nginx-reverse--proxy-009639?logo=nginx\&logoColor=white)
@@ -56,9 +58,9 @@ A primeira versão contempla:
 * seção Sobre;
 * seção Conteúdos;
 * seção Contato;
-* PostgreSQL como base operacional;
+* banco operacional em PostgreSQL;
 * sincronização de conteúdo versionado em Markdown;
-* worker assíncrono para Learning in Public;
+* backend Java (`portfolio-api-java`) rodando Spring Boot para orquestrar o Learning in Public e rotinas de leitura;
 * observabilidade mínima viável;
 * deploy automatizado.
 
@@ -85,8 +87,8 @@ A arquitetura da v1 foi definida para privilegiar:
 ### Componentes principais
 
 * `nginx`: entrada pública, TLS, redirecionamentos e reverse proxy;
-* `app`: aplicação principal do portfólio;
-* `worker-learning`: processamento assíncrono do Learning in Public;
+* `web-app`: aplicação web pública (Next.js);
+* `portfolio-api-java`: serviço backend real (Java 21 + Spring Boot), responsável pelo núcleo dinâmico do Learning in Public e endpoints internos;
 * `postgres`: persistência operacional;
 * `promtail`, `loki`, `prometheus`, `grafana`: stack de observabilidade.
 
@@ -99,11 +101,17 @@ A arquitetura da v1 foi definida para privilegiar:
 
 ## Stack
 
-### Aplicação
+### Aplicação Front/Web
 
 * Next.js
 * React
 * TypeScript
+
+### Serviço Backend
+
+* Java 21
+* Spring Boot
+* Gradle
 
 ### Persistência
 
@@ -209,10 +217,10 @@ A v1 inclui observabilidade mínima viável com:
 
 Os sinais mínimos esperados incluem:
 
-* disponibilidade da aplicação;
+* disponibilidade da aplicação (`web-app`);
 * taxa de erro;
 * latência;
-* execução do worker;
+* execução e estabilidade do `portfolio-api-java`;
 * falhas de sincronização;
 * saúde dos serviços principais.
 
@@ -278,8 +286,8 @@ Os próximos passos naturais do projeto são:
 * definir `.env.example`;
 * montar o `docker-compose.yml` real da v1;
 * implementar schema e migrations reais;
-* estruturar a aplicação e o worker;
-* configurar pipeline de CI/CD;
+* estruturar o `web-app` (Next.js) e o `portfolio-api-java` (Spring Boot);
+* configurar pipeline de CI/CD para compilar ambas as stacks em containers;
 * validar deploy ponta a ponta na VPS.
 
 ## Licença e Uso

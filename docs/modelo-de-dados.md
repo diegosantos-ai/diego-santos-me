@@ -291,7 +291,7 @@ Registrar execuções do processo de sincronização de conteúdo editorial do r
 
 ## Finalidade
 
-Registrar execuções do processo agendado do Learning in Public.
+Registrar execuções do processo agendado do Learning in Public (Spring Batch / Scheduler).
 
 ### Campos sugeridos
 
@@ -324,7 +324,7 @@ Registrar execuções do processo agendado do Learning in Public.
 ### Objetivo operacional
 
 * registrar a saúde do processamento dinâmico;
-* facilitar observabilidade e diagnóstico do worker.
+* facilitar observabilidade e diagnóstico da API Java (`portfolio-api-java`).
 
 ---
 

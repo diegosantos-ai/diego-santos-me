@@ -1,136 +1,435 @@
-# Manifesto & Governança para Agentes de IA (`AGENTS.md`)
+# AGENTS.md
 
-Este documento serve como a **Referência Arquitetural Oficial e Conjunto de Regras (System Prompting)** para toda IA (Copilot, Claude, GPT, etc) que operar dentro deste Workspace (`dev-workspace`).
+## Objetivo
 
-**ATENÇÃO AGENTE:** Antes de planejar, sugerir comandos de terminal ou alterar arquivos, **você DEVE ler e submeter-se às regras abaixo**. Falhar em seguir estas diretrizes resultará em quebra da esteira de CI/CD (Shift-Left Security) e corrupção da arquitetura Premium estabelecida.
+Este documento define as regras operacionais, arquiteturais e editoriais que qualquer agente de IA deve seguir ao atuar neste repositório.
 
----
+Ele existe para reduzir ambiguidade, evitar decisões implícitas e manter coerência com a arquitetura e o escopo da v1.
 
-## [ CAPÍTULO 1 ] O Padrão Premium (Platform Engineering)
-Este repositório deixou de ser um conjunto de scripts soltos para se tornar um Produto de Plataforma. Absolutamente TUDO deve ser:
-1. **Idempotente:** Se rodar 1 vez ou 1000 vezes, o resultado é seguro e o mesmo.
-2. **Modular:** Separação entre lógica (modules) e estado (envs).
-3. **Seguro (Shift-Left):** Zero credenciais hardcoded. Linting local rígido.
+Todo agente que atuar neste projeto deve tratar este arquivo como referência obrigatória antes de sugerir código, estrutura, automação, documentação ou comandos de operação.
 
 ---
 
-## [ CAPÍTULO 2 ] Regras de Ouro por Domínio
+## 1. Natureza do Repositório
 
-### [ A ] Automação de Máquina (OS Setup & Dotfiles)
-- **NÃO** adicione comandos imperativos complexos em `scripts/setup-machine.sh`. Este arquivo serve exclusivamentente como bootstrap para instalar o Ansible.
-- **USE** o Ansible (`ansible/local-setup.yml`) para qualquer nova instalação de software, gerenciamento de serviços ou permissões.
-- **USE** GNU Stow para dotfiles. Se precisar adicionar uma nova configuração de terminal (ex: `nvim`), os arquivos devem ir para `/dotfiles/nvim/` respeitando a árvore de espelhamento do OS, para que o Stow crie os symlinks corretamente.
+Este repositório não é um workspace genérico de automação.
 
-### [ B ] Infraestrutura as Code (Terraform)
-- **NÃO** crie arquivos soltos (`.tf`) na raiz do repositório ou em `templates/`.
-- **Infra Viva (`gestao-centralizada-agents/infra/`):** Instancie e gerencie provisionamentos reais EXCLUSIVAMENTE dentro de subpastas em `gestao-centralizada-agents/infra/` (ex: `gestao-centralizada-agents/infra/meu-lab/`), baseando-se nos modelos de `templates/`.
-- **Módulos Virtuais (`modules/`):** Recursos (`compute`, `network`, etc) DEVEM estar destituídos de ambiente. NUNCA coloque backend variables, instâncias de `provider` diretas ou valores hardcoded aqui.
-- **Ambientes (`envs/<env>/`):** É aqui que as variáveis são passadas (`terraform.tfvars`) e onde o state reside. Sempre aponte os módulos usando path relativo (`../../modules/<nome>`).
+Ele é o repositório do **portfólio profissional de Diego Santos**, tratado como um projeto de software pequeno, mas operável, com foco em:
 
-### [ C ] Segurança e Linting (CI/CD)
-- O projeto usa `pre-commit` com `gitleaks`, `tflint`, `tfsec` e `shellcheck`.
-- **NÃO** insira chaves, tokens, senhas ou secrets em nenhum script ou TF. Use passagem de variáveis de ambiente do sistema (`TF_VAR_`, Github Secrets) ou injeção via gerenciador de senhas.
-- Garanta que qualquer script shell que você escrever passe limpo sob as regras do `shellcheck`.
+* posicionamento técnico claro;
+* backend e automação;
+* operação reproduzível;
+* observabilidade mínima viável;
+* deploy automatizado;
+* evolução incremental sem reescrita total.
 
-### [ D ] Operações e Ponto de Entrada (Entrypoint)
-- **NÃO Mande o usuário digitar comandos verbosos no terminal.** Todo fluxo operacional de alto nível deve ter um atalho no `Makefile`.
-- Se você criar um novo processo recorrente de setup, teste ou deploy, encapsule-o num novo target no arquivo `Makefile`.
+### Diretriz principal
 
-### [ E ] Containers Locais e Core (Docker)
-- **NÃO** exponha portas de banco de dados e caches (ex: `5432` - Postgres, `6379` - Redis) mapeando diretamente para o host em projetos individuais para evitar colisão de portas (`Address already in use`).
-- **USE** a infraestrutura unificada central em `infra-core/`. Todo novo banco ou base vetorial deve ser uma database lógica dentro dos containers do core.
-- **CONECTE** qualquer novo `docker-compose.yml` do seu projeto à rede core definindo a network como `dev-workspace-net` (externa) e se comunique com os serviços usando o hostname interno do docker (ex: `POSTGRES_HOST=postgres`, não `localhost`).
+Toda sugestão deve reforçar estes objetivos:
+
+1. clareza de proposta profissional;
+2. sobriedade editorial;
+3. operação simples e verificável;
+4. desacoplamento entre aplicação pública e processamento assíncrono;
+5. aderência às decisões da v1 já registradas na documentação.
 
 ---
 
-## [ CAPÍTULO 3 ] Fluxo de Trabalho Esperado do Agente
+## 2. Decisões Arquiteturais já Fechadas
 
-Quando o usuário Diego demandar a você a implementação de uma nova ferramenta (feature) sob este diretório, proceda da seguinte forma:
+As seguintes decisões já estão tomadas e não devem ser reabertas sem justificativa técnica real:
 
-1. **Contexto Contínuo:** Verifique os `docs-referencia/adr/` (Architecture Decision Records) se estiver em dúvida do arranjo atual.
-2. **Proposta Arquitetural (ADR):** Caso traga uma refatoração massiva, gere primeiro um ADR em `docs-referencia/adr/` e valide com o usuário.
-3. **Separação de Preocupações:** Identifique se a mudança é IaC (Terraform), Automação Local (Ansible) ou CI/CD e aplique direto no diretório final isolado.
-4. **Resumo Efetivo:** Ao terminar cada sub-task, traga um resumo de _Estado Arquitetural Anterior vs Estado Alvo_, lista de _Arquivos Modificados_ e o _Status/Validação_.
+### Infraestrutura e runtime
 
-**_Agente, se você entendeu esse arquivo, a partir deste momento execute todas as tarefas priorizando este contrato de integridade._**
+* hospedagem em **VPS da OVH**;
+* runtime com **Docker Compose**;
+* **Nginx** como reverse proxy;
+* aplicação web em container separado (`web-app`);
+* **serviço real em Java 21 + Spring Boot** (`portfolio-api-java`) para núcleo dinâmico do Learning in Public e endpoints internos;
+* **PostgreSQL desde a v1**;
+* observabilidade com **Promtail, Loki, Prometheus e Grafana**.
 
----
+### Domínio e exposição pública
 
-## [ CAPÍTULO 4 ] Matriz de Agentes & Model Context Protocol (MCP)
+* domínio principal: `diegosantos.me`;
+* `www` redireciona para o domínio principal;
+* TLS obrigatório;
+* somente o reverse proxy deve receber tráfego externo.
 
-Este repositório possui uma **Gestão Centralizada de Agentes** implementada via MCP. Qualquer uso de IA autônoma deve respeitar as Personas definidas e utilizar estritamente o servidor central de ferramentas.
+### Conteúdo e persistência
 
-### 4.1. As Personas (Comportamentos Definidos)
-Se você for um Agente encarregado de atuar neste repositório, você DEVE assumir e declarar uma das seguintes posturas (documentadas em `gestao-centralizada-agents/agents-personas/`):
-- **O Orquestrador (Orchy):** Planeja, quebra a tarefa, analisa ADRs. **Nunca escreve código final direto**.
-- **O Executor (Dev):** Gera a gestao-centralizada-agents/infra/scripts seguindo os `templates/` e garantindo Idempotência.
-- **O Revisor (Shift-Left):** Roda o `make lint` e barra gambiarras ou hardcoded secrets.
+* conteúdo humano editado em **Markdown versionado no repositório**;
+* PostgreSQL como fonte operacional de leitura da aplicação;
+* sincronização Markdown → banco como parte do fluxo da aplicação.
 
-### 4.2. Escopo das Skills (MCP)
-Toda interação com APIs externas, memória (Qdrant) ou servidores N8N para este repositório **NÃO DEVE** ser feita via scripts soltos de curl. Use o Servidor MCP localizado em `gestao-centralizada-agents/skills-mcp/`.
-- Para testar ou ver se o servidor de Skills funciona, utilize `make test-skills`.
-## [ CAPÍTULO 5 ] Padrão de Comunicação Técnica e Documentação
+### Learning in Public
 
-Toda documentação gerada, revisada ou reescrita por agentes neste repositório DEVE seguir padrão de comunicação profissional, técnico e objetivo.
+* origem: **PRs merged**;
+* início com poucos repositórios;
+* execução por rotina agendada;
+* persistência no banco;
+* resumo curto + categoria técnica + link;
+* publicação automática ou revisão manual por configuração.
 
-### 5.1. Tom obrigatório
-- Escreva com tom profissional, sóbrio e confiável.
-- Priorize clareza, precisão e utilidade prática.
-- Prefira linguagem técnica simples e direta.
-- O texto deve parecer escrito por um profissional experiente de engenharia, não por material promocional.
+### CI/CD
 
-### 5.2. É proibido
-- Jargões de IA, como "potencializar", "turboalimentar", "alavancar com inteligência", "revolucionar", "orquestração inteligente" e similares.
-- Linguagem de marketing, autopromoção ou discurso vendedor.
-- Excesso de adjetivos, superlativos e frases de efeito.
-- Metáforas desnecessárias, tom épico, tom evangelizador ou escrita emocional.
-- Explicações infantis, didatismo artificial ou texto que pareça “simplificado para criança”.
-- Emojis em qualquer documentação técnica, README, ADR, guia, comentário de commit ou descrição de PR.
+* merge na `main` dispara a pipeline;
+* pipeline executa lint, testes, build, segurança básica e deploy;
+* deploy por imagem publicada e atualização remota da VPS.
 
-### 5.3. É permitido
-- Badges no README, desde que tenham função visual objetiva e não substituam informação real.
-- Texto introdutório curto, desde que mantenha sobriedade e contexto técnico.
-- Organização visual clara com títulos, listas e seções bem definidas.
+### Regra
 
-### 5.4. Regras de escrita
-- Descreva o que o projeto faz, como está organizado, como usar e como validar.
-- Evite adjetivar o projeto; explique sua função.
-- Não atribua grandeza, maturidade ou sofisticação ao repositório sem evidência objetiva.
-- Troque promessas por fatos verificáveis.
-- Prefira frases curtas, declarativas e técnicas.
-- Sempre que possível, use estrutura orientada a operação: objetivo, contexto, componentes, uso, validação e limites.
-
-### 5.5. Critérios de revisão textual
-Antes de concluir qualquer documentação, o agente deve revisar se o texto:
-1. parece material técnico real e não publicidade;
-2. evita termos inflados ou linguagem artificial;
-3. está claro para leitura profissional;
-4. mantém credibilidade;
-5. explica sem exagerar.
-
-### 5.6. Regra prática de reescrita
-Se uma frase parecer institucional demais, promocional demais ou “happy IA” demais, o agente deve reescrevê-la em linguagem neutra, técnica e verificável.
-
-### 5.7. Exemplo de reescrita
-**Original:** "Esta ferramenta revolucionária de IA turboalimentada vai potencializar sua produtividade com um clique!"
-**Reescrito:** "Esta ferramenta automatiza tarefas repetitivas para aumentar a eficiência operacional."
-
-### REGRA ABSOLUTA DE TOM:
-Documentação deve soar como engenharia profissional. Não use tom publicitário, infantilizado, emocional ou “entusiasmado demais”. Badges são permitidas. Emojis são proibidos.
+O agente não deve propor CMS, painel administrativo completo, tempo real desnecessário, arquitetura distribuída excessiva ou soluções que contrariem diretamente essas definições sem explicar impacto, trade-off e motivo.
 
 ---
 
-## [ CAPÍTULO 6 ] Naming Conventions (Padrão de Nomenclatura)
+## 3. Escopo da v1
 
-A padronização previne inconsistências e problemas de portabilidade entre sistemas (Linux/Mac/Win). Ao atuar sobre arquivos, todo Agente DEVE OBRIGATORIAMENTE obedecer ao seguinte padrão:
+A v1 cobre:
 
-1. **Padrão Default (Lowercase kebab-case):** Documentos Markdown (`.md`), playbooks, runbooks, scripts Bash (`.sh`) e arquivos de configuração (`.yaml`, `.json`) devem ser preenchidos EXCLUSIVAMENTE em `kebab-case` minúsculo, sem acentos, sem espaços e sem sufixos genéricos de versão (`-v2`, `-novo`, `temp_`).
-   - *Exemplo Certo:* `onboarding-projetos.md` | `setup-env.sh`
-   - *Proibido:* `ONBOARDING_PROJETOS.md` | `SetupAmbiente.sh` | `script_old.sh`
-2. **Exceções Normativas (Root Preservations):** Arquivos mestre estabelecidos convencionalmente por ferramentas ou pelo design root da arquitetura DEVEM ser mantidos intactos (Ex: `Makefile`, `Dockerfile`, `README.md`, `CONTRIBUTING.md`, `AGENTS.md`, `GEMINI.md`).
-3. **Padrão Específico de Linguagens:**
-   - Módulos / Códigos Python: `snake_case` (ex: `api_client.py`).
-   - Componentes Frontend TS/React: `PascalCase`.
-   - Utilitários gerais Node/TS: `kebab-case`.
+* Home;
+* Projetos;
+* Sobre;
+* Conteúdos;
+* Contato;
+* projeto-âncora Nexo 360;
+* Learning in Public funcional em modo simples;
+* persistência em PostgreSQL;
+* deploy automatizado;
+* observabilidade mínima viável;
+* backup e restore documentados.
 
-**_Regra Inviolável:_** Um agente nunca deve gerar arquivos em `UPPERCASE` na arquitetura (como `LIMITES.md`) salvo se for estritamente cobrado pela ferramenta (como `Dockerfile`).
+Fora do escopo da v1:
+
+* CMS completo;
+* painel administrativo completo;
+* múltiplas integrações editoriais complexas;
+* busca interna avançada;
+* analytics sofisticado;
+* internacionalização;
+* workflow editorial multiusuário.
+
+### Regra
+
+O agente deve proteger o escopo da v1. Não inflar o projeto com estruturas que ainda não têm necessidade operacional real.
+
+---
+
+## 4. Princípios Obrigatórios
+
+Tudo o que for sugerido, escrito ou modificado neste repositório deve respeitar estes princípios:
+
+### 4.1. Idempotência
+
+Scripts, automações e rotinas devem ser seguros em repetição.
+
+### 4.2. Configuração externa
+
+Nenhuma configuração sensível deve ser hardcoded.
+
+### 4.3. Reprodutibilidade
+
+O ambiente deve poder ser reconstruído por documentação e automação.
+
+### 4.4. Validabilidade
+
+Toda alteração relevante deve vir acompanhada de forma objetiva de validação.
+
+### 4.5. Sobriedade editorial
+
+O projeto deve comunicar engenharia, não marketing.
+
+### 4.6. Evolução incremental
+
+Evitar reescrita total, abstração prematura e arquitetura ornamental.
+
+---
+
+## 5. Regras de Implementação
+
+### 5.1. Antes de implementar
+
+O agente deve verificar a documentação já existente antes de propor mudanças estruturais.
+
+Os documentos-base deste repositório incluem:
+
+* `README.md`
+* `contexto.md`
+* `arquitetura.md`
+* `decisoes-arquiteturais.md`
+* `requisitos-funcionais.md`
+* `modelo-de-dados.md`
+* `topologia-deploy.md`
+* `runbook-deploy.md`
+* `runbook-backup-restore.md`
+* `adr-learning-in-public.md`
+* `checklist-producao-v1.md`
+* `migrations-iniciais.md`
+* `matriz-de-variaveis-de-ambiente.md`
+
+### 5.2. Se houver conflito
+
+Em caso de conflito entre implementação proposta e documentação aprovada:
+
+1. priorizar a decisão arquitetural já registrada;
+2. apontar explicitamente o conflito;
+3. sugerir ajuste incremental, não desvio silencioso.
+
+### 5.3. Se a mudança for estrutural
+
+Se a mudança afetar arquitetura, runtime, banco, deploy, observabilidade ou Learning in Public de forma relevante, o agente deve atualizar ou propor atualização dos artefatos documentais correspondentes.
+
+---
+
+## 6. Regras de Runtime e Infraestrutura
+
+### 6.1. Docker Compose
+
+* Use Docker Compose como mecanismo principal de runtime da v1.
+* Não proponha execução principal baseada em processos manuais soltos no host.
+* Serviços devem ter responsabilidade clara.
+
+### 6.2. Reverse proxy
+
+* O reverse proxy oficial da v1 é o Nginx.
+* Não substituir por Caddy, Traefik ou outra opção sem justificativa técnica explícita.
+
+### 6.3. PostgreSQL
+
+* PostgreSQL faz parte da v1.
+* Não substituir por arquivos locais, SQLite ou armazenamento improvisado como fonte operacional principal.
+* O banco não deve ser exposto publicamente.
+
+### 6.4. Observabilidade
+
+* A stack de observabilidade da v1 usa Promtail, Loki, Prometheus e Grafana.
+* Não remover observabilidade do desenho sem justificativa.
+* Grafana não deve ficar público sem proteção.
+
+### 6.5. Exposição de serviços
+
+* Apenas o reverse proxy deve publicar portas externas necessárias.
+* O `web-app`, `portfolio-api-java`, banco e stack interna devem permanecer na rede privada do Compose.
+
+---
+
+## 7. Regras para Conteúdo e Publicação
+
+### 7.1. Fonte de edição humana
+
+Conteúdo editorial deve ser mantido em Markdown versionado no repositório.
+
+### 7.2. Fonte operacional
+
+A aplicação deve ler do PostgreSQL, não depender diretamente de arquivos Markdown em runtime.
+
+### 7.3. Estrutura editorial
+
+A comunicação do projeto deve permanecer:
+
+* técnica;
+* objetiva;
+* sóbria;
+* sem discurso vendedor;
+* sem “papo de IA” inflado.
+
+### 7.4. Nexo 360
+
+O projeto Nexo 360 deve permanecer como projeto-âncora do portfólio na v1, salvo decisão explícita em contrário.
+
+---
+
+## 8. Regras do Learning in Public
+
+### 8.1. Fonte de eventos
+
+* processar apenas PRs merged;
+* começar com poucos repositórios;
+* evitar múltiplas fontes na v1.
+
+### 8.2. Processamento
+
+* processar por rotina agendada (orquestrada pelo Spring Boot);
+* persistir `external_id` único para evitar duplicidade;
+* registrar falhas de execução;
+* desacoplar a ingestão assíncrona do `web-app` principal, centralizando-a na API Java.
+
+### 8.3. Publicação
+
+* exibir apenas eventos publicados;
+* respeitar modo automático ou revisão manual por configuração;
+* manter resumo curto, categoria técnica e link.
+
+### 8.4. Proibições
+
+O agente não deve:
+
+* transformar o bloco em feed social;
+* depender de chamada em tempo real ao GitHub para renderização da Home;
+* introduzir workflow editorial complexo na v1;
+* publicar texto longo, promocional ou de tom artificial.
+
+---
+
+## 9. Segurança e Segredos
+
+### 9.1. Segredos
+
+* nunca versionar chaves, tokens, senhas ou credenciais reais;
+* usar `.env.example` para documentação;
+* usar variáveis de ambiente, secrets do CI e configuração segura na VPS para valores reais.
+
+### 9.2. Pipeline
+
+* manter validações básicas de segurança no CI;
+* preservar gitleaks e checks equivalentes;
+* não criar caminhos paralelos inseguros de deploy.
+
+### 9.3. Host e acesso
+
+* acesso por SSH com chave;
+* firewall ativo;
+* TLS obrigatório;
+* banco não exposto;
+* Grafana protegido.
+
+---
+
+## 10. Operação e Entrypoints
+
+### Regra principal
+
+O agente deve evitar orientar a operação do projeto por sequências verbosas e frágeis de comandos quando isso puder ser encapsulado.
+
+### Diretriz
+
+Fluxos recorrentes devem preferir:
+
+* `Makefile`;
+* scripts curtos e idempotentes;
+* documentação de uso objetiva.
+
+### Exemplos de fluxos que devem ser encapsulados quando surgirem
+
+* setup local;
+* lint;
+* testes;
+* sincronização de conteúdo;
+* backup;
+* restore;
+* deploy;
+* validações operacionais.
+
+---
+
+## 11. Padrão de Documentação e Escrita
+
+Toda documentação deve seguir padrão técnico e sóbrio.
+
+### Obrigatório
+
+* linguagem direta e verificável;
+* foco em objetivo, contexto, componentes, uso, validação e limites;
+* frases curtas e técnicas;
+* clareza acima de floreio.
+
+### Proibido
+
+* linguagem promocional;
+* marketing;
+* exagero sobre maturidade do projeto;
+* adjetivação vazia;
+* jargões de IA usados como ornamento;
+* emojis em documentação técnica.
+
+### Permitido
+
+* badges no README quando tiverem função objetiva;
+* organização visual clara;
+* introdução curta com contexto real.
+
+---
+
+## 12. Naming Conventions
+
+### 12.1. Documentação e configuração
+
+Arquivos Markdown, YAML, JSON e scripts Bash devem seguir `kebab-case` minúsculo, sem espaços e sem acentos.
+
+### 12.2. Exceções normativas
+
+Arquivos que seguem convenção consolidada podem permanecer como:
+
+* `README.md`
+* `AGENTS.md`
+* `Makefile`
+* `Dockerfile`
+
+### 12.3. Código
+
+* Python: `snake_case`
+* componentes React/TSX: `PascalCase`
+* utilitários TS/Node: `kebab-case` ou padrão já definido pelo projeto
+
+### Regra
+
+Não criar nomes em `UPPERCASE` fora das exceções convencionais.
+
+---
+
+## 13. Fluxo Esperado do Agente
+
+Quando atuar neste repositório, o agente deve seguir esta ordem:
+
+1. entender a tarefa e localizar o impacto no escopo da v1;
+2. verificar documentação relevante já existente;
+3. identificar se a mudança afeta app web, backend Java, banco, deploy, observabilidade ou conteúdo;
+4. propor ou aplicar a menor mudança de maior impacto;
+5. indicar como validar;
+6. atualizar documentação quando a mudança alterar contrato técnico do projeto.
+
+### Saída esperada do agente ao concluir uma tarefa relevante
+
+* estado anterior vs estado alvo;
+* arquivos afetados;
+* impacto da mudança;
+* forma de validação.
+
+---
+
+## 14. Critério de Qualidade
+
+Uma boa contribuição de agente neste repositório é aquela que:
+
+* respeita o escopo da v1;
+* reforça a clareza do portfólio;
+* melhora operação ou documentação;
+* reduz improviso;
+* mantém segurança mínima;
+* evita complexidade prematura.
+
+Uma contribuição ruim é aquela que:
+
+* ignora decisões já tomadas;
+* sugere arquitetura maior que o problema;
+* introduz dependência desnecessária;
+* enfraquece reprodutibilidade;
+* usa linguagem publicitária;
+* cria caminhos manuais frágeis.
+
+---
+
+## 15. Regra Final
+
+Este repositório deve soar e operar como engenharia profissional em escala pequena.
+
+Toda sugestão deve favorecer:
+
+* clareza;
+* operação previsível;
+* documentação útil;
+* segurança mínima;
+* automação suficiente;
+* evolução incremental.
+
+Se houver dúvida entre uma solução chamativa e uma solução simples, operável e documentável, a segunda deve ser escolhida.

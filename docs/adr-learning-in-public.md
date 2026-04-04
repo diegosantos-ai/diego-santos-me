@@ -26,7 +26,7 @@ A v1 do Learning in Public seguirá as seguintes regras:
 * o bloco exibirá **resumo curto + categoria técnica + link**;
 * os eventos serão persistidos em **PostgreSQL**;
 * haverá opção de **publicação automática ou revisão manual** por configuração;
-* o processamento será feito em **worker separado** da aplicação principal.
+* o processamento será feito por um **backend Java real construído com Spring Boot** (`portfolio-api-java`) separado do app Next.js.
 
 ---
 
@@ -42,7 +42,7 @@ Começar com poucos repositórios limita complexidade, facilita validação e me
 
 ### 3. Desacoplamento operacional
 
-Separar o processamento em worker evita que a Home dependa em tempo real de GitHub ou de chamadas a LLM.
+Separar o processamento na API Java (`portfolio-api-java`) evita que o `web-app` (Next.js) dependa em tempo real do GitHub ou chamadas a LLM.
 
 ### 4. Persistência rastreável
 
@@ -132,7 +132,7 @@ Todo item processado seria publicado diretamente sem possibilidade de controle.
 
 ### Negativas
 
-* exige worker separado;
+* exige um backend Java à parte (nova stack no ecossistema de containers);
 * exige modelagem e persistência específicas;
 * exige integração com GitHub e provedor LLM;
 * aumenta um pouco a superfície operacional da aplicação.
@@ -143,8 +143,8 @@ Todo item processado seria publicado diretamente sem possibilidade de controle.
 
 O fluxo da v1 será:
 
-1. rotina agendada aciona o worker;
-2. o worker consulta PRs merged nos repositórios configurados;
+1. rotina agendada interna aciona a classe de serviço Java;
+2. API Java (portfolio-api-java) consulta PRs merged nos repositórios configurados;
 3. para cada item elegível, verifica se já foi processado;
 4. prepara payload controlado com dados relevantes;
 5. chama componente de enriquecimento para gerar resumo curto e categoria técnica;
@@ -221,7 +221,7 @@ Na primeira versão, o Learning in Public:
 * persistir external_id único;
 * registrar falhas de processamento;
 * permitir revisão manual;
-* manter worker separado;
+* manter a API em JVM separada do runtime do Node.js;
 * usar logs estruturados e métricas mínimas.
 
 ---

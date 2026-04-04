@@ -285,13 +285,13 @@ O sistema deve ler configuração por variáveis de ambiente, sem dependência d
 
 O sistema deve expor mecanismo de verificação de saúde da aplicação para suporte ao deploy e à observabilidade.
 
-### RF-47 — Healthcheck do worker
+### RF-47 — Healthcheck do portfolio-api-java
 
-O sistema deve permitir verificação operacional mínima do componente responsável pelo Learning in Public.
+O sistema deve expor endpoints de `/actuator/health` ou similar dentro do serviço Spring Boot (`portfolio-api-java`) para validar a saúde do processamento dinâmico.
 
 ### RF-48 — Logs estruturados
 
-O sistema deve emitir logs estruturados para a aplicação principal e para o worker.
+O sistema deve emitir logs estruturados tanto para o `web-app` principal quanto para a API Java `portfolio-api-java`.
 
 ---
 

@@ -14,9 +14,9 @@ A v1 será implantada em uma **VPS da OVH**, utilizando **Docker Compose** como 
 
 A topologia será composta por serviços separados, com responsabilidades explícitas:
 
-* reverse proxy;
-* aplicação principal;
-* worker do Learning in Public;
+* reverse proxy (`nginx`);
+* aplicação web principal (`web-app`);
+* serviço de backend Java + Spring Boot (`portfolio-api-java`);
 * banco de dados PostgreSQL;
 * stack de observabilidade.
 
@@ -89,26 +89,28 @@ Aplicação principal do portfólio responsável por renderização pública, le
 
 ---
 
-## 2.3. `worker-learning`
+## 2.3. `portfolio-api-java`
 
 ### Papel
 
-Serviço responsável pelo processamento assíncrono do Learning in Public.
+Serviço Backend em Java 21 e Spring Boot. Responsável pelo processamento engajado do Learning in Public e atuando como um barramento interno de manipulação de dados em retaguarda.
 
 ### Responsabilidades
 
-* executar rotina agendada;
-* consultar PRs merged em repositórios configurados;
-* evitar reprocessamento duplicado;
-* gerar resumo curto, categoria técnica e link;
-* registrar falhas e status de processamento;
-* persistir eventos processados no banco;
-* respeitar modo automático ou revisão manual.
+* executar rotina agendada (ex: Spring Batch / `@Scheduled`);
+* consultar PRs merged em repositórios configurados via requisições à API do GitHub;
+* evitar reprocessamento duplicado através de banco próprio;
+* interagir com a LLM;
+* persistir eventos processados no `postgres`.
 
 ### Exposição
 
 * não exposto publicamente;
-* acessível apenas via rede interna.
+* acessível apenas via rede interna, ou porta interna de tráfego restrito a outros containers.
+
+### Recursos e Limites (JVM Tuning)
+
+* o container do backend Java deve operar estritamente com flags predefinidas de limite de memória (ex: `JAVA_OPTS="-Xms256m -Xmx256m"`) injetadas via Compose. Isso mitiga o risco de contenção e interrupção do sistema via OOM Killer, balanceando a carga da instância junto ao Next.js e PostgreSQL.
 
 ### Dependências
 
@@ -263,14 +265,14 @@ Nenhum serviço interno além do reverse proxy deve ser diretamente exposto ao p
 
 O fluxo do Learning in Public seguirá esta ordem:
 
-1. o `worker-learning` é acionado por rotina agendada;
-2. o worker consulta repositórios configurados no GitHub;
+1. `portfolio-api-java` desperta sua rotina agendada;
+2. API consulta repositórios configurados no GitHub;
 3. identifica PRs merged elegíveis;
-4. verifica se o evento já foi processado;
-5. monta payload controlado para enriquecimento;
-6. gera resumo curto e categoria técnica;
-7. persiste o evento no `postgres` com status adequado;
-8. eventos publicados passam a ser lidos pelo `app` e exibidos na Home.
+4. verifica validade e se o evento já foi processado;
+5. monta payload para LLM;
+6. LLM devolve resumo e categorias;
+7. a API persiste o evento no `postgres`;
+8. `web-app` consome do banco de dados (direto ou via nova rota em JVM) e os eventos são refletidos na Home.
 
 ### Regra
 
@@ -366,9 +368,11 @@ A topologia deve incluir healthchecks para os principais serviços da aplicaçã
 
 ### Obrigatórios
 
-* `app`
-* `postgres`
-* `worker-learning` com critério operacional mínimo
+* `web-app`: validação explícita suportada por endpoint raiz HTTP 200 de front;
+* `postgres`: validação baseada no executável `pg_isready`;
+* `portfolio-api-java`: verificação intra-rede no endpoint `/actuator/health` respondendo HTTP 200 (UP).
+
+*Nota de Segurança: Por desenho, configurações de reverse proxy do `nginx` devem mascarar ou bloquear qualquer redirecionamento público do Path `/actuator/*`, vedando a superfície do Spring para a WAN*.
 
 ### Recomendados
 
@@ -460,15 +464,14 @@ Internet
    v
 [Nginx : 80/443]
    |
-   v
-[App]
-   |
-   v
-[PostgreSQL]
-
-[Worker Learning] ---> GitHub API
-[Worker Learning] ---> LLM Provider
-[Worker Learning] ---> PostgreSQL
+   +-----> [Web-App (Next.js)] -----> [PostgreSQL]
+                   |
+                   v
+           [Portfolio-API-Java (Spring Boot)]
+                   |
+                   +---> GitHub API
+                   +---> LLM Provider
+                   +---> [PostgreSQL]
 
 [Promtail] ---> [Loki]
 [Prometheus] ---> métricas da stack

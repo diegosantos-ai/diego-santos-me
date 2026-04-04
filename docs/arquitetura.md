@@ -1,16 +1,14 @@
 # ARQUITETURA: Portfólio Profissional — Diego Santos
 
 ## 1. Stack Tecnológica
-- Backend:
+- Backend (`portfolio-api-java`):
+  - Serviço real em Java 21 + Spring Boot + Gradle
+  - Atua como api e worker responsável pelo núcleo dinâmico do Learning in Public e rotinas internas
+  - Integração com GitHub API e provedor LLM processada dentro do ecossistema Java
+
+- Frontend Web (`web-app`):
   - Next.js (App Router) para renderização da aplicação web
   - TypeScript para tipagem e manutenção
-  - Camada server-side para leitura e transformação dos dados exibidos no site
-  - Endpoint interno ou jobs de sincronização para abastecer a seção Learning in Public
-  - Integração com GitHub API para leitura de pull requests, commits e links de repositório
-  - LLM aplicada apenas como componente de enriquecimento editorial dos eventos técnicos do Learning in Public
-
-- Frontend:
-  - Next.js
   - React
   - TypeScript
   - Tailwind CSS
@@ -28,7 +26,7 @@
   - Terraform para provisionamento de infraestrutura
   - Hospedagem web em ambiente cloud compatível com aplicação Next.js e workloads auxiliares
   - Armazenamento seguro de segredos por variáveis de ambiente e secrets do pipeline
-  - Possível worker agendado para ingestão e processamento contínuo do Learning in Public
+  - Possível orquestrador de ingestão contínua embutido como rotina background do Spring Boot (`portfolio-api-java`)
 
 ## 2. Topologia de Infraestrutura (IaC)
 A infraestrutura deve ser descrita e provisionada de forma modular, priorizando simplicidade operacional, automação e evolução incremental.
@@ -42,9 +40,9 @@ A infraestrutura deve ser descrita e provisionada de forma modular, priorizando 
   - camada responsável pela aplicação principal do portfólio
   - pode representar serviço gerenciado, container app ou instância compatível com execução do frontend/backend web
 
-- **compute-worker**
-  - execução do job responsável por consultar eventos do GitHub, processar pull requests e atualizar o bloco Learning in Public
-  - separado da aplicação principal para reduzir acoplamento operacional
+- **compute-backend**
+  - execução do serviço `portfolio-api-java` responsável pelas operações de backend rest e por consultar eventos do GitHub para atualizar o bloco Learning in Public
+  - separado do front-end principal para isolamento operacional e de processamento
 
 - **database**
   - provisionamento do PostgreSQL ou serviço gerenciado equivalente
@@ -81,6 +79,7 @@ Essa separação facilita:
   - JSON estruturado via Promtail/Loki
   - correlação por request_id, event_id e source
   - logs separados por contexto: aplicação web, sincronização GitHub, processamento LLM e persistência
+  - convergência de schema: obrigatoriedade de parear as chaves base (como `level`, `message`, `trace_id`, `timestamp`) do Logback (Spring Boot) formatado em JSON com o logger estruturado nativo do frontend (Next.js)
   - evitar logs verbosos sem valor operacional
 
 - Métricas:

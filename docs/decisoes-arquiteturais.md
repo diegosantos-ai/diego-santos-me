@@ -31,7 +31,7 @@ Este documento existe para reduzir ambiguidade, alinhar implementação e evitar
 ### Decisão
 
 * O runtime da aplicação será baseado em **Docker Compose**.
-* A aplicação principal rodará em **container separado**.
+* O projeto utilizará dois containers de serviço principais: o `web-app` (Next.js) para a interface pública e o `portfolio-api-java` (Spring Boot) como backend.
 * O ambiente será atualizado por pipeline automatizada.
 
 ### Motivo
@@ -188,7 +188,7 @@ A funcionalidade Learning in Public seguirá as seguintes regras iniciais:
 
 ### Consequência
 
-* O projeto precisará de um worker ou processo agendado separado da aplicação principal.
+* O projeto precisará de um backend `portfolio-api-java` lidando com filas ou processos agendados (Spring Scheduler) separado do Next.js.
 * O fluxo do Learning in Public deve ter rastreamento de status, falha e publicação.
 
 ---
@@ -199,10 +199,10 @@ A funcionalidade Learning in Public seguirá as seguintes regras iniciais:
 
 A arquitetura de runtime da v1 será separada nos seguintes blocos:
 
-* aplicação principal;
+* `web-app` (frontend estrutural público);
+* `portfolio-api-java` (backend de regra de negócio, integração e jobs);
 * banco PostgreSQL;
 * reverse proxy;
-* worker do Learning in Public;
 * stack de observabilidade.
 
 ### Motivo
@@ -213,8 +213,8 @@ A arquitetura de runtime da v1 será separada nos seguintes blocos:
 
 ### Consequência
 
-* O Learning in Public não deve ficar embutido de forma frágil no processo principal da aplicação.
-* O worker deve poder falhar ou reiniciar sem derrubar a aplicação web.
+* O Learning in Public orquestrado pelo Java Spring Boot não deve impactar o Next.js.
+* A API e seus jobs assíncronos podem falhar ou reiniciar sem derrubar a aplicação web.
 
 ---
 
@@ -403,9 +403,9 @@ A v1 seguirá estratégia de segurança compatível com Shift-Left Security e op
 
 ### Funcionalidade dinâmica
 
-* Learning in Public com PRs merged
-* poucos repositórios na v1
-* cron job
+* Learning in Public guiado por PRs merged
+* Back-end robusto e encapsulado base (API Java via Spring Boot)
+* execução baseada em cron local ou job java
 * resumo curto + categoria + link
 * publicação automática configurável
 

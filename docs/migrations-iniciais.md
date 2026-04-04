@@ -251,7 +251,7 @@ Criar tabela de rastreamento das sincronizações editoriais.
 
 ### Objetivo
 
-Criar tabela de rastreamento das execuções do worker do Learning in Public.
+Criar tabela de rastreamento das execuções periódicas do serviço Java (`portfolio-api-java`) referentes ao Learning in Public.
 
 ### Campos esperados
 
@@ -398,5 +398,5 @@ A primeira leva de migrations será considerada suficiente quando:
 * houver integridade mínima entre entidades e links;
 * houver unicidade para slugs e eventos externos;
 * a sincronização editorial puder registrar suas execuções;
-* o worker puder registrar suas execuções;
+* a rotina do `portfolio-api-java` puder registrar suas execuções;
 * a aplicação conseguir ler os dados públicos sem necessidade de tabelas adicionais.

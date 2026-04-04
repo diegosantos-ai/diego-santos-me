@@ -42,7 +42,8 @@ Este documento serve como referência para:
 | `APP_BASE_URL`         | Sim         |      Não | URL pública canônica da aplicação                           | `https://diegosantos.me` |
 | `APP_LOG_LEVEL`        | Sim         |      Não | Nível de log da aplicação                                   | `info`                   |
 | `APP_ENABLE_DEBUG`     | Não         |      Não | Habilita comportamento de debug em ambientes não produtivos | `false`                  |
-| `APP_HEALTHCHECK_PATH` | Sim         |      Não | Caminho de healthcheck da aplicação                         | `/health`                |
+| `APP_HEALTHCHECK_PATH` | Sim         |      Não | Caminho de healthcheck da app base (`web-app`)              | `/health`                |
+| `JAVA_OPTS`            | Sim         |      Não | Flags de restrição e tuning de RAM para `portfolio-api-java`| `-Xms256m -Xmx256m`      |
 
 ---
 
@@ -67,9 +68,9 @@ A aplicação deve usar preferencialmente `DATABASE_URL` ou composição control
 
 | Variável                      | Obrigatória | Sensível | Finalidade                                          | Exemplo conceitual |
 | ----------------------------- | ----------- | -------: | --------------------------------------------------- | ------------------ |
-| `LEARNING_ENABLED`            | Sim         |      Não | Liga ou desliga o worker do Learning in Public      | `true`             |
+| `LEARNING_ENABLED`            | Sim         |      Não | Liga ou desliga o modulo dinâmico da API Java       | `true`             |
 | `LEARNING_REPOSITORIES`       | Sim         |      Não | Lista de repositórios monitorados                   | `repo-a,repo-b`    |
-| `LEARNING_CRON_SCHEDULE`      | Sim         |      Não | Agenda de execução do worker                        | `*/30 * * * *`     |
+| `LEARNING_CRON_SCHEDULE`      | Sim         |      Não | Agenda de execução da rotina (cron spring formato)  | `0 */30 * * * *`   |
 | `LEARNING_AUTO_PUBLISH`       | Sim         |      Não | Define se a publicação é automática                 | `false`            |
 | `LEARNING_MAX_ITEMS_PER_RUN`  | Não         |      Não | Limita quantidade processada por execução           | `10`               |
 | `LEARNING_SUMMARY_MAX_LENGTH` | Não         |      Não | Limite do resumo público                            | `240`              |
@@ -240,7 +241,7 @@ A aplicação deve validar, na inicialização:
 
 ### Exemplo de falha aceitável
 
-* impedir boot do worker sem `GITHUB_TOKEN` ou `LLM_API_KEY` quando o Learning in Public estiver ativado.
+* impedir boot do backend (Java) sem `GITHUB_TOKEN` ou `LLM_API_KEY` quando o Learning in Public estiver ativado.
 
 ---
 
