@@ -189,7 +189,7 @@ infra-up: ## Sobe servicos compartilhados (Postgres, Redis, ChromaDB, MLFlow, Tr
 	  exit 1; \
 	fi
 	@docker network create dev-workspace-net 2>/dev/null || true
-	@docker compose -f "$(INFRA_DIR)/docker-compose.yml" up -d
+	@docker compose -f "$(INFRA_DIR)/docker-compose.yml" -f "$(INFRA_DIR)/docker-compose.override.yml" up -d
 	@printf "$(GREEN)Infraestrutura disponivel na rede 'dev-workspace-net'.$(RESET)\n"
 
 infra-down: ## Encerra os servicos compartilhados
