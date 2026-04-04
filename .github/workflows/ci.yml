@@ -1,0 +1,82 @@
+name: CI — Build e Validação
+
+on:
+  push:
+    branches: [develop, main]
+  pull_request:
+    branches: [develop, main]
+
+jobs:
+  # ============================================================================
+  # JOB 1: Lint e Build do Frontend (Next.js)
+  # ============================================================================
+  frontend:
+    name: Frontend — Lint e Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: apps/web-app/package-lock.json
+
+      - name: Instalar dependências
+        working-directory: apps/web-app
+        run: npm ci
+
+      - name: Lint
+        working-directory: apps/web-app
+        run: npm run lint
+
+      - name: Verificar formatação (Prettier)
+        working-directory: apps/web-app
+        run: npx prettier --check .
+
+      - name: Build da imagem Docker
+        uses: docker/build-push-action@v5
+        with:
+          context: apps/web-app
+          push: false
+          tags: portfolio-web-app:ci
+
+  # ============================================================================
+  # JOB 2: Lint e Build do Backend (Spring Boot / Java 21)
+  # ============================================================================
+  backend:
+    name: Backend — Spotless e Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Permissão do Gradlew
+        working-directory: apps/portfolio-api-java
+        run: chmod +x gradlew
+
+      - name: Verificar formatação (Spotless)
+        working-directory: apps/portfolio-api-java
+        run: ./gradlew spotlessCheck --no-daemon
+
+      - name: Build e Testes
+        working-directory: apps/portfolio-api-java
+        run: ./gradlew build --no-daemon
+
+      - name: Build da imagem Docker
+        uses: docker/build-push-action@v5
+        with:
+          context: apps/portfolio-api-java
+          push: false
+          tags: portfolio-api-java:ci
