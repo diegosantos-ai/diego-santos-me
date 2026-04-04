@@ -25,12 +25,12 @@ services:
       - pgdata:/var/lib/postgresql/data
 
   web-app:
-    image: ghcr.io/diegosantos-ai/diego-santos-me/web-app:latest
+    image: ghcr.io/diegosantos-ai/portfolio-web-app:latest
     restart: always
     # Nenhuma porta web-app exposta para o host, o Nginx tratará do roteamento
 
   portfolio-api-java:
-    image: ghcr.io/diegosantos-ai/diego-santos-me/api-java:latest
+    image: ghcr.io/diegosantos-ai/portfolio-api-java:latest
     restart: always
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${DB_NAME:-portfolio_prod}
@@ -40,3 +40,12 @@ services:
       - GITHUB_TOKEN=${GITHUB_TOKEN}
       - LLM_API_KEY=${LLM_API_KEY}
     # Nenhuma porta portfolio-api-java exposta para o host, o Nginx tratará do roteamento
+
+  certbot:
+    image: certbot/certbot:latest
+    container_name: portfolio_certbot
+    restart: unless-stopped
+    volumes:
+      - ../certbot/conf:/etc/letsencrypt
+      - ../certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
