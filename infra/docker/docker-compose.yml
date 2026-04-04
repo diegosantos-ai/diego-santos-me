@@ -1,19 +1,75 @@
+version: '3.8'
+
 services:
-  # Template minimal de serviço para projetos que adotam a rede unificada.
-  # Consulte ../ports/ports.md para o padrão de portas recomendado.
-  app:
-    image: alpine:latest
-    command: tail -f /dev/null
+  nginx:
+    image: nginx:alpine
+    container_name: dev_nginx
+    ports:
+      - "80:80"
+    # volumes:
+    #   - ./nginx.conf:/etc/nginx/nginx.conf:ro
     networks:
-      - dev-workspace-net
-    # Exemplo de como mapear porta do host via variável (padrão seguindo a convenção):
-    # ports:
-    #   - "${APP_PORT:-8001}:${APP_INTERNAL_PORT:-8000}"
-    # Exemplo utilizando o banco unificado (infra-core):
-    # environment:
-    #   - DATABASE_URL=postgres://devroot:devpassword@core-postgres:5432/meu_projeto_db
+      - app-net
+    depends_on:
+      - web-app
+      - portfolio-api-java
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: dev_postgres
+    restart: unless-stopped
+    env_file:
+      - ../../envs/.env
+    environment:
+      POSTGRES_DB: ${DB_NAME:-portfolio_dev}
+      POSTGRES_USER: ${DB_USER:-portfolio_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-portfolio_secret}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - app-net
+
+  web-app:
+    image: node:20-alpine
+    container_name: dev_web_app
+    working_dir: /app
+    volumes:
+      - ../../apps/web-app:/app
+    # command: npm run dev
+    # Desativado temporariamente até concluir o scaffolding
+    entrypoint: [ "tail", "-f", "/dev/null" ]
+    ports:
+      - "3000:3000"
+    networks:
+      - app-net
+
+  portfolio-api-java:
+    image: eclipse-temurin:21-jdk-alpine
+    container_name: dev_portfolio_api_java
+    working_dir: /app
+    volumes:
+      - ../../apps/portfolio-api-java:/app
+    # command: ./gradlew bootRun
+    # Desativado temporariamente até concluir o scaffolding
+    entrypoint: [ "tail", "-f", "/dev/null" ]
+    ports:
+      - "8080:8080"
+    env_file:
+      - ../../envs/.env
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${DB_NAME:-portfolio_dev}
+      - SPRING_DATASOURCE_USERNAME=${DB_USER:-portfolio_user}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD:-portfolio_secret}
+    networks:
+      - app-net
+    depends_on:
+      - postgres
 
 networks:
-  dev-workspace-net:
-    external: true
-    name: dev-workspace-net
+  app-net:
+    driver: bridge
+
+volumes:
+  pgdata:

@@ -24,8 +24,8 @@ export PATH := $(HOME)/.local/bin:$(PATH)
 ANSIBLE_SCRIPT  := $(DEV_WORKSPACE_ROOT)/ansible/scripts/setup-machine.sh
 SANIDADE_DIR    := $(DEV_WORKSPACE_ROOT)/sanidade-ambiente/scripts
 ROTINA_DIR      := $(DEV_WORKSPACE_ROOT)/rotina-devops/scripts
-AGENTS_DIR      := $(DEV_WORKSPACE_ROOT)/gestao-centralizada-agents
-INFRA_DIR       := $(DEV_WORKSPACE_ROOT)/infra-core
+AGENTS_DIR      := $(DEV_WORKSPACE_ROOT)/.agents
+INFRA_DIR       := $(DEV_WORKSPACE_ROOT)/infra/docker
 
 CYAN   := \033[36m
 RESET  := \033[0m
