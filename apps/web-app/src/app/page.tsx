@@ -1,65 +1,120 @@
-import Image from 'next/image';
+import Link from 'next/link';
+import Hero from '../components/home/Hero';
+import CompetenceBlock from '../components/home/CompetenceBlock';
+import ProjectCard from '../components/home/ProjectCard';
+import LearningTable from '../components/home/LearningTable';
+import { getSortedProjectsMetadata } from '../lib/markdown';
 
-export default function Home() {
+export default async function Home() {
+  const allProjects = await getSortedProjectsMetadata();
+  const featuredProjects = allProjects.filter((p) => p.featured);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{' '}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <>
+      <Hero />
+      <CompetenceBlock />
+
+      <section className="section" id="projects" style={{ padding: '7rem 0' }}>
+        <div className="container">
+          <div style={{ marginBottom: '4.5rem' }}>
+            <h2
+              style={{
+                fontSize: '2.5rem',
+                fontWeight: 800,
+                marginBottom: '1.5rem',
+                letterSpacing: '-1px',
+              }}
             >
-              Templates
-            </a>{' '}
-            or the{' '}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              Projetos em Destaque
+            </h2>
+            <p
+              className="text-muted"
+              style={{
+                fontSize: '1.15rem',
+                maxWidth: '800px',
+                lineHeight: '1.6',
+              }}
             >
-              Learning
-            </a>{' '}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+              Projetos selecionados para demonstrar arquitetura, automação, dados, operação e
+              evolução incremental. Cada case foi pensado para mostrar como decisões técnicas se
+              traduzem em sistemas mais claros, reproduzíveis e confiáveis dentro do pipeline de
+              engenharia.
+            </p>
+          </div>
+
+          <div
+            className="grid"
+            style={{
+              gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
+              gap: '3rem',
+            }}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            {featuredProjects.map((project) => (
+              <ProjectCard
+                key={project.slug}
+                title={project.title}
+                description={project.description}
+                slug={project.slug}
+                tags={project.tags}
+              />
+            ))}
+          </div>
         </div>
-      </main>
-    </div>
+      </section>
+
+      <LearningTable />
+
+      <section className="section" style={{ padding: '7rem 0 10rem' }}>
+        <div className="container">
+          <div
+            className="glass"
+            style={{
+              padding: '5rem 3rem',
+              textAlign: 'center',
+              borderColor: 'var(--border-strong)',
+              background: 'rgba(229, 149, 0, 0.02)',
+            }}
+          >
+            <h2
+              style={{
+                fontSize: '2.25rem',
+                marginBottom: '1.75rem',
+                fontWeight: 800,
+                letterSpacing: '-0.5px',
+              }}
+            >
+              Maturidade Técnica & Operação
+            </h2>
+            <p
+              className="text-muted"
+              style={{
+                maxWidth: '850px',
+                margin: '0 auto 3rem',
+                fontSize: '1.2rem',
+                lineHeight: '1.7',
+              }}
+            >
+              Minha trajetória se formou na interseção entre operação, negócio e tecnologia. Hoje,
+              meu foco é transformar esse repertório em sistemas cada vez mais robustos, com atenção
+              especial a integrações empresariais e engenharia de software com profundidade
+              operacional.
+            </p>
+            <Link
+              href="/sobre"
+              style={{
+                fontSize: '0.85rem',
+                fontWeight: 700,
+                letterSpacing: '1.5px',
+                borderBottom: '2px solid var(--accent-bronze)',
+                paddingBottom: '6px',
+                textTransform: 'uppercase',
+              }}
+            >
+              CONHECER TRAJETÓRIA COMPLETA
+            </Link>
+          </div>
+        </div>
+      </section>
+    </>
   );
 }

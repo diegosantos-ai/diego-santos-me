@@ -1,0 +1,68 @@
+import fs from 'fs';
+import path from 'path';
+import matter from 'gray-matter';
+import { remark } from 'remark';
+import html from 'remark-html';
+
+const projectsDirectory = path.join(process.cwd(), '../../content/projetos');
+
+export interface ProjectMetadata {
+  title: string;
+  description: string;
+  slug: string;
+  featured: boolean;
+  order: number;
+  tags: string[];
+}
+
+export interface ProjectData extends ProjectMetadata {
+  contentHtml: string;
+}
+
+export async function getSortedProjectsMetadata(): Promise<ProjectMetadata[]> {
+  if (!fs.existsSync(projectsDirectory)) {
+    return [];
+  }
+  const fileNames = fs.readdirSync(projectsDirectory);
+  const allProjectsData = fileNames
+    .filter((fileName) => fileName.endsWith('.md'))
+    .map((fileName) => {
+      const slug = fileName.replace(/\.md$/, '');
+      const fullPath = path.join(projectsDirectory, fileName);
+      const fileContents = fs.readFileSync(fullPath, 'utf8');
+      const { data } = matter(fileContents);
+
+      return {
+        slug: data.slug || slug,
+        title: data.title || slug,
+        description: data.description || '',
+        featured: data.featured || false,
+        order: data.order || 99,
+        tags: data.tags || [],
+      } as ProjectMetadata;
+    });
+
+  return allProjectsData.sort((a, b) => (a.order > b.order ? 1 : -1));
+}
+
+export async function getProjectData(slug: string): Promise<ProjectData | null> {
+  const fullPath = path.join(projectsDirectory, `${slug}.md`);
+  if (!fs.existsSync(fullPath)) {
+    return null;
+  }
+  const fileContents = fs.readFileSync(fullPath, 'utf8');
+  const { data, content } = matter(fileContents);
+
+  const processedContent = await remark().use(html).process(content);
+  const contentHtml = processedContent.toString();
+
+  return {
+    slug: data.slug || slug,
+    title: data.title || slug,
+    description: data.description || '',
+    featured: data.featured || false,
+    order: data.order || 99,
+    tags: data.tags || [],
+    contentHtml,
+  };
+}
