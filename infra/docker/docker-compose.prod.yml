@@ -1,0 +1,40 @@
+version: '3.8'
+
+# docker-compose.prod.yml (Ambiente PRODUÇÃO / VPS)
+# Para executar na VPS: docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+
+services:
+  nginx:
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+
+  postgres:
+    restart: always
+    # Nenhuma porta exposta no host local em prod. Somente a rede interna verá a 5432!
+    environment:
+      POSTGRES_DB: ${DB_NAME:-portfolio_prod}
+      POSTGRES_USER: ${DB_USER:-portfolio_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  web-app:
+    image: ghcr.io/diegosantos-ai/diego-santos-me/web-app:latest
+    restart: always
+    # Nenhuma porta web-app exposta para o host, o Nginx tratará do roteamento
+
+  portfolio-api-java:
+    image: ghcr.io/diegosantos-ai/diego-santos-me/api-java:latest
+    restart: always
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${DB_NAME:-portfolio_prod}
+      - SPRING_DATASOURCE_USERNAME=${DB_USER:-portfolio_user}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - SPRING_PROFILES_ACTIVE=prod
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+      - LLM_API_KEY=${LLM_API_KEY}
+    # Nenhuma porta portfolio-api-java exposta para o host, o Nginx tratará do roteamento

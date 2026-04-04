@@ -1,13 +1,13 @@
 version: '3.8'
 
+# Base docker-compose.yml
+# Define TODOS os serviços, redes e binds inter-containers, sem amarrar
+# ao ambiente (volumes locais ou imagens finais de prod).
+
 services:
   nginx:
     image: nginx:alpine
-    container_name: dev_nginx
-    ports:
-      - "80:80"
-    # volumes:
-    #   - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    container_name: portfolio_nginx
     networks:
       - app-net
     depends_on:
@@ -16,52 +16,17 @@ services:
 
   postgres:
     image: postgres:16-alpine
-    container_name: dev_postgres
-    restart: unless-stopped
-    env_file:
-      - ../../envs/.env
-    environment:
-      POSTGRES_DB: ${DB_NAME:-portfolio_dev}
-      POSTGRES_USER: ${DB_USER:-portfolio_user}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-portfolio_secret}
-    ports:
-      - "${DB_PORT:-5435}:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
+    container_name: portfolio_postgres
     networks:
       - app-net
 
   web-app:
-    image: node:20-alpine
-    container_name: dev_web_app
-    working_dir: /app
-    volumes:
-      - ../../apps/web-app:/app
-    # command: npm run dev
-    # Desativado temporariamente até concluir o scaffolding
-    entrypoint: [ "tail", "-f", "/dev/null" ]
-    ports:
-      - "3000:3000"
+    container_name: portfolio_web_app
     networks:
       - app-net
 
   portfolio-api-java:
-    image: eclipse-temurin:21-jdk-alpine
-    container_name: dev_portfolio_api_java
-    working_dir: /app
-    volumes:
-      - ../../apps/portfolio-api-java:/app
-    # command: ./gradlew bootRun
-    # Desativado temporariamente até concluir o scaffolding
-    entrypoint: [ "tail", "-f", "/dev/null" ]
-    ports:
-      - "8080:8080"
-    env_file:
-      - ../../envs/.env
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${DB_NAME:-portfolio_dev}
-      - SPRING_DATASOURCE_USERNAME=${DB_USER:-portfolio_user}
-      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD:-portfolio_secret}
+    container_name: portfolio_api_java
     networks:
       - app-net
     depends_on:

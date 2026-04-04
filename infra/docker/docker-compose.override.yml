@@ -1,0 +1,49 @@
+version: '3.8'
+
+# docker-compose.override.yml (Ambiente DEV)
+# Lido automaticamente pelo comando `docker compose up`
+
+services:
+  nginx:
+    ports:
+      - "80:80"
+
+  postgres:
+    restart: unless-stopped
+    env_file:
+      - ../../envs/.env
+    environment:
+      POSTGRES_DB: ${DB_NAME:-portfolio_dev}
+      POSTGRES_USER: ${DB_USER:-portfolio_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-portfolio_secret}
+    # Mantemos portas abertas para poder conectar via dBeaver localmente
+    ports:
+      - "${DB_PORT:-5435}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  web-app:
+    image: node:20-alpine
+    working_dir: /app
+    volumes:
+      - ../../apps/web-app:/app
+    # Desativado temporariamente até concluir o desenvolvimento com npm run dev manual
+    entrypoint: [ "tail", "-f", "/dev/null" ]
+    ports:
+      - "3000:3000"
+
+  portfolio-api-java:
+    image: eclipse-temurin:21-jdk-alpine
+    working_dir: /app
+    volumes:
+      - ../../apps/portfolio-api-java:/app
+    # Desativado temporariamente para o gradlew bootRun rodar manualmente
+    entrypoint: [ "tail", "-f", "/dev/null" ]
+    ports:
+      - "8080:8080"
+    env_file:
+      - ../../envs/.env
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${DB_NAME:-portfolio_dev}
+      - SPRING_DATASOURCE_USERNAME=${DB_USER:-portfolio_user}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD:-portfolio_secret}
