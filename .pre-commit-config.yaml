@@ -24,9 +24,24 @@ repos:
     rev: v8.18.1
     hooks:
       - id: gitleaks
+        exclude: 'envs/.*'
 
   - repo: https://github.com/adrienverge/yamllint.git
     rev: v1.33.0
     hooks:
       - id: yamllint
         args: ["-d", "{extends: relaxed, rules: {line-length: disable}}"]
+
+  - repo: local
+    hooks:
+      - id: check-frontend
+        name: Check Frontend (ESLint + Prettier)
+        entry: bash -c "cd apps/web-app && npm run lint && npx prettier --check ."
+        language: system
+        files: ^apps/web-app/.*\.([tj]sx?)$
+
+      - id: check-backend
+        name: Check Backend (Spotless Java)
+        entry: bash -c "cd apps/portfolio-api-java && ./gradlew spotlessCheck"
+        language: system
+        files: ^apps/portfolio-api-java/.*\.java$
