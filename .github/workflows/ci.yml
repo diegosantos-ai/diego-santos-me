@@ -51,6 +51,21 @@ jobs:
     name: Backend — Spotless e Build
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: portfolio_test
+          POSTGRES_USER: portfolio_user
+          POSTGRES_PASSWORD: portfolio_secret
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -72,6 +87,10 @@ jobs:
 
       - name: Build e Testes
         working-directory: apps/portfolio-api-java
+        env:
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/portfolio_test
+          SPRING_DATASOURCE_USERNAME: portfolio_user
+          SPRING_DATASOURCE_PASSWORD: portfolio_secret
         run: ./gradlew build --no-daemon
 
       - name: Build da imagem Docker
