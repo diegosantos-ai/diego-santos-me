@@ -1,0 +1,54 @@
+name: CD — Deploy to OVH
+
+on:
+  workflow_run:
+    workflows: ["CI — Build e Validação"]
+    types:
+      - completed
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy Remoto via SSH
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      - name: Checkout infra
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            infra
+
+      - name: Copiar docker-compose para a VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.OVH_VPS_HOST }}
+          username: ${{ secrets.OVH_VPS_USER }}
+          key: ${{ secrets.OVH_SSH_PRIVATE_KEY }}
+          source: "infra/"
+          target: "~/portfolio-deploy/"
+          strip_components: 1
+
+      - name: Executar docker compose pull e up
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.OVH_VPS_HOST }}
+          username: ${{ secrets.OVH_VPS_USER }}
+          key: ${{ secrets.OVH_SSH_PRIVATE_KEY }}
+          script: |
+            cd ~/portfolio-deploy || exit 1
+
+            # Exportar variaveis de ambiente sensíveis no servidor
+            export DB_PASSWORD='${{ secrets.DB_PASSWORD }}'
+            export GITHUB_TOKEN='${{ secrets.GITHUB_TOKEN }}'
+            export LLM_API_KEY='${{ secrets.LLM_API_KEY }}'
+
+            # Autenticar no GHCR para puxar imagems mais recentes
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+            # Sincronizar container e limpar imagens antigas
+            docker compose -f docker-compose.yml -f docker-compose.prod.yml pull
+            docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --remove-orphans
+            docker system prune -f

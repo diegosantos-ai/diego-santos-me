@@ -1,0 +1,13 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'portfolio-api-java'
+    metrics_path: '/api/v1/actuator/prometheus'
+    static_configs:
+      # Nome do container do backend referenciado na mesma rede docker_app-net
+      - targets: ['portfolio-api-java:8080']

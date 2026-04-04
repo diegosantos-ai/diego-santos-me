@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [develop, main]
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   # ============================================================================
   # JOB 1: Lint e Build do Frontend (Next.js)
@@ -37,12 +41,22 @@ jobs:
         working-directory: apps/web-app
         run: npx prettier --check .
 
+      - name: Log in to the Container registry
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build da imagem Docker
         uses: docker/build-push-action@v5
         with:
           context: apps/web-app
-          push: false
-          tags: portfolio-web-app:ci
+          push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/portfolio-web-app:latest
+            ghcr.io/${{ github.repository_owner }}/portfolio-web-app:${{ github.sha }}
 
   # ============================================================================
   # JOB 2: Lint e Build do Backend (Spring Boot / Java 21)
@@ -95,9 +109,19 @@ jobs:
         run: ./gradlew build --no-daemon
 
 
+      - name: Log in to the Container registry
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build da imagem Docker
         uses: docker/build-push-action@v5
         with:
           context: apps/portfolio-api-java
-          push: false
-          tags: portfolio-api-java:ci
+          push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/portfolio-api-java:latest
+            ghcr.io/${{ github.repository_owner }}/portfolio-api-java:${{ github.sha }}

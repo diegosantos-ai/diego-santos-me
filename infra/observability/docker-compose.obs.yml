@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: obs_prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    # Conecta à mesma rede do docker-compose.yml para poder ver o java
+    networks:
+      - docker_app-net
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana-oss:latest
+    container_name: obs_grafana
+    ports:
+      - "3001:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    networks:
+      - docker_app-net
+    restart: unless-stopped
+
+  loki:
+    image: grafana/loki:latest
+    container_name: obs_loki
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - docker_app-net
+    restart: unless-stopped
+
+  promtail:
+    image: grafana/promtail:latest
+    container_name: obs_promtail
+    volumes:
+      - /var/log:/var/log
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+    command: -config.file=/etc/promtail/config.yml
+    networks:
+      - docker_app-net
+    restart: unless-stopped
+
+networks:
+  # Referencia rede externa criada pelo docker-compose principal
+  docker_app-net:
+    external: true
+
+volumes:
+  prometheus_data:
+  grafana_data:
