@@ -38,7 +38,7 @@ jobs:
           username: ${{ secrets.OVH_VPS_USER }}
           key: ${{ secrets.OVH_SSH_PRIVATE_KEY }}
           script: |
-            cd ~/portfolio-deploy || exit 1
+            cd ~/portfolio-deploy/docker || exit 1
 
             # Exportar variaveis de ambiente sensíveis no servidor
             export DB_PASSWORD='${{ secrets.DB_PASSWORD }}'
