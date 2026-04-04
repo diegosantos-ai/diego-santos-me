@@ -1,4 +1,3 @@
-version: '3.8'
 
 # Base docker-compose.yml
 # Define TODOS os serviços, redes e binds inter-containers, sem amarrar
