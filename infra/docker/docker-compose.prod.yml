@@ -32,6 +32,8 @@ services:
   web-app:
     image: ghcr.io/diegosantos-ai/portfolio-web-app:latest
     restart: always
+    environment:
+      - INTERNAL_API_URL=${INTERNAL_API_URL:-http://portfolio-api-java:8080/api/v1}
     # Nenhuma porta web-app exposta para o host, o Nginx tratará do roteamento
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3000/health >/dev/null || exit 1"]

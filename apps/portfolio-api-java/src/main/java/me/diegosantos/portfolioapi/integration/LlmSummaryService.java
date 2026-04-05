@@ -6,7 +6,10 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.text.Normalizer;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -17,11 +20,27 @@ import org.springframework.stereotype.Service;
 @Service
 public class LlmSummaryService {
 
-  public record LearningEnrichment(String summary, String technicalCategory) {}
+  public record LearningEnrichment(String summary, String technicalCategory, boolean needsReview) {
+    public LearningEnrichment(String summary, String technicalCategory) {
+      this(summary, technicalCategory, false);
+    }
+  }
 
   private static final Logger log = LoggerFactory.getLogger(LlmSummaryService.class);
   private static final String OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
   private static final String MODEL = "google/gemini-2.0-flash-001";
+  private static final List<String> LOW_SIGNAL_TITLES =
+      Arrays.asList(
+          "develop", "main", "master", "release", "update", "updates", "changes", "change", "sync",
+          "merge", "wip", "test", "tests", "ajuste", "ajustes");
+  private static final List<String> DISALLOWED_SUMMARY_PHRASES =
+      Arrays.asList(
+          "nao possui descricao",
+          "não possui descrição",
+          "recomenda-se adicionar",
+          "mudancas desconhecidas",
+          "mudanças desconhecidas",
+          "objetivo desconhecido");
 
   private final HttpClient httpClient;
   private final ObjectMapper objectMapper;
@@ -36,10 +55,12 @@ public class LlmSummaryService {
 
   public LearningEnrichment enrich(String title, String body) {
     String fallbackCategory = inferTechnicalCategory(title, body);
+    boolean needsReview = requiresManualReview(title, body);
+    String fallbackSummary = buildFallbackSummary(title, body, needsReview);
 
     if (llmApiKey == null || llmApiKey.isBlank()) {
       log.warn("LLM_API_KEY não configurada. Retornando título e categoria inferida localmente.");
-      return new LearningEnrichment(title, fallbackCategory);
+      return new LearningEnrichment(fallbackSummary, fallbackCategory, needsReview);
     }
 
     String prompt =
@@ -53,6 +74,9 @@ public class LlmSummaryService {
                 - Responda apenas JSON válido.
                 - Não use markdown.
                 - Não invente informação ausente.
+                - Não escreva frases como "o pull request não possui descrição", "mudanças desconhecidas" ou "objetivo desconhecido".
+                - Se houver pouco contexto, produza um resumo neutro, profissional e conservador.
+                - Nunca transforme ausência de descrição em bronca de revisão.
 
                 Título: %s
 
@@ -86,21 +110,21 @@ public class LlmSummaryService {
 
       if (response.statusCode() != 200) {
         log.error("Erro na chamada ao LLM. Status: {}", response.statusCode());
-        return new LearningEnrichment(title, fallbackCategory);
+        return new LearningEnrichment(fallbackSummary, fallbackCategory, needsReview);
       }
 
       JsonNode root = objectMapper.readTree(response.body());
       String content = root.path("choices").path(0).path("message").path("content").asText("");
-      return parseEnrichmentContent(content, title, fallbackCategory);
+      return parseEnrichmentContent(content, fallbackSummary, fallbackCategory, needsReview);
 
     } catch (Exception e) {
       log.error("Falha ao chamar LLM: {}", e.getMessage());
-      return new LearningEnrichment(title, fallbackCategory);
+      return new LearningEnrichment(fallbackSummary, fallbackCategory, needsReview);
     }
   }
 
   private LearningEnrichment parseEnrichmentContent(
-      String content, String fallbackSummary, String fallbackCategory) {
+      String content, String fallbackSummary, String fallbackCategory, boolean needsReview) {
     String cleanedContent = stripMarkdownFences(content);
 
     try {
@@ -116,11 +140,15 @@ public class LlmSummaryService {
         technicalCategory = fallbackCategory;
       }
 
-      return new LearningEnrichment(summary, technicalCategory);
+      summary = sanitizeSummary(summary, fallbackSummary);
+      return new LearningEnrichment(summary, technicalCategory, needsReview);
     } catch (Exception e) {
       log.warn("Resposta do LLM fora do formato JSON esperado. Aplicando fallback local.");
       return new LearningEnrichment(
-          cleanedContent.isBlank() ? fallbackSummary : cleanedContent, fallbackCategory);
+          sanitizeSummary(
+              cleanedContent.isBlank() ? fallbackSummary : cleanedContent, fallbackSummary),
+          fallbackCategory,
+          needsReview);
     }
   }
 
@@ -174,5 +202,58 @@ public class LlmSummaryService {
     }
 
     return "engineering";
+  }
+
+  private boolean requiresManualReview(String title, String body) {
+    if (body != null && !body.isBlank()) {
+      return false;
+    }
+
+    String normalizedTitle = normalize(title);
+    if (normalizedTitle.isBlank()) {
+      return true;
+    }
+
+    if (LOW_SIGNAL_TITLES.contains(normalizedTitle)) {
+      return true;
+    }
+
+    return normalizedTitle.split("\\s+").length <= 2 && normalizedTitle.length() <= 14;
+  }
+
+  private String buildFallbackSummary(String title, String body, boolean needsReview) {
+    if (needsReview) {
+      return "Registro criado a partir de um merge com pouco contexto no Pull Request. O item foi mantido para curadoria manual antes de ganhar destaque publico no journal.";
+    }
+
+    if (body == null || body.isBlank()) {
+      return "Atualizacao integrada ao repositorio com contexto limitado no Pull Request. O resumo foi mantido conservador para evitar interpretar mudancas alem do que o registro permite afirmar.";
+    }
+
+    return title == null || title.isBlank()
+        ? "Atualizacao tecnica registrada no repositorio."
+        : title;
+  }
+
+  private String sanitizeSummary(String summary, String fallbackSummary) {
+    String trimmedSummary = summary == null ? "" : summary.trim();
+    if (trimmedSummary.isBlank()) {
+      return fallbackSummary;
+    }
+
+    String normalizedSummary = normalize(trimmedSummary);
+    for (String disallowed : DISALLOWED_SUMMARY_PHRASES) {
+      if (normalizedSummary.contains(normalize(disallowed))) {
+        return fallbackSummary;
+      }
+    }
+
+    return trimmedSummary;
+  }
+
+  private String normalize(String value) {
+    String normalized = value == null ? "" : value.trim().toLowerCase(Locale.ROOT);
+    normalized = Normalizer.normalize(normalized, Normalizer.Form.NFD);
+    return normalized.replaceAll("\\p{M}", "");
   }
 }

@@ -93,6 +93,7 @@ public class LearningEventService {
             LearningEnrichment enrichment = llmService.enrich(pr.title(), pr.body());
             LocalDateTime processedAt = LocalDateTime.now();
             LocalDateTime eventDate = parseMergedAt(pr.mergedAt());
+            boolean shouldAutoPublish = autoPublish && !enrichment.needsReview();
 
             LearningEvent event = new LearningEvent();
             event.setExternalId(pr.externalId());
@@ -108,12 +109,16 @@ public class LearningEventService {
             event.setProcessedAt(processedAt);
 
             LearningEventStatus status =
-                autoPublish ? LearningEventStatus.PUBLISHED : LearningEventStatus.PENDING;
+                shouldAutoPublish ? LearningEventStatus.PUBLISHED : LearningEventStatus.PENDING;
             event.setStatus(status);
-            event.setIsAutoPublished(autoPublish);
+            event.setIsAutoPublished(shouldAutoPublish);
 
-            if (autoPublish) {
+            if (shouldAutoPublish) {
               event.setPublishedAt(eventDate != null ? eventDate : processedAt);
+            } else if (enrichment.needsReview()) {
+              log.info(
+                  "LearningEvent criado como PENDING por falta de contexto suficiente: {}",
+                  pr.title());
             }
 
             eventRepository.save(event);

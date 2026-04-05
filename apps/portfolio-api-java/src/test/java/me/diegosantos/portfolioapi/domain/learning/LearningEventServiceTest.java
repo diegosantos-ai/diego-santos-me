@@ -55,7 +55,7 @@ class LearningEventServiceTest {
     when(gitHubService.fetchMergedPullRequests("owner/repo")).thenReturn(List.of(pullRequest));
     when(eventRepository.existsByExternalId("github-pr-1")).thenReturn(false);
     when(llmService.enrich(pullRequest.title(), pullRequest.body()))
-        .thenReturn(new LearningEnrichment("Health endpoint and checks.", "backend"));
+        .thenReturn(new LearningEnrichment("Health endpoint and checks.", "backend", false));
 
     LearningSyncRun run = service.executeSyncRun("manual");
 
@@ -105,5 +105,42 @@ class LearningEventServiceTest {
     assertThat(run.getStatus()).isEqualTo("partial_success");
     assertThat(run.getItemsCreated()).isEqualTo(0);
     assertThat(run.getItemsFailed()).isEqualTo(1);
+  }
+
+  @Test
+  void executeSyncRunKeepsLowContextPullRequestAsPending() {
+    PullRequestData pullRequest =
+        new PullRequestData(
+            "github-pr-2",
+            "owner/repo",
+            "https://github.com/owner/repo",
+            43,
+            "https://github.com/owner/repo/pull/43",
+            "Develop",
+            "",
+            "2026-04-05T16:00:00Z");
+
+    when(gitHubService.fetchMergedPullRequests("owner/repo")).thenReturn(List.of(pullRequest));
+    when(eventRepository.existsByExternalId("github-pr-2")).thenReturn(false);
+    when(llmService.enrich(pullRequest.title(), pullRequest.body()))
+        .thenReturn(
+            new LearningEnrichment(
+                "Registro criado a partir de um merge com pouco contexto no Pull Request.",
+                "engineering",
+                true));
+
+    LearningSyncRun run = service.executeSyncRun("manual");
+
+    ArgumentCaptor<LearningEvent> eventCaptor = ArgumentCaptor.forClass(LearningEvent.class);
+    verify(eventRepository).save(eventCaptor.capture());
+
+    LearningEvent savedEvent = eventCaptor.getValue();
+    assertThat(savedEvent.getStatus()).isEqualTo(LearningEventStatus.PENDING);
+    assertThat(savedEvent.getIsAutoPublished()).isFalse();
+    assertThat(savedEvent.getPublishedAt()).isNull();
+
+    assertThat(run.getStatus()).isEqualTo("success");
+    assertThat(run.getItemsCreated()).isEqualTo(1);
+    assertThat(run.getItemsFailed()).isEqualTo(0);
   }
 }
