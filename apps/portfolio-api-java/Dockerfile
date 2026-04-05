@@ -17,7 +17,8 @@ RUN ./gradlew build -x test --no-daemon
 # ==============================================================================
 FROM eclipse-temurin:21-jre-alpine AS runner
 
-RUN addgroup --system --gid 1001 appgroup && \
+RUN apk add --no-cache wget && \
+    addgroup --system --gid 1001 appgroup && \
     adduser --system --uid 1001 --ingroup appgroup appuser
 
 WORKDIR /app

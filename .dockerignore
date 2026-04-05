@@ -1,0 +1,17 @@
+.git
+.github
+.idea
+.vscode
+
+**/node_modules
+**/.next
+**/build
+**/.gradle
+**/coverage
+
+infra/certbot
+infra/terraform/.terraform
+
+*.log
+*.tmp
+*.swp

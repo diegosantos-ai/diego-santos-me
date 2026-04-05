@@ -51,4 +51,28 @@ jobs:
             # Sincronizar container e limpar imagens antigas
             docker compose -f docker-compose.yml -f docker-compose.prod.yml pull
             docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --remove-orphans
+            docker compose -f docker-compose.yml -f docker-compose.prod.yml ps
+
+            echo "Aguardando healthchecks dos servicos principais..."
+            for attempt in $(seq 1 18); do
+              WEB_STATUS=$(docker inspect --format='{{if .State.Health}}{{.State.Health.Status}}{{else}}no-healthcheck{{end}}' portfolio_web_app 2>/dev/null || echo "missing")
+              API_STATUS=$(docker inspect --format='{{if .State.Health}}{{.State.Health.Status}}{{else}}no-healthcheck{{end}}' portfolio_api_java 2>/dev/null || echo "missing")
+              POSTGRES_STATUS=$(docker inspect --format='{{if .State.Health}}{{.State.Health.Status}}{{else}}no-healthcheck{{end}}' portfolio_postgres 2>/dev/null || echo "missing")
+
+              echo "Tentativa ${attempt}: web=${WEB_STATUS} api=${API_STATUS} postgres=${POSTGRES_STATUS}"
+
+              if [ "${WEB_STATUS}" = "healthy" ] && [ "${API_STATUS}" = "healthy" ] && [ "${POSTGRES_STATUS}" = "healthy" ]; then
+                break
+              fi
+
+              if [ "${attempt}" -eq 18 ]; then
+                echo "Servicos nao ficaram saudaveis dentro da janela esperada."
+                docker compose -f docker-compose.yml -f docker-compose.prod.yml logs --tail=120 nginx web-app portfolio-api-java postgres
+                exit 1
+              fi
+
+              sleep 10
+            done
+
+            docker compose -f docker-compose.yml -f docker-compose.prod.yml logs --tail=40 nginx web-app portfolio-api-java
             docker system prune -f
