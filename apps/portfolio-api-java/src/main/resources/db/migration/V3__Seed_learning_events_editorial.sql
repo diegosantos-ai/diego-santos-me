@@ -1,6 +1,3 @@
--- Mantida com o conteúdo original aplicado anteriormente em ambiente remoto.
--- Mudanças editoriais posteriores devem entrar em novas migrations para evitar checksum mismatch no Flyway.
-
 INSERT INTO learning_events (
     external_id,
     repository_name,
