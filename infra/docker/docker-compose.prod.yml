@@ -49,6 +49,11 @@ services:
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
       - SPRING_JPA_HIBERNATE_DDL_AUTO=${SPRING_JPA_HIBERNATE_DDL_AUTO:-none}
       - SPRING_PROFILES_ACTIVE=prod
+      - LEARNING_ENABLED=${LEARNING_ENABLED:-true}
+      - LEARNING_REPOSITORIES=${LEARNING_REPOSITORIES:-diegosantos-ai/diego-santos-me}
+      - LEARNING_AUTO_PUBLISH=${LEARNING_AUTO_PUBLISH:-true}
+      - LEARNING_CRON_SCHEDULE=${LEARNING_CRON_SCHEDULE:-0 0 */6 * * *}
+      - LEARNING_ADMIN_TOKEN=${LEARNING_ADMIN_TOKEN:-}
       - GITHUB_TOKEN=${GITHUB_TOKEN}
       - LLM_API_KEY=${LLM_API_KEY}
     # Nenhuma porta portfolio-api-java exposta para o host, o Nginx tratará do roteamento

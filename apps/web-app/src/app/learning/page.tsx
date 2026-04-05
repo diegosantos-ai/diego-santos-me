@@ -3,7 +3,8 @@ import { LearningEventCard } from '../../components/LearningEventCard';
 
 export const metadata = {
   title: 'Learning in Public | Diego Santos',
-  description: 'Registro técnico de pull requests reais — o que foi construído, por que e como.',
+  description:
+    'Registro técnico de mudanças, decisões e aprendizados recentes, combinando entradas editoriais e evolução operacional da stack.',
 };
 
 export default async function LearningPage() {
@@ -40,9 +41,9 @@ export default async function LearningPage() {
             maxWidth: '820px',
           }}
         >
-          Registro técnico de pull requests reais dos meus repositórios. Processados automaticamente
-          e sumarizados para comunicar decisões técnicas, aprendizados e evolução incremental da
-          stack como evidência operacional.
+          Registro técnico de mudanças, decisões e aprendizados recentes. Enquanto a esteira de
+          automação amadurece, esta seção combina entradas editoriais curadas com eventos
+          processados da stack para comunicar evolução incremental com contexto.
         </p>
       </header>
 

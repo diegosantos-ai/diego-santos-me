@@ -1,25 +1,39 @@
-import { getApiBaseUrl } from '../../lib/api';
+import Link from 'next/link';
+import { getLearningEvents, LearningEvent } from '../../lib/api';
 
-interface LearningEvent {
-  id: string;
-  title: string;
-  technicalCategory: string | null;
-  createdAt: string;
-  summary: string;
+function getReferenceDate(event: LearningEvent): string {
+  return event.eventDate ?? event.createdAt;
+}
+
+function hasCuratedSummary(event: LearningEvent): boolean {
+  const summary = event.summary?.trim() ?? '';
+  const title = event.title?.trim() ?? '';
+
+  return summary.length >= 90 && summary !== title;
+}
+
+function isEditorialEntry(event: LearningEvent): boolean {
+  return !event.pullRequestUrl;
+}
+
+function truncateSummary(summary: string): string {
+  if (summary.length <= 180) {
+    return summary;
+  }
+
+  return `${summary.slice(0, 177).trimEnd()}...`;
 }
 
 export default async function LearningTable() {
   let events: LearningEvent[] = [];
 
   try {
-    const res = await fetch(`${getApiBaseUrl()}/learning-events?size=5`, {
-      next: { revalidate: 60 }, // Revalida a cada minuto
-    });
+    const data = await getLearningEvents(0, 12);
+    const curatedEvents = data.content.filter(
+      (event) => isEditorialEntry(event) || hasCuratedSummary(event)
+    );
 
-    if (res.ok) {
-      const data = await res.json();
-      events = data.content || [];
-    }
+    events = curatedEvents.slice(0, 4);
   } catch (e) {
     console.error('Fetch Error: Learning events suppressed. API might be offline.', e);
   }
@@ -35,151 +49,170 @@ export default async function LearningTable() {
       }}
     >
       <div className="container">
-        <div style={{ marginBottom: '4rem' }}>
-          <p className="eyebrow" style={{ marginBottom: '1rem' }}>
-            Journal Técnico
-          </p>
-          <h2
-            style={{
-              fontSize: 'clamp(2.1rem, 4vw, 2.8rem)',
-              marginBottom: '1rem',
-              fontWeight: 800,
-              letterSpacing: '-0.04em',
-              color: 'var(--accent-deep)',
-            }}
-          >
-            Learning in Public
-          </h2>
-          <p
-            className="text-muted"
-            style={{ fontSize: '1.08rem', maxWidth: '760px', lineHeight: '1.8' }}
-          >
-            Registro de decisões, testes e aprendizados técnicos automatizados. O journal técnico é
-            alimentado diretamente pelos Pull Requests aprovados na nossa esteira de engenharia.
-          </p>
-        </div>
-
         <div
-          className="glass"
           style={{
-            overflow: 'hidden',
-            border: '1px solid var(--border-soft)',
+            marginBottom: '4rem',
+            display: 'flex',
+            justifyContent: 'space-between',
+            gap: '2rem',
+            alignItems: 'flex-end',
+            flexWrap: 'wrap',
           }}
         >
-          <div style={{ overflowX: 'auto' }}>
-            <table
+          <div style={{ maxWidth: '760px' }}>
+            <p className="eyebrow" style={{ marginBottom: '1rem' }}>
+              Journal Técnico
+            </p>
+            <h2
               style={{
-                width: '100%',
-                borderCollapse: 'collapse',
-                textAlign: 'left',
-                minWidth: '600px',
+                fontSize: 'clamp(2.1rem, 4vw, 2.8rem)',
+                marginBottom: '1rem',
+                fontWeight: 800,
+                letterSpacing: '-0.04em',
+                color: 'var(--accent-deep)',
               }}
             >
-              <thead>
-                <tr
+              Learning in Public
+            </h2>
+            <p
+              className="text-muted"
+              style={{ fontSize: '1.08rem', maxWidth: '760px', lineHeight: '1.8' }}
+            >
+              Uma vitrine viva de decisões, ajustes e aprendizados recentes. Aqui entram os
+              registros que melhor explicam como a stack evolui na prática, com contexto técnico e
+              leitura humana.
+            </p>
+          </div>
+
+          <Link
+            href="/learning"
+            style={{
+              fontSize: '0.82rem',
+              fontWeight: 800,
+              letterSpacing: '0.08em',
+              color: 'var(--accent-deep)',
+              textTransform: 'uppercase',
+            }}
+          >
+            Ver journal completo →
+          </Link>
+        </div>
+
+        {events.length > 0 ? (
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+              gap: '1.5rem',
+            }}
+          >
+            {events.map((event) => (
+              <article
+                key={event.id}
+                className="glass interactive-card"
+                style={{
+                  padding: '1.8rem',
+                  border: '1px solid var(--border-soft)',
+                  minHeight: '100%',
+                }}
+              >
+                <div
                   style={{
-                    background: 'var(--bg-warm)',
-                    borderBottom: '1px solid var(--border-soft)',
+                    display: 'flex',
+                    gap: '0.75rem',
+                    alignItems: 'center',
+                    flexWrap: 'wrap',
+                    marginBottom: '1rem',
                   }}
                 >
-                  <th
+                  <span
                     style={{
-                      padding: '1.25rem 2rem',
-                      fontSize: '0.7rem',
+                      fontSize: '0.72rem',
                       fontWeight: 800,
-                      color: 'var(--accent-deep)',
-                      letterSpacing: '0.1em',
+                      color: 'var(--accent-solar)',
+                      letterSpacing: '0.08em',
+                      fontFamily: 'var(--font-geist-mono)',
                     }}
                   >
-                    DATA
-                  </th>
-                  <th
+                    {new Date(getReferenceDate(event)).toLocaleDateString('pt-BR')}
+                  </span>
+                  <span
+                    className="badge"
                     style={{
-                      padding: '1.25rem 2rem',
-                      fontSize: '0.7rem',
-                      fontWeight: 800,
-                      color: 'var(--accent-deep)',
-                      letterSpacing: '0.1em',
+                      fontSize: '0.58rem',
+                      color: 'var(--text-secondary)',
                     }}
                   >
-                    CATEGORIA
-                  </th>
-                  <th
-                    style={{
-                      padding: '1.25rem 2rem',
-                      fontSize: '0.7rem',
-                      fontWeight: 800,
-                      color: 'var(--accent-deep)',
-                      letterSpacing: '0.1em',
-                    }}
-                  >
-                    TÍTULO DO LOG
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {events.length > 0 ? (
-                  events.map((event) => (
-                    <tr
-                      key={event.id}
+                    {(event.technicalCategory ?? 'engineering').toUpperCase()}
+                  </span>
+                  {!event.pullRequestUrl && (
+                    <span
                       style={{
-                        borderBottom: '1px solid var(--border-soft)',
-                        backgroundColor: 'transparent',
-                      }}
-                    >
-                      <td
-                        style={{
-                          padding: '1.25rem 2rem',
-                          fontSize: '0.85rem',
-                          color: 'var(--text-muted)',
-                          fontFamily: 'var(--font-geist-mono)',
-                          whiteSpace: 'nowrap',
-                        }}
-                      >
-                        {new Date(event.createdAt).toLocaleDateString('pt-BR')}
-                      </td>
-                      <td style={{ padding: '1.25rem 2rem' }}>
-                        <span
-                          className="badge"
-                          style={{
-                            fontSize: '0.6rem',
-                            color: 'var(--text-secondary)',
-                          }}
-                        >
-                          {(event.technicalCategory ?? 'sem categoria').toUpperCase()}
-                        </span>
-                      </td>
-                      <td
-                        style={{
-                          padding: '1.25rem 2rem',
-                          fontSize: '0.95rem',
-                          fontWeight: 600,
-                          color: 'var(--text-primary)',
-                        }}
-                      >
-                        {event.title}
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td
-                      colSpan={3}
-                      style={{
-                        padding: '5rem 2rem',
-                        textAlign: 'center',
+                        fontSize: '0.58rem',
                         color: 'var(--text-muted)',
-                        fontSize: '0.9rem',
+                        letterSpacing: '0.08em',
+                        textTransform: 'uppercase',
+                        fontWeight: 700,
                       }}
                     >
-                      Nenhum log técnico recente encontrado na API operacional.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+                      Curado
+                    </span>
+                  )}
+                </div>
+
+                <h3
+                  style={{
+                    fontSize: '1.15rem',
+                    lineHeight: '1.4',
+                    letterSpacing: '-0.02em',
+                    marginBottom: '0.9rem',
+                    color: 'var(--accent-deep)',
+                  }}
+                >
+                  <Link href={`/learning/${event.id}`} style={{ color: 'inherit' }}>
+                    {event.title}
+                  </Link>
+                </h3>
+
+                <p
+                  className="text-muted"
+                  style={{
+                    marginBottom: '1.5rem',
+                    lineHeight: '1.75',
+                    fontSize: '0.96rem',
+                  }}
+                >
+                  {truncateSummary(event.summary)}
+                </p>
+
+                <Link
+                  href={`/learning/${event.id}`}
+                  style={{
+                    fontSize: '0.78rem',
+                    fontWeight: 800,
+                    letterSpacing: '0.08em',
+                    color: 'var(--accent-deep)',
+                    textTransform: 'uppercase',
+                  }}
+                >
+                  Ler registro →
+                </Link>
+              </article>
+            ))}
           </div>
-        </div>
+        ) : (
+          <div
+            className="glass"
+            style={{
+              padding: '3rem 2rem',
+              border: '1px solid var(--border-soft)',
+              textAlign: 'center',
+              color: 'var(--text-muted)',
+            }}
+          >
+            Nenhum registro curado disponível no momento.
+          </div>
+        )}
       </div>
     </section>
   );

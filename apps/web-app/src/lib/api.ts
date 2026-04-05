@@ -23,9 +23,9 @@ export interface LearningEvent {
   id: number;
   externalId: string;
   repositoryName: string;
-  repositoryUrl: string;
-  pullRequestNumber: number;
-  pullRequestUrl: string;
+  repositoryUrl: string | null;
+  pullRequestNumber: number | null;
+  pullRequestUrl: string | null;
   title: string;
   summary: string;
   technicalCategory: string | null;

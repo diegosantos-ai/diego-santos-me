@@ -65,15 +65,16 @@ public class GitHubIntegrationService {
       for (JsonNode pr : prs) {
         if (pr.path("merged_at").isNull()) continue;
 
-        PullRequestData data = new PullRequestData();
-        data.setExternalId("github-pr-" + pr.path("id").asLong());
-        data.setRepositoryName(repository);
-        data.setRepositoryUrl("https://github.com/" + repository);
-        data.setPullRequestNumber(pr.path("number").asInt());
-        data.setPullRequestUrl(pr.path("html_url").asText());
-        data.setTitle(pr.path("title").asText());
-        data.setBody(pr.path("body").asText(""));
-        data.setMergedAt(pr.path("merged_at").asText());
+        PullRequestData data =
+            new PullRequestData(
+                "github-pr-" + pr.path("id").asLong(),
+                repository,
+                "https://github.com/" + repository,
+                pr.path("number").asInt(),
+                pr.path("html_url").asText(),
+                pr.path("title").asText(),
+                pr.path("body").asText(""),
+                pr.path("merged_at").asText());
         results.add(data);
       }
 
@@ -92,78 +93,5 @@ public class GitHubIntegrationService {
       String pullRequestUrl,
       String title,
       String body,
-      String mergedAt) {
-
-    public PullRequestData() {
-      this(null, null, null, 0, null, null, null, null);
-    }
-
-    public PullRequestData setExternalId(String v) {
-      return new PullRequestData(
-          v,
-          repositoryName,
-          repositoryUrl,
-          pullRequestNumber,
-          pullRequestUrl,
-          title,
-          body,
-          mergedAt);
-    }
-
-    public PullRequestData setRepositoryName(String v) {
-      return new PullRequestData(
-          externalId, v, repositoryUrl, pullRequestNumber, pullRequestUrl, title, body, mergedAt);
-    }
-
-    public PullRequestData setRepositoryUrl(String v) {
-      return new PullRequestData(
-          externalId, repositoryName, v, pullRequestNumber, pullRequestUrl, title, body, mergedAt);
-    }
-
-    public PullRequestData setPullRequestNumber(int v) {
-      return new PullRequestData(
-          externalId, repositoryName, repositoryUrl, v, pullRequestUrl, title, body, mergedAt);
-    }
-
-    public PullRequestData setPullRequestUrl(String v) {
-      return new PullRequestData(
-          externalId, repositoryName, repositoryUrl, pullRequestNumber, v, title, body, mergedAt);
-    }
-
-    public PullRequestData setTitle(String v) {
-      return new PullRequestData(
-          externalId,
-          repositoryName,
-          repositoryUrl,
-          pullRequestNumber,
-          pullRequestUrl,
-          v,
-          body,
-          mergedAt);
-    }
-
-    public PullRequestData setBody(String v) {
-      return new PullRequestData(
-          externalId,
-          repositoryName,
-          repositoryUrl,
-          pullRequestNumber,
-          pullRequestUrl,
-          title,
-          v,
-          mergedAt);
-    }
-
-    public PullRequestData setMergedAt(String v) {
-      return new PullRequestData(
-          externalId,
-          repositoryName,
-          repositoryUrl,
-          pullRequestNumber,
-          pullRequestUrl,
-          title,
-          body,
-          v);
-    }
-  }
+      String mergedAt) {}
 }
