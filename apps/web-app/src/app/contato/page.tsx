@@ -22,9 +22,9 @@ export default function ContatoPage() {
             paddingLeft: '2rem',
           }}
         >
-          Estou sempre aberto a discussões técnicas sobre engenharia de plataforma, backend
-          corporativo e automação estruturada. Escolha o canal que preferir ou acesse minhas
-          evidências públicas no GitHub.
+          Estou construindo projetos que misturam backend, automação, dados e IA aplicada. Se quiser
+          trocar uma ideia sobre tecnologia, projeto ou alguma oportunidade, só me chamar. Ou, se
+          preferir, dá uma passada no meu LinkedIn e no GitHub.
         </p>
       </header>
 
@@ -53,8 +53,7 @@ export default function ContatoPage() {
             className="text-muted"
             style={{ fontSize: '0.95rem', marginBottom: '2rem', lineHeight: '1.6' }}
           >
-            Conecte-se para conversas profissionais, networking e atualizações sobre a stack Nexo
-            360.
+            Projetos, aprendizados e atualizações da minha trajetória em tecnologia.
           </p>
           <a
             href="https://linkedin.com/in/diego-santos"
@@ -67,7 +66,7 @@ export default function ContatoPage() {
               letterSpacing: '1px',
             }}
           >
-            DIEGO SANTOS IA →
+            linkedin.com/in/diego-santos-ia →
           </a>
         </div>
 
@@ -88,7 +87,7 @@ export default function ContatoPage() {
             className="text-muted"
             style={{ fontSize: '0.95rem', marginBottom: '2rem', lineHeight: '1.6' }}
           >
-            Explore o código-fonte deste portfólio, meus runbooks de IaC e projetos de IA Aplicada.
+            Código, automações, experimentos e projetos construídos na prática.
           </p>
           <a
             href="https://github.com/diegosantos-ai"
@@ -101,7 +100,7 @@ export default function ContatoPage() {
               letterSpacing: '1px',
             }}
           >
-            DIEGOSANTOS-AI →
+            github.com/diegosantos-ai →
           </a>
         </div>
 
@@ -116,16 +115,16 @@ export default function ContatoPage() {
               fontWeight: 700,
             }}
           >
-            Email Direct
+            Email
           </h2>
           <p
             className="text-muted"
             style={{ fontSize: '0.95rem', marginBottom: '2rem', lineHeight: '1.6' }}
           >
-            Para propostas diretas, convites de palestras ou discussões técnicas aprofundadas.
+            Para contato direto, propostas, oportunidades ou conversas com mais contexto.
           </p>
           <a
-            href="mailto:diego@diegosantos.me"
+            href="mailto:santos.diegoj86@gmail.com"
             style={{
               fontWeight: 700,
               fontSize: '0.85rem',
@@ -133,7 +132,7 @@ export default function ContatoPage() {
               letterSpacing: '1px',
             }}
           >
-            DIEGO@DIEGOSANTOS.ME →
+            santos.diegoj86@gmail.com →
           </a>
         </div>
       </section>

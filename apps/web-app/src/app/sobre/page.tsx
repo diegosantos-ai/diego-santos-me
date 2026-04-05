@@ -22,9 +22,9 @@ export default function SobrePage() {
             paddingLeft: '2rem',
           }}
         >
-          Engenheiro com trajetória construída na interseção entre negócio, operação e tecnologia.
-          Focado em transformar IA Generativa e Automação em sistemas reais, reproduzíveis e
-          rastreáveis.
+          Engenheiro com base em negócio, operação e tecnologia, hoje focado em construir soluções
+          com backend, automação, dados e IA aplicada. Gosto de transformar ideia em sistema útil,
+          bem estruturado e pronto para rodar no mundo real.
         </p>
       </header>
 
@@ -54,15 +54,14 @@ export default function SobrePage() {
             className="text-muted"
             style={{ lineHeight: '1.8', marginBottom: '1.5rem', fontSize: '1.05rem' }}
           >
-            Minha base profissional foi moldada por anos em operações e gestão, o que me deu uma
-            visão pragmática sobre como a tecnologia deve servir ao negócio. Essa experiência
-            reflete diretamente na minha forma de escrever código: orientado a resultados,
-            documentado e operável.
+            Minha trajetória começou em contextos onde tecnologia precisava resolver problema de
+            verdade, com impacto direto na operação e no negócio. Isso moldou a forma como eu
+            construo software: com foco em clareza, aplicação prática e arquitetura que faça sentido
+            fora do ambiente de teste.
           </p>
           <p className="text-muted" style={{ lineHeight: '1.8', fontSize: '1.05rem' }}>
-            Atualmente na Nexo Basis, atuo na linha de frente da Engenharia de IA, construindo
-            plataformas multi-agente que resolvem problemas reais de PMEs brasileiras, utilizando
-            stacks modernas de Backend (Python/Java), Dados e IA.
+            Hoje, na Nexo Basis, atuo com projetos de IA e automação, criando soluções que conectam
+            backend, dados e agentes para resolver problemas reais de empresas brasileiras.
           </p>
         </div>
 
@@ -77,7 +76,7 @@ export default function SobrePage() {
               fontWeight: 700,
             }}
           >
-            Technical Toolchain
+            STACK PRINCIPAL
           </h2>
           <ul style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1.5rem' }}>
             <li>
@@ -91,7 +90,7 @@ export default function SobrePage() {
                   marginBottom: '0.5rem',
                 }}
               >
-                Languages
+                Linguagens
               </strong>
               <span style={{ fontSize: '1rem', color: 'var(--text-primary)', fontWeight: 500 }}>
                 Python, Java, SQL, TypeScript, Shell
@@ -111,7 +110,7 @@ export default function SobrePage() {
                 Cloud & Infra
               </strong>
               <span style={{ fontSize: '1rem', color: 'var(--text-primary)', fontWeight: 500 }}>
-                AWS, Terraform, Docker, CI/CD Actions
+                AWS, Terraform, Docker, GitHub Actions
               </span>
             </li>
             <li>
@@ -128,7 +127,7 @@ export default function SobrePage() {
                 Backend & AI
               </strong>
               <span style={{ fontSize: '1rem', color: 'var(--text-primary)', fontWeight: 500 }}>
-                FastAPI, Spring Boot, RAG (ChromaDB), LLMs
+                FastAPI, Spring Boot, RAG,ChromaDB, LLMs
               </span>
             </li>
           </ul>
@@ -147,11 +146,10 @@ export default function SobrePage() {
           O que eu busco agora
         </h2>
         <p className="text-muted" style={{ fontSize: '1.2rem', lineHeight: '1.8' }}>
-          Estou direcionando meu repertório para contextos corporativos de maior maturidade técnica,
-          onde a qualidade do software, a arquitetura modular e a disciplina de engenharia são
-          pilares da entrega. Tenho interesse especial em ecossistemas Java/Spring e soluções
-          empresa-escala que demandam alta confiabilidade, observabilidade e governança baseada em
-          dados.
+          Estou aprofundando minha transição para contextos de engenharia mais maduros, com mais
+          ênfase em arquitetura modular, qualidade de software, automação e backend corporativo.
+          Tenho interesse especial em ecossistemas Java/Spring e em produtos que exigem
+          confiabilidade, observabilidade e evolução contínua.
         </p>
       </section>
     </main>

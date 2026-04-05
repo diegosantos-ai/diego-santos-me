@@ -41,7 +41,7 @@ BOLD   := \033[1m
         assert-git-context \
         setup-workstation setup asdf-install bootstrap \
         doctor env-check audit lint \
-        infra-up infra-down \
+        infra-up infra-down local-up web-dev api-dev \
         setup-agents test-skills adopt \
         morning day-start log day-close week-close \
         update
@@ -193,7 +193,25 @@ infra-up: ## Sobe servicos compartilhados (Postgres, Redis, ChromaDB, MLFlow, Tr
 	@printf "$(GREEN)Infraestrutura disponivel na rede 'dev-workspace-net'.$(RESET)\n"
 
 infra-down: ## Encerra os servicos compartilhados
-	@docker compose -f "$(INFRA_DIR)/docker-compose.yml" down
+	@docker compose --profile proxy --profile shell \
+	  -f "$(INFRA_DIR)/docker-compose.yml" \
+	  -f "$(INFRA_DIR)/docker-compose.override.yml" down
+
+local-up: infra-up ## Prepara a infra local e orienta a subida manual da aplicacao
+	@printf "$(GREEN)Banco pronto em localhost:%s$(RESET)\n" "$${DB_PORT:-5435}"
+	@printf "Rode em terminais separados:\n"
+	@printf "  $(CYAN)make api-dev$(RESET)  -> API Spring em http://localhost:$${BACKEND_PORT:-8001}\n"
+	@printf "  $(CYAN)make web-dev$(RESET)  -> Front Next em http://localhost:$${FRONTEND_PORT:-3000}\n"
+
+web-dev: ## Sobe o frontend Next apontando para a API local
+	@cd "$(DEV_WORKSPACE_ROOT)/apps/web-app" && \
+	  NEXT_PUBLIC_API_URL="http://localhost:$${BACKEND_PORT:-8001}" \
+	  npm run dev -- --hostname 0.0.0.0 --port "$${FRONTEND_PORT:-3000}"
+
+api-dev: ## Sobe a API Spring localmente na porta 8001 por padrao
+	@cd "$(DEV_WORKSPACE_ROOT)/apps/portfolio-api-java" && \
+	  SERVER_PORT="$${BACKEND_PORT:-8001}" \
+	  ./gradlew bootRun
 
 # ==============================================================================
 # GESTAO DE AGENTES & IA

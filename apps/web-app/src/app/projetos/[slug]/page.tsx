@@ -80,7 +80,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         }}
       >
         <Link
-          href="/#projects"
+          href="/projetos"
           style={{
             fontWeight: 700,
             fontSize: '0.85rem',

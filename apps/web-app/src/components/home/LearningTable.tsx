@@ -1,7 +1,9 @@
+import { getApiBaseUrl } from '../../lib/api';
+
 interface LearningEvent {
   id: string;
   title: string;
-  category: string;
+  technicalCategory: string | null;
   createdAt: string;
   summary: string;
 }
@@ -10,9 +12,7 @@ export default async function LearningTable() {
   let events: LearningEvent[] = [];
 
   try {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://portfolio-api-java:8080';
-    // No Docker do servidor, o frontend fala com o serviço pela rede interna do docker
-    const res = await fetch(`${apiUrl}/api/v1/learning-events?size=5`, {
+    const res = await fetch(`${getApiBaseUrl()}/learning-events?size=5`, {
       next: { revalidate: 60 }, // Revalida a cada minuto
     });
 
@@ -133,7 +133,7 @@ export default async function LearningTable() {
                             borderColor: 'var(--border-subtle)',
                           }}
                         >
-                          {event.category.toUpperCase()}
+                          {(event.technicalCategory ?? 'sem categoria').toUpperCase()}
                         </span>
                       </td>
                       <td

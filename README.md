@@ -251,6 +251,16 @@ Essa decisão foi adotada para manter:
 * controle editorial;
 * flexibilidade de renderização.
 
+## Execução Local
+
+Para subir o projeto localmente sem conflito com a infraestrutura compartilhada do workspace:
+
+1. rode `make infra-up` para subir o PostgreSQL do projeto em `localhost:5435`;
+2. em outro terminal, rode `make api-dev` para iniciar a API em `http://localhost:8001/api/v1`;
+3. em outro terminal, rode `make web-dev` para iniciar o frontend em `http://localhost:3000`.
+
+Quando quiser encerrar os containers do projeto, use `make infra-down`.
+
 ## Documentação do Projeto
 
 A base documental da v1 está organizada nos seguintes artefatos:
@@ -267,28 +277,6 @@ A base documental da v1 está organizada nos seguintes artefatos:
 * `checklist-producao-v1.md`
 * `migrations-iniciais.md`
 * `matriz-de-variaveis-de-ambiente.md`
-
-Esses documentos formam a referência técnica da v1.
-
-## Estado Atual
-
-Neste estágio, o repositório está organizado para:
-
-* consolidar a arquitetura da v1;
-* transformar documentação em artefatos executáveis;
-* preparar ambiente, schema, runtime e pipeline;
-* sustentar implementação incremental sem reescrita total.
-
-## Próximos Passos
-
-Os próximos passos naturais do projeto são:
-
-* definir `.env.example`;
-* montar o `docker-compose.yml` real da v1;
-* implementar schema e migrations reais;
-* estruturar o `web-app` (Next.js) e o `portfolio-api-java` (Spring Boot);
-* configurar pipeline de CI/CD para compilar ambas as stacks em containers;
-* validar deploy ponta a ponta na VPS.
 
 ## Licença e Uso
 

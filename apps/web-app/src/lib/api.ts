@@ -1,4 +1,23 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8080/api/v1';
+const API_PATH_PREFIX = '/api/v1';
+const DEFAULT_LOCAL_API_ORIGIN = 'http://localhost:8001';
+
+function normalizeApiBaseUrl(rawUrl: string): string {
+  const trimmedUrl = rawUrl.replace(/\/$/, '');
+
+  if (trimmedUrl.endsWith(API_PATH_PREFIX)) {
+    return trimmedUrl;
+  }
+
+  return `${trimmedUrl}${API_PATH_PREFIX}`;
+}
+
+export function getApiBaseUrl(): string {
+  return normalizeApiBaseUrl(
+    process.env.INTERNAL_API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? DEFAULT_LOCAL_API_ORIGIN
+  );
+}
+
+const API_BASE_URL = getApiBaseUrl();
 
 export interface LearningEvent {
   id: number;

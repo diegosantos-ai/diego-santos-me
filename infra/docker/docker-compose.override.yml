@@ -1,12 +1,11 @@
-version: '3.8'
-
 # docker-compose.override.yml (Ambiente DEV)
 # Lido automaticamente pelo comando `docker compose up`
 
 services:
   nginx:
-    ports:
-      - "80:80"
+    # No fluxo local o proxy fica opcional, porque frontend e API rodam manualmente no host.
+    profiles:
+      - proxy
 
   postgres:
     restart: unless-stopped
@@ -21,26 +20,31 @@ services:
       - "${DB_PORT:-5435}:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER:-portfolio_user} -d ${DB_NAME:-portfolio_dev}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   web-app:
     image: node:20-alpine
     working_dir: /app
     volumes:
       - ../../apps/web-app:/app
-    # Desativado temporariamente até concluir o desenvolvimento com npm run dev manual
+    # Mantido como shell opcional; o frontend principal roda via `make web-dev`.
     entrypoint: [ "tail", "-f", "/dev/null" ]
-    ports:
-      - "3000:3000"
+    profiles:
+      - shell
 
   portfolio-api-java:
     image: eclipse-temurin:21-jdk-alpine
     working_dir: /app
     volumes:
       - ../../apps/portfolio-api-java:/app
-    # Desativado temporariamente para o gradlew bootRun rodar manualmente
+    # Mantido como shell opcional; a API principal roda via `make api-dev`.
     entrypoint: [ "tail", "-f", "/dev/null" ]
-    ports:
-      - "8080:8080"
+    profiles:
+      - shell
     env_file:
       - ../../envs/.env
     environment:
