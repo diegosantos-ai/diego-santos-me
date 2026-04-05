@@ -30,16 +30,7 @@ export default async function LearningEventPage({ params }: Props) {
   return (
     <main className="container" style={{ padding: '8rem 0 10rem' }}>
       <nav style={{ marginBottom: '5rem' }}>
-        <Link
-          href="/learning"
-          style={{
-            fontSize: '0.8rem',
-            color: 'var(--text-muted)',
-            fontWeight: 700,
-            letterSpacing: '1.5px',
-            textTransform: 'uppercase',
-          }}
-        >
+        <Link href="/learning" className="link-accent" style={{ color: 'var(--text-secondary)' }}>
           ← VOLTAR PARA O JOURNAL
         </Link>
       </nav>
@@ -60,8 +51,8 @@ export default async function LearningEventPage({ params }: Props) {
                 fontSize: '0.75rem',
                 fontWeight: 800,
                 fontFamily: 'var(--font-geist-mono)',
-                color: 'var(--accent-amber)',
-                letterSpacing: '1px',
+                color: 'var(--accent-solar)',
+                letterSpacing: '0.08em',
               }}
             >
               {event.repositoryName.toUpperCase()}
@@ -71,9 +62,7 @@ export default async function LearningEventPage({ params }: Props) {
                 className="badge"
                 style={{
                   fontSize: '0.6rem',
-                  background: 'transparent',
-                  borderColor: 'var(--border-subtle)',
-                  color: 'var(--text-muted)',
+                  color: 'var(--text-secondary)',
                 }}
               >
                 {event.technicalCategory.toUpperCase()}
@@ -97,8 +86,8 @@ export default async function LearningEventPage({ params }: Props) {
               fontSize: 'clamp(2.2rem, 6vw, 2.75rem)',
               fontWeight: 800,
               lineHeight: '1.2',
-              letterSpacing: '-1px',
-              color: 'var(--text-primary)',
+              letterSpacing: '-0.05em',
+              color: 'var(--accent-deep)',
             }}
           >
             {event.title}
@@ -109,13 +98,14 @@ export default async function LearningEventPage({ params }: Props) {
           <section
             className="glass"
             style={{
-              padding: '4rem 3rem',
-              fontSize: '1.25rem',
+              padding: '3rem 2.5rem',
+              fontSize: '1.18rem',
               lineHeight: '1.8',
               marginBottom: '6rem',
-              borderLeft: '5px solid var(--accent-bronze)',
-              background: 'rgba(229, 149, 0, 0.02)',
+              borderLeft: '4px solid var(--accent-bronze)',
+              background: 'var(--bg-warm)',
               color: 'var(--text-primary)',
+              border: '1px solid var(--border-soft)',
             }}
           >
             {event.summary}
@@ -138,10 +128,8 @@ export default async function LearningEventPage({ params }: Props) {
             style={{
               fontSize: '0.9rem',
               fontWeight: 700,
-              letterSpacing: '1px',
-              color: 'var(--accent-amber)',
-              textDecoration: 'underline',
-              textUnderlineOffset: '6px',
+              letterSpacing: '0.08em',
+              color: 'var(--accent-deep)',
             }}
           >
             VER PR #{event.pullRequestNumber} NO GITHUB

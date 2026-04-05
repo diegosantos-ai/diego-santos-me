@@ -3,67 +3,97 @@ export default function CompetenceBlock() {
     {
       title: 'Automação e integrações',
       description:
-        'Desenho e implemento fluxos entre sistemas, APIs e dados com foco em confiabilidade, rastreabilidade e redução de trabalho manual.',
+        'Crio fluxos entre APIs, serviços e dados para reduzir retrabalho, aumentar rastreabilidade e dar mais consistência à operação.',
     },
     {
-      title: 'Backend e dados',
+      title: 'Backend e Arquitetura',
       description:
-        'Construo serviços, pipelines e estruturas de persistência pensando em clareza de domínio, manutenção e evolução.',
+        'Projeto serviços e estruturas de domínio com foco em manutenção, testabilidade e evolução incremental.',
     },
     {
-      title: 'Operação e reprodutibilidade',
+      title: 'Operação como Engenharia',
       description:
-        'Trato infraestrutura, deploy, containers, CI/CD e configuração como parte do produto, não como detalhe secundário.',
+        'Deploy, configuração, containers, CI/CD e recuperação fazem parte da solução desde o início.',
     },
     {
-      title: 'Observabilidade e aprendizado',
+      title: 'Aprendizado com evidência',
       description:
-        'Documento decisões, testes, erros e melhorias para transformar execução em evidência técnica pública.',
+        'Registro decisões, testes, erros e melhorias para mostrar evolução técnica com base em trabalho real.',
     },
   ];
 
   return (
-    <section className="section" style={{ background: 'var(--bg-secondary)', padding: '6rem 0' }}>
-      <div
-        className="container grid"
-        style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '2.5rem' }}
-      >
-        {competences.map((c, i) => (
-          <div
-            key={i}
-            className="glass"
+    <section
+      className="section"
+      style={{
+        background: 'var(--bg-surface-alt)',
+        borderTop: '1px solid var(--border-soft)',
+        borderBottom: '1px solid var(--border-soft)',
+        padding: '6rem 0',
+      }}
+    >
+      <div className="container">
+        <div style={{ marginBottom: '3.5rem', maxWidth: '780px' }}>
+          <p className="eyebrow" style={{ marginBottom: '1rem' }}>
+            Como Eu Construo
+          </p>
+          <h2
             style={{
-              padding: '2.5rem',
-              height: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'flex-start',
+              fontSize: 'clamp(2rem, 4vw, 2.8rem)',
+              fontWeight: 800,
+              letterSpacing: '-0.04em',
+              marginBottom: '1.25rem',
+              color: 'var(--accent-deep)',
             }}
           >
-            <h3
+            Blocos de competência pensados para sustentar sistemas reais.
+          </h2>
+          <p className="text-muted" style={{ fontSize: '1.08rem', lineHeight: '1.8' }}>
+            O foco não está em empilhar ferramentas, mas em combinar integração, arquitetura,
+            operação e aprendizado contínuo de forma coerente.
+          </p>
+        </div>
+
+        <div
+          className="grid"
+          style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}
+        >
+          {competences.map((c, i) => (
+            <div
+              key={i}
+              className="glass interactive-card"
               style={{
-                marginBottom: '1.25rem',
-                color: 'var(--accent-amber)',
-                fontSize: '1.15rem',
-                fontWeight: 700,
-                textTransform: 'uppercase',
-                letterSpacing: '0.5px',
+                padding: '2rem',
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'flex-start',
+                borderTop: '3px solid var(--accent-solar)',
               }}
             >
-              {c.title}
-            </h3>
-            <p
-              className="text-muted"
-              style={{
-                fontSize: '0.95rem',
-                lineHeight: '1.6',
-                color: 'var(--text-muted)',
-              }}
-            >
-              {c.description}
-            </p>
-          </div>
-        ))}
+              <h3
+                style={{
+                  marginBottom: '1.25rem',
+                  color: 'var(--accent-deep)',
+                  fontSize: '1.12rem',
+                  fontWeight: 700,
+                  letterSpacing: '-0.02em',
+                }}
+              >
+                {c.title}
+              </h3>
+              <p
+                className="text-muted"
+                style={{
+                  fontSize: '0.98rem',
+                  lineHeight: '1.75',
+                }}
+              >
+                {c.description}
+              </p>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );

@@ -1,19 +1,14 @@
 export default function Footer() {
   return (
-    <footer
-      className="section"
-      style={{
-        borderTop: '1px solid var(--border-subtle)',
-        marginTop: 'auto',
-        padding: '3rem 0',
-      }}
-    >
+    <footer className="site-footer">
       <div
         className="container"
         style={{
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
+          gap: '1.5rem',
+          flexWrap: 'wrap',
         }}
       >
         <p className="text-muted" style={{ fontSize: '0.75rem', letterSpacing: '0.5px' }}>
@@ -29,12 +24,20 @@ export default function Footer() {
             GITHUB
           </a>
           <a
-            href="https://linkedin.com/in/diego-santos"
+            href="https://linkedin.com/in/diego-santos-ia"
             target="_blank"
             rel="noopener"
             style={{ fontSize: '0.75rem', fontWeight: 600 }}
           >
             LINKEDIN
+          </a>
+          <a
+            href="mailto:santos.diegoj86@gmail.com"
+            target="_blank"
+            rel="noopener"
+            style={{ fontSize: '0.75rem', fontWeight: 600 }}
+          >
+            EMAIL
           </a>
         </div>
       </div>

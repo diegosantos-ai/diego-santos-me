@@ -20,24 +20,24 @@ export default async function LearningPage() {
   return (
     <main className="container" style={{ padding: '8rem 0 10rem' }}>
       <header style={{ marginBottom: '6rem', maxWidth: '850px' }}>
+        <p className="eyebrow" style={{ marginBottom: '1rem' }}>
+          Evidência Operacional
+        </p>
         <h1
           style={{
             fontSize: 'clamp(2.5rem, 8vw, 3.5rem)',
             fontWeight: 800,
             marginBottom: '2rem',
-            letterSpacing: '-1.5px',
-            color: 'var(--text-primary)',
+            letterSpacing: '-0.06em',
+            color: 'var(--accent-deep)',
           }}
         >
           Learning in Public
         </h1>
         <p
-          className="text-muted"
+          className="lead-bar"
           style={{
-            fontSize: '1.25rem',
-            lineHeight: '1.7',
-            borderLeft: '4px solid var(--accent-bronze)',
-            paddingLeft: '2rem',
+            maxWidth: '820px',
           }}
         >
           Registro técnico de pull requests reais dos meus repositórios. Processados automaticamente
@@ -51,9 +51,10 @@ export default async function LearningPage() {
           className="glass"
           style={{
             padding: '2rem',
-            border: '1px solid var(--border-strong)',
-            color: 'var(--accent-amber)',
+            border: '1px solid var(--border-soft)',
+            color: 'var(--accent-deep)',
             marginBottom: '4rem',
+            background: 'var(--bg-warm)',
           }}
         >
           {error}

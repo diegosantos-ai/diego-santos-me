@@ -17,12 +17,16 @@ export default async function Home() {
       <section className="section" id="projects" style={{ padding: '7rem 0' }}>
         <div className="container">
           <div style={{ marginBottom: '4.5rem' }}>
+            <p className="eyebrow" style={{ marginBottom: '1rem' }}>
+              Casos Selecionados
+            </p>
             <h2
               style={{
-                fontSize: '2.5rem',
+                fontSize: 'clamp(2.2rem, 5vw, 3rem)',
                 fontWeight: 800,
-                marginBottom: '1.5rem',
-                letterSpacing: '-1px',
+                marginBottom: '1.35rem',
+                letterSpacing: '-0.04em',
+                color: 'var(--accent-deep)',
               }}
             >
               Projetos em Destaque
@@ -32,7 +36,7 @@ export default async function Home() {
               style={{
                 fontSize: '1.15rem',
                 maxWidth: '800px',
-                lineHeight: '1.6',
+                lineHeight: '1.8',
               }}
             >
               Projetos selecionados para demonstrar arquitetura, automação, dados, operação e
@@ -69,18 +73,22 @@ export default async function Home() {
           <div
             className="glass"
             style={{
-              padding: '5rem 3rem',
+              padding: '4.5rem 3rem',
               textAlign: 'center',
-              borderColor: 'var(--border-strong)',
-              background: 'rgba(229, 149, 0, 0.02)',
+              borderColor: 'var(--border-soft)',
+              background: 'var(--bg-warm)',
             }}
           >
+            <p className="eyebrow" style={{ marginBottom: '1rem' }}>
+              Direção Profissional
+            </p>
             <h2
               style={{
                 fontSize: '2.25rem',
-                marginBottom: '1.75rem',
+                marginBottom: '1.5rem',
                 fontWeight: 800,
-                letterSpacing: '-0.5px',
+                letterSpacing: '-0.04em',
+                color: 'var(--accent-deep)',
               }}
             >
               Maturidade Técnica & Operação
@@ -90,8 +98,8 @@ export default async function Home() {
               style={{
                 maxWidth: '850px',
                 margin: '0 auto 3rem',
-                fontSize: '1.2rem',
-                lineHeight: '1.7',
+                fontSize: '1.14rem',
+                lineHeight: '1.85',
               }}
             >
               Minha trajetória se formou na interseção entre operação, negócio e tecnologia. Hoje,
@@ -99,18 +107,9 @@ export default async function Home() {
               especial a integrações empresariais e engenharia de software com profundidade
               operacional.
             </p>
-            <Link
-              href="/sobre"
-              style={{
-                fontSize: '0.85rem',
-                fontWeight: 700,
-                letterSpacing: '1.5px',
-                borderBottom: '2px solid var(--accent-bronze)',
-                paddingBottom: '6px',
-                textTransform: 'uppercase',
-              }}
-            >
+            <Link href="/sobre" className="link-accent">
               CONHECER TRAJETÓRIA COMPLETA
+              <span style={{ fontSize: '1.05rem' }}>→</span>
             </Link>
           </div>
         </div>

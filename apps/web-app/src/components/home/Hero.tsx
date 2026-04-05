@@ -2,60 +2,45 @@ import Link from 'next/link';
 
 export default function Hero() {
   return (
-    <section className="section" style={{ padding: '8rem 0 5rem' }}>
+    <section className="section" style={{ padding: '7rem 0 5.5rem' }}>
       <div className="container">
+        <p className="eyebrow" style={{ marginBottom: '1.4rem' }}>
+          Que bom ter você por aqui!
+        </p>
         <h1
           style={{
-            fontSize: 'clamp(2.5rem, 8vw, 4rem)',
-            lineHeight: '1.1',
-            marginBottom: '2rem',
+            fontSize: 'clamp(2.7rem, 8vw, 4.7rem)',
+            lineHeight: '1.02',
+            marginBottom: '2.2rem',
             fontWeight: 800,
-            letterSpacing: '-1.5px',
+            letterSpacing: '-0.06em',
+            maxWidth: '980px',
+            color: 'var(--accent-deep)',
           }}
         >
-          Engenharia de Plataforma, <br />
-          <span className="text-accent">Dados e Automação</span> <br />
-          aplicada a sistemas reais.
+          Engenharia aplicada em
+          <br />
+          <span className="text-accent">backend, dados e automação</span>
+          <br />
+          com clareza operacional.
         </h1>
         <p
-          className="text-muted"
+          className="lead-bar"
           style={{
-            maxWidth: '800px',
-            fontSize: '1.25rem',
-            lineHeight: '1.6',
-            marginBottom: '3.5rem',
+            marginBottom: '3.2rem',
           }}
         >
-          Construo soluções com foco em backend, integração, dados, observabilidade e operação
-          reproduzível. Meu portfólio reúne projetos, decisões e aprendizado público como evidência
-          técnica, não como vitrine genérica.
+          Desenvolvo sistemas e fluxos técnicos com foco em integração, observabilidade, clareza
+          arquitetural e execução confiável. Este portfólio reúne estudos de caso, decisões de
+          engenharia e aprendizado público com contexto real.
         </p>
-        <div className="flex" style={{ gap: '2.5rem', alignItems: 'center' }}>
-          <a
-            href="#projects"
-            className="badge"
-            style={{
-              padding: '1rem 2.5rem',
-              fontSize: '0.85rem',
-              borderRadius: 'var(--radius-sm)',
-              textTransform: 'uppercase',
-              letterSpacing: '1px',
-            }}
-          >
+        <div className="flex" style={{ gap: '1.25rem', alignItems: 'center', flexWrap: 'wrap' }}>
+          <a href="#projects" className="button-primary">
             VER PROJETOS
           </a>
-          <Link
-            href="/learning"
-            style={{
-              fontSize: '0.85rem',
-              fontWeight: 700,
-              borderBottom: '2px solid var(--accent-bronze)',
-              paddingBottom: '4px',
-              textTransform: 'uppercase',
-              letterSpacing: '1px',
-            }}
-          >
+          <Link href="/learning" className="link-accent">
             EXPLORAR LEARNING IN PUBLIC
+            <span style={{ fontSize: '1.05rem' }}>→</span>
           </Link>
         </div>
       </div>

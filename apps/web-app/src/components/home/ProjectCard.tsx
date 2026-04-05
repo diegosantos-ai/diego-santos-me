@@ -9,23 +9,30 @@ interface ProjectCardProps {
 
 export default function ProjectCard({ title, description, slug, tags }: ProjectCardProps) {
   return (
-    <div
-      className="glass"
+    <article
+      className="glass interactive-card"
       style={{
-        padding: '2.5rem',
+        padding: '2.2rem',
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
-        transition: 'transform 0.2s ease, border-color 0.2s ease',
-        border: '1px solid var(--border-subtle)',
+        border: '1px solid var(--border-soft)',
       }}
     >
+      <p
+        className="eyebrow"
+        style={{ marginBottom: '1rem', color: 'var(--accent-deep)', opacity: 0.84 }}
+      >
+        Estudo de caso
+      </p>
       <h3
         style={{
-          fontSize: '1.5rem',
+          fontSize: '1.45rem',
           marginBottom: '1rem',
           fontWeight: 700,
-          color: 'var(--text-primary)',
+          color: 'var(--accent-deep)',
+          lineHeight: '1.25',
+          letterSpacing: '-0.03em',
         }}
       >
         {title}
@@ -33,9 +40,9 @@ export default function ProjectCard({ title, description, slug, tags }: ProjectC
       <p
         className="text-muted"
         style={{
-          marginBottom: '2rem',
+          marginBottom: '1.8rem',
           fontSize: '1rem',
-          lineHeight: '1.6',
+          lineHeight: '1.75',
           flexGrow: 1,
         }}
       >
@@ -47,10 +54,10 @@ export default function ProjectCard({ title, description, slug, tags }: ProjectC
           style={{
             fontSize: '0.7rem',
             fontWeight: 800,
-            color: 'var(--accent-amber)',
+            color: 'var(--accent-solar)',
             marginBottom: '0.75rem',
             textTransform: 'uppercase',
-            letterSpacing: '0.5px',
+            letterSpacing: '0.08em',
           }}
         >
           O que esse projeto demonstra
@@ -62,8 +69,7 @@ export default function ProjectCard({ title, description, slug, tags }: ProjectC
               className="badge"
               style={{
                 fontSize: '0.65rem',
-                background: 'rgba(229, 149, 0, 0.05)',
-                padding: '0.2rem 0.8rem',
+                padding: '0.22rem 0.72rem',
               }}
             >
               {tag}
@@ -72,22 +78,10 @@ export default function ProjectCard({ title, description, slug, tags }: ProjectC
         </div>
       </div>
 
-      <Link
-        href={`/projetos/${slug}`}
-        style={{
-          fontSize: '0.85rem',
-          fontWeight: 700,
-          letterSpacing: '1px',
-          color: 'var(--accent-amber)',
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: '0.5rem',
-          marginTop: 'auto',
-        }}
-      >
+      <Link href={`/projetos/${slug}`} className="link-accent" style={{ marginTop: 'auto' }}>
         VER ESTUDO DE CASO
         <span style={{ fontSize: '1.1rem' }}>→</span>
       </Link>
-    </div>
+    </article>
   );
 }

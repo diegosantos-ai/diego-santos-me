@@ -16,12 +16,11 @@ export function LearningEventCard({ event }: LearningEventCardProps) {
 
   return (
     <article
-      className="glass"
+      className="glass interactive-card"
       style={{
-        padding: '2.5rem',
+        padding: '2.2rem',
         marginBottom: '2rem',
-        border: '1px solid var(--border-subtle)',
-        transition: 'border-color 0.2s ease',
+        border: '1px solid var(--border-soft)',
       }}
     >
       <div
@@ -38,8 +37,8 @@ export function LearningEventCard({ event }: LearningEventCardProps) {
             fontSize: '0.75rem',
             fontWeight: 800,
             fontFamily: 'var(--font-geist-mono)',
-            color: 'var(--accent-amber)',
-            letterSpacing: '0.5px',
+            color: 'var(--accent-solar)',
+            letterSpacing: '0.08em',
           }}
         >
           {event.repositoryName.toUpperCase()}
@@ -49,9 +48,7 @@ export function LearningEventCard({ event }: LearningEventCardProps) {
             className="badge"
             style={{
               fontSize: '0.6rem',
-              background: 'transparent',
-              borderColor: 'var(--border-subtle)',
-              color: 'var(--text-muted)',
+              color: 'var(--text-secondary)',
             }}
           >
             {event.technicalCategory.toUpperCase()}
@@ -72,13 +69,14 @@ export function LearningEventCard({ event }: LearningEventCardProps) {
 
       <h2
         style={{
-          fontSize: '1.4rem',
+          fontSize: '1.35rem',
           fontWeight: 700,
           marginBottom: '1.25rem',
-          lineHeight: '1.3',
+          lineHeight: '1.35',
+          letterSpacing: '-0.03em',
         }}
       >
-        <Link href={`/learning/${event.id}`} style={{ color: 'var(--text-primary)' }}>
+        <Link href={`/learning/${event.id}`} style={{ color: 'var(--accent-deep)' }}>
           {event.title}
         </Link>
       </h2>
@@ -87,8 +85,8 @@ export function LearningEventCard({ event }: LearningEventCardProps) {
         className="text-muted"
         style={{
           fontSize: '1rem',
-          marginBottom: '2.5rem',
-          lineHeight: '1.7',
+          marginBottom: '2.3rem',
+          lineHeight: '1.8',
         }}
       >
         {event.summary}
@@ -103,7 +101,7 @@ export function LearningEventCard({ event }: LearningEventCardProps) {
             fontSize: '0.75rem',
             fontWeight: 700,
             letterSpacing: '1px',
-            color: 'var(--text-muted)',
+            color: 'var(--text-secondary)',
             textDecoration: 'underline',
             textUnderlineOffset: '4px',
           }}
@@ -118,7 +116,7 @@ export function LearningEventCard({ event }: LearningEventCardProps) {
             fontSize: '0.75rem',
             fontWeight: 700,
             letterSpacing: '1px',
-            color: 'var(--accent-amber)',
+            color: 'var(--accent-deep)',
           }}
         >
           ACESSAR REPOSITÓRIO →

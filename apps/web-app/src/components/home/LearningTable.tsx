@@ -25,20 +25,35 @@ export default async function LearningTable() {
   }
 
   return (
-    <section className="section" id="learning">
+    <section
+      className="section"
+      id="learning"
+      style={{
+        background: 'var(--bg-surface-alt)',
+        borderTop: '1px solid var(--border-soft)',
+        borderBottom: '1px solid var(--border-soft)',
+      }}
+    >
       <div className="container">
         <div style={{ marginBottom: '4rem' }}>
+          <p className="eyebrow" style={{ marginBottom: '1rem' }}>
+            Journal Técnico
+          </p>
           <h2
             style={{
-              fontSize: '2.5rem',
+              fontSize: 'clamp(2.1rem, 4vw, 2.8rem)',
               marginBottom: '1rem',
               fontWeight: 800,
-              letterSpacing: '-1px',
+              letterSpacing: '-0.04em',
+              color: 'var(--accent-deep)',
             }}
           >
             Learning in Public
           </h2>
-          <p className="text-muted" style={{ fontSize: '1.1rem', maxWidth: '700px' }}>
+          <p
+            className="text-muted"
+            style={{ fontSize: '1.08rem', maxWidth: '760px', lineHeight: '1.8' }}
+          >
             Registro de decisões, testes e aprendizados técnicos automatizados. O journal técnico é
             alimentado diretamente pelos Pull Requests aprovados na nossa esteira de engenharia.
           </p>
@@ -48,7 +63,7 @@ export default async function LearningTable() {
           className="glass"
           style={{
             overflow: 'hidden',
-            border: '1px solid var(--border-subtle)',
+            border: '1px solid var(--border-soft)',
           }}
         >
           <div style={{ overflowX: 'auto' }}>
@@ -63,8 +78,8 @@ export default async function LearningTable() {
               <thead>
                 <tr
                   style={{
-                    background: 'rgba(255, 255, 255, 0.02)',
-                    borderBottom: '1px solid var(--border-subtle)',
+                    background: 'var(--bg-warm)',
+                    borderBottom: '1px solid var(--border-soft)',
                   }}
                 >
                   <th
@@ -72,8 +87,8 @@ export default async function LearningTable() {
                       padding: '1.25rem 2rem',
                       fontSize: '0.7rem',
                       fontWeight: 800,
-                      color: 'var(--accent-amber)',
-                      letterSpacing: '1px',
+                      color: 'var(--accent-deep)',
+                      letterSpacing: '0.1em',
                     }}
                   >
                     DATA
@@ -83,8 +98,8 @@ export default async function LearningTable() {
                       padding: '1.25rem 2rem',
                       fontSize: '0.7rem',
                       fontWeight: 800,
-                      color: 'var(--accent-amber)',
-                      letterSpacing: '1px',
+                      color: 'var(--accent-deep)',
+                      letterSpacing: '0.1em',
                     }}
                   >
                     CATEGORIA
@@ -94,8 +109,8 @@ export default async function LearningTable() {
                       padding: '1.25rem 2rem',
                       fontSize: '0.7rem',
                       fontWeight: 800,
-                      color: 'var(--accent-amber)',
-                      letterSpacing: '1px',
+                      color: 'var(--accent-deep)',
+                      letterSpacing: '0.1em',
                     }}
                   >
                     TÍTULO DO LOG
@@ -108,7 +123,7 @@ export default async function LearningTable() {
                     <tr
                       key={event.id}
                       style={{
-                        borderBottom: '1px solid var(--border-subtle)',
+                        borderBottom: '1px solid var(--border-soft)',
                         backgroundColor: 'transparent',
                       }}
                     >
@@ -128,9 +143,7 @@ export default async function LearningTable() {
                           className="badge"
                           style={{
                             fontSize: '0.6rem',
-                            background: 'transparent',
-                            color: 'var(--text-muted)',
-                            borderColor: 'var(--border-subtle)',
+                            color: 'var(--text-secondary)',
                           }}
                         >
                           {(event.technicalCategory ?? 'sem categoria').toUpperCase()}

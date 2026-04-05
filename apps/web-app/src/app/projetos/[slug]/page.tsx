@@ -28,36 +28,30 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
               className="badge"
               style={{
                 fontSize: '0.65rem',
-                letterSpacing: '1px',
+                letterSpacing: '0.08em',
                 textTransform: 'uppercase',
-                background: 'rgba(229, 149, 0, 0.05)',
               }}
             >
               {tag}
             </span>
           ))}
         </div>
+        <p className="eyebrow" style={{ marginBottom: '1rem' }}>
+          Estudo de Caso
+        </p>
         <h1
           style={{
             fontSize: 'clamp(2rem, 6vw, 3.5rem)',
             fontWeight: 800,
             marginBottom: '2rem',
-            letterSpacing: '-1px',
+            letterSpacing: '-0.05em',
             lineHeight: '1.2',
+            color: 'var(--accent-deep)',
           }}
         >
           {project.title}
         </h1>
-        <p
-          className="text-muted"
-          style={{
-            fontSize: '1.3rem',
-            maxWidth: '850px',
-            lineHeight: '1.6',
-            borderLeft: '4px solid var(--accent-bronze)',
-            paddingLeft: '2rem',
-          }}
-        >
+        <p className="lead-bar" style={{ maxWidth: '850px' }}>
           {project.description}
         </p>
       </header>
@@ -80,16 +74,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           borderTop: '1px solid var(--border-subtle)',
         }}
       >
-        <Link
-          href="/projetos"
-          style={{
-            fontWeight: 700,
-            fontSize: '0.85rem',
-            color: 'var(--accent-amber)',
-            letterSpacing: '1px',
-            textTransform: 'uppercase',
-          }}
-        >
+        <Link href="/projetos" className="link-accent">
           ← VOLTAR PARA O PORTFÓLIO
         </Link>
       </div>

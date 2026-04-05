@@ -16,38 +16,22 @@ export default async function ProjectsPage() {
   return (
     <main className="container" style={{ padding: '8rem 0 10rem' }}>
       <header style={{ marginBottom: '5rem', maxWidth: '900px' }}>
-        <p
-          style={{
-            fontSize: '0.8rem',
-            fontWeight: 800,
-            letterSpacing: '1.5px',
-            textTransform: 'uppercase',
-            color: 'var(--accent-amber)',
-            marginBottom: '1.25rem',
-          }}
-        >
+        <p className="eyebrow" style={{ marginBottom: '1.25rem' }}>
           PORTFÓLIO TÉCNICO
         </p>
         <h1
           style={{
             fontSize: 'clamp(2.4rem, 7vw, 4rem)',
             fontWeight: 800,
-            letterSpacing: '-1.5px',
+            letterSpacing: '-0.06em',
             lineHeight: '1.1',
             marginBottom: '1.75rem',
+            color: 'var(--accent-deep)',
           }}
         >
           Projetos que conectam arquitetura, automação e operação.
         </h1>
-        <p
-          className="text-muted"
-          style={{
-            fontSize: '1.2rem',
-            lineHeight: '1.7',
-            borderLeft: '4px solid var(--accent-bronze)',
-            paddingLeft: '2rem',
-          }}
-        >
+        <p className="lead-bar">
           Esses projetos mostram como transformo desafios de arquitetura, automação e operação em
           soluções mais claras, escaláveis e fáceis de evoluir. Sempre com foco no que gera valor
           técnico e funciona bem no dia a dia.
@@ -61,13 +45,14 @@ export default async function ProjectsPage() {
               style={{
                 fontSize: '2rem',
                 fontWeight: 800,
-                letterSpacing: '-0.8px',
+                letterSpacing: '-0.04em',
                 marginBottom: '1rem',
+                color: 'var(--accent-deep)',
               }}
             >
               Casos em Destaque
             </h2>
-            <p className="text-muted" style={{ fontSize: '1.05rem', lineHeight: '1.7' }}>
+            <p className="text-muted" style={{ fontSize: '1.05rem', lineHeight: '1.8' }}>
               Uma seleção de cases que combinam backend, infraestrutura, automação e visão de
               sistema.
             </p>
@@ -100,13 +85,14 @@ export default async function ProjectsPage() {
               style={{
                 fontSize: '2rem',
                 fontWeight: 800,
-                letterSpacing: '-0.8px',
+                letterSpacing: '-0.04em',
                 marginBottom: '1rem',
+                color: 'var(--accent-deep)',
               }}
             >
               Outros Projetos
             </h2>
-            <p className="text-muted" style={{ fontSize: '1.05rem', lineHeight: '1.7' }}>
+            <p className="text-muted" style={{ fontSize: '1.05rem', lineHeight: '1.8' }}>
               Trabalhos complementares que reforçam a evolução técnica do portfólio.
             </p>
           </div>
@@ -136,8 +122,9 @@ export default async function ProjectsPage() {
           className="glass"
           style={{
             padding: '3rem',
-            border: '1px solid var(--border-strong)',
+            border: '1px solid var(--border-soft)',
             color: 'var(--text-muted)',
+            background: 'var(--bg-warm)',
           }}
         >
           Nenhum projeto publicado foi encontrado no conteúdo versionado.
@@ -151,16 +138,7 @@ export default async function ProjectsPage() {
           borderTop: '1px solid var(--border-subtle)',
         }}
       >
-        <Link
-          href="/"
-          style={{
-            fontWeight: 700,
-            fontSize: '0.85rem',
-            color: 'var(--accent-amber)',
-            letterSpacing: '1px',
-            textTransform: 'uppercase',
-          }}
-        >
+        <Link href="/" className="link-accent">
           ← VOLTAR PARA A HOME
         </Link>
       </footer>

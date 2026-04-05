@@ -2,19 +2,7 @@ import Link from 'next/link';
 
 export default function Header() {
   return (
-    <header
-      className="glass"
-      style={{
-        position: 'sticky',
-        top: 0,
-        zIndex: 100,
-        borderTop: 'none',
-        borderLeft: 'none',
-        borderRight: 'none',
-        borderRadius: 0,
-        background: 'rgba(2, 4, 15, 0.8)',
-      }}
-    >
+    <header className="site-header">
       <nav
         className="container flex"
         style={{
@@ -23,34 +11,17 @@ export default function Header() {
           height: '4.5rem',
         }}
       >
-        <Link
-          href="/"
-          style={{
-            fontWeight: 700,
-            letterSpacing: '1px',
-            fontSize: '1.1rem',
-            color: 'var(--text-primary)',
-          }}
-        >
+        <Link href="/" className="site-brand">
           DIEGO SANTOS
         </Link>
-        <div className="flex" style={{ gap: '2.5rem' }}>
-          <Link
-            href="/projetos"
-            style={{ fontSize: '0.8rem', fontWeight: 600, letterSpacing: '0.5px' }}
-          >
+        <div className="flex" style={{ gap: '2rem' }}>
+          <Link href="/projetos" className="site-nav-link">
             PROJETOS
           </Link>
-          <Link
-            href="/sobre"
-            style={{ fontSize: '0.8rem', fontWeight: 600, letterSpacing: '0.5px' }}
-          >
+          <Link href="/sobre" className="site-nav-link">
             SOBRE
           </Link>
-          <Link
-            href="/contato"
-            style={{ fontSize: '0.8rem', fontWeight: 600, letterSpacing: '0.5px' }}
-          >
+          <Link href="/contato" className="site-nav-link">
             CONTATO
           </Link>
         </div>

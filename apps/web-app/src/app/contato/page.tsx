@@ -2,24 +2,24 @@ export default function ContatoPage() {
   return (
     <main className="container" style={{ padding: '8rem 0 10rem' }}>
       <header style={{ marginBottom: '6rem', maxWidth: '850px' }}>
+        <p className="eyebrow" style={{ marginBottom: '1rem' }}>
+          Contato
+        </p>
         <h1
           style={{
             fontSize: 'clamp(2.5rem, 8vw, 3.5rem)',
             fontWeight: 800,
             marginBottom: '2rem',
-            letterSpacing: '-1.5px',
-            color: 'var(--text-primary)',
+            letterSpacing: '-0.06em',
+            color: 'var(--accent-deep)',
           }}
         >
           Vamos conversar?
         </h1>
         <p
-          className="text-muted"
+          className="lead-bar"
           style={{
-            fontSize: '1.25rem',
-            lineHeight: '1.7',
-            borderLeft: '4px solid var(--accent-bronze)',
-            paddingLeft: '2rem',
+            maxWidth: '820px',
           }}
         >
           Estou construindo projetos que misturam backend, automação, dados e IA aplicada. Se quiser
@@ -32,18 +32,21 @@ export default function ContatoPage() {
         className="grid"
         style={{
           gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-          gap: '2.5rem',
+          gap: '1.5rem',
           maxWidth: '1000px',
         }}
       >
-        <div className="glass" style={{ padding: '2.5rem' }}>
+        <div
+          className="glass interactive-card"
+          style={{ padding: '2.2rem', background: 'var(--bg-warm)' }}
+        >
           <h2
             style={{
               fontSize: '1rem',
               marginBottom: '1.25rem',
-              color: 'var(--accent-amber)',
+              color: 'var(--accent-deep)',
               textTransform: 'uppercase',
-              letterSpacing: '1.5px',
+              letterSpacing: '0.12em',
               fontWeight: 700,
             }}
           >
@@ -56,28 +59,28 @@ export default function ContatoPage() {
             Projetos, aprendizados e atualizações da minha trajetória em tecnologia.
           </p>
           <a
-            href="https://linkedin.com/in/diego-santos"
+            href="https://linkedin.com/in/diego-santos-ia"
             target="_blank"
             rel="noopener"
             style={{
               fontWeight: 700,
               fontSize: '0.85rem',
-              color: 'var(--accent-amber)',
-              letterSpacing: '1px',
+              color: 'var(--accent-deep)',
+              letterSpacing: '0.08em',
             }}
           >
             linkedin.com/in/diego-santos-ia →
           </a>
         </div>
 
-        <div className="glass" style={{ padding: '2.5rem' }}>
+        <div className="glass interactive-card" style={{ padding: '2.2rem' }}>
           <h2
             style={{
               fontSize: '1rem',
               marginBottom: '1.25rem',
-              color: 'var(--accent-amber)',
+              color: 'var(--accent-deep)',
               textTransform: 'uppercase',
-              letterSpacing: '1.5px',
+              letterSpacing: '0.12em',
               fontWeight: 700,
             }}
           >
@@ -96,22 +99,25 @@ export default function ContatoPage() {
             style={{
               fontWeight: 700,
               fontSize: '0.85rem',
-              color: 'var(--accent-amber)',
-              letterSpacing: '1px',
+              color: 'var(--accent-deep)',
+              letterSpacing: '0.08em',
             }}
           >
             github.com/diegosantos-ai →
           </a>
         </div>
 
-        <div className="glass" style={{ padding: '2.5rem' }}>
+        <div
+          className="glass interactive-card"
+          style={{ padding: '2.2rem', background: 'var(--bg-surface-alt)' }}
+        >
           <h2
             style={{
               fontSize: '1rem',
               marginBottom: '1.25rem',
-              color: 'var(--accent-amber)',
+              color: 'var(--accent-deep)',
               textTransform: 'uppercase',
-              letterSpacing: '1.5px',
+              letterSpacing: '0.12em',
               fontWeight: 700,
             }}
           >
@@ -128,8 +134,8 @@ export default function ContatoPage() {
             style={{
               fontWeight: 700,
               fontSize: '0.85rem',
-              color: 'var(--accent-amber)',
-              letterSpacing: '1px',
+              color: 'var(--accent-deep)',
+              letterSpacing: '0.08em',
             }}
           >
             santos.diegoj86@gmail.com →
