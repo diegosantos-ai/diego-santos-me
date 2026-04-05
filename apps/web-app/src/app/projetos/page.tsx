@@ -26,7 +26,7 @@ export default async function ProjectsPage() {
             marginBottom: '1.25rem',
           }}
         >
-          Portfólio Técnico
+          PORTFÓLIO TÉCNICO
         </p>
         <h1
           style={{
@@ -37,7 +37,7 @@ export default async function ProjectsPage() {
             marginBottom: '1.75rem',
           }}
         >
-          Projetos que conectam arquitetura, automação e operação real.
+          Projetos que conectam arquitetura, automação e operação.
         </h1>
         <p
           className="text-muted"
@@ -48,9 +48,9 @@ export default async function ProjectsPage() {
             paddingLeft: '2rem',
           }}
         >
-          Esta página reúne os estudos de caso do portfólio. Cada projeto foi selecionado para
-          mostrar decisões de engenharia, clareza de implementação e capacidade de operar sistemas
-          com previsibilidade.
+          Esses projetos mostram como transformo desafios de arquitetura, automação e operação em
+          soluções mais claras, escaláveis e fáceis de evoluir. Sempre com foco no que gera valor
+          técnico e funciona bem no dia a dia.
         </p>
       </header>
 
@@ -68,7 +68,8 @@ export default async function ProjectsPage() {
               Casos em Destaque
             </h2>
             <p className="text-muted" style={{ fontSize: '1.05rem', lineHeight: '1.7' }}>
-              Uma seleção dos projetos mais representativos da stack atual.
+              Uma seleção de cases que combinam backend, infraestrutura, automação e visão de
+              sistema.
             </p>
           </div>
 

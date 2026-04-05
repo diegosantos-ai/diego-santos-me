@@ -1,304 +1,100 @@
 ---
 title: "Portfólio Profissional"
-description: "Plataforma de portfólio DevOps com CI/CD, Observabilidade e Backend Java."
+description: "Portfólio construído como produto real, com CI/CD, observabilidade e backend Java para reforçar engenharia, não só apresentação."
 slug: "portifolio"
 featured: true
 order: 6
 tags: ["Next.js", "Java", "Spring Boot", "Docker"]
 ---
 
-# Portfólio Profissional — Diego Santos
+Perfeito. Então esse case não deve ser tratado como “um site pessoal simples”, e sim como **um produto real que cumpre dois papéis ao mesmo tempo**:
 
-![Next.js](https://img.shields.io/badge/Next.js-app-000000?logo=next.js)
-![TypeScript](https://img.shields.io/badge/TypeScript-typed-3178C6?logo=typescript\&logoColor=white)
-![Java](https://img.shields.io/badge/Java_21-backend-007396?logo=java\&logoColor=white)
-![Spring Boot](https://img.shields.io/badge/Spring_Boot-framework-6DB33F?logo=spring-boot\&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-data-4169E1?logo=postgresql\&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-compose-2496ED?logo=docker\&logoColor=white)
-![Nginx](https://img.shields.io/badge/Nginx-reverse--proxy-009639?logo=nginx\&logoColor=white)
-![Prometheus](https://img.shields.io/badge/Prometheus-metrics-E6522C?logo=prometheus\&logoColor=white)
-![Grafana](https://img.shields.io/badge/Grafana-dashboards-F46800?logo=grafana\&logoColor=white)
-![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-CI%2FCD-2088FF?logo=github-actions\&logoColor=white)
+1. é a sua **página pública de posicionamento profissional**;
+2. é também um **projeto de engenharia completo**, usado como evidência prática de arquitetura, backend, automação, CI/CD, observabilidade, operação e evolução para stack corporativa.
 
-## Visão Geral
+Esse enquadramento muda bastante a narrativa. O valor do projeto não está só no visual do portfólio, mas no fato de que o próprio portfólio é um sistema desenhado, operado e publicado com critérios de engenharia.
 
-Este repositório concentra a reconstrução do portfólio profissional de Diego Santos.
+Abaixo está a versão revisada do case nesse posicionamento.
 
-O objetivo do projeto é apresentar, de forma clara e verificável, uma proposta profissional centrada em:
+# Portfólio Profissional
 
-* backend;
-* automação;
-* integração;
-* observabilidade;
-* arquitetura aplicada;
-* operação de sistemas.
+## Aplicação web pública que funciona ao mesmo tempo como página de posicionamento profissional e como projeto real de engenharia, operação e arquitetura
 
-O projeto não é tratado como site estático isolado. A v1 foi desenhada como uma aplicação pequena, mas operável, com deploy automatizado, persistência, observabilidade básica e separação entre conteúdo editorial e processamento assíncrono.
+## Introdução
 
-## Objetivo do Projeto
+Portfólios técnicos costumam falhar por um motivo simples: mostram tecnologia, mas não comunicam proposta de valor. Em muitos casos, viram uma vitrine genérica de ferramentas, projetos desconectados e textos que não deixam claro o que a pessoa realmente constrói, quais problemas resolve e qual nível de maturidade já demonstrou na prática.
 
-O problema central deste projeto é de comunicação profissional.
+Este projeto foi concebido para resolver exatamente esse problema. A proposta não era criar apenas uma página web bonita, mas reconstruir o portfólio como um sistema real, capaz de comunicar posicionamento profissional com clareza e, ao mesmo tempo, servir como prova concreta de engenharia aplicada. Ou seja: o portfólio é tanto a interface pública da marca profissional quanto um projeto técnico completo, com frontend, backend, banco, CI/CD, observabilidade, deploy, rotinas operacionais e arquitetura evolutiva.
 
-A versão anterior do portfólio não refletia com precisão a evolução do perfil técnico, nem destacava com clareza:
+## Problema de negócio
 
-* os tipos de problema resolvidos;
-* os projetos que melhor demonstram maturidade técnica;
-* a combinação entre engenharia, automação e operação;
-* a direção de evolução para contexto corporativo.
+O problema central era de comunicação e credibilidade técnica. A versão anterior do portfólio não traduzia com precisão a evolução profissional, nem deixava evidente, em poucos segundos, quais competências já estavam provadas, qual projeto melhor representava maturidade técnica e como estudo, execução e entrega pública se conectavam. Isso enfraquecia o posicionamento diante de recrutadores, líderes técnicos e gestores de engenharia.
 
-A v1 deste repositório reorganiza essa narrativa em cinco áreas principais:
+Ao mesmo tempo, havia uma oportunidade maior: transformar o próprio portfólio em um case de engenharia. Em vez de depender de uma página estática sem profundidade operacional, o projeto poderia incorporar banco, backend, sincronização editorial, ingestão de eventos técnicos reais, deploy automatizado, logs estruturados, métricas e runbooks. Com isso, o portfólio deixaria de ser apenas vitrine e passaria a funcionar como evidência pública da forma de pensar e construir sistemas.
 
-* Home
-* Projetos
-* Sobre
-* Conteúdos
-* Contato
+## Solução que entrega
 
-Além disso, introduz o bloco **Learning in Public**, que transforma pull requests merged em registros curtos de aprendizado técnico com exibição pública controlada.
+A solução foi desenhada como uma aplicação web pública com arquitetura separada por responsabilidades. O frontend em Next.js entrega a experiência pública do site, organizada em cinco áreas principais — Home, Projetos, Sobre, Conteúdos e Contato — enquanto um backend real em Java 21 com Spring Boot processa a parte dinâmica do sistema, especialmente o bloco **Learning in Public**, que transforma pull requests merged em evidências públicas curtas de evolução técnica.
 
-## Escopo da v1
+O projeto usa PostgreSQL desde a v1 como base operacional de leitura, persistindo projetos, conteúdos, links, eventos do Learning in Public e rastreamento das sincronizações. O conteúdo editorial continua sendo escrito em Markdown versionado no repositório, mas é sincronizado para o banco para leitura operacional pela aplicação. Isso separa claramente a fonte de edição humana da fonte de leitura pública e indexação.
 
-A primeira versão contempla:
+Na prática, a solução entrega:
 
-* navegação principal completa;
-* Home com hero, stack principal, Learning in Public e indicadores estáticos;
-* Nexo 360 como projeto-âncora;
-* projetos em destaque;
-* seção Sobre;
-* seção Conteúdos;
-* seção Contato;
-* banco operacional em PostgreSQL;
-* sincronização de conteúdo versionado em Markdown;
-* backend Java (`portfolio-api-java`) rodando Spring Boot para orquestrar o Learning in Public e rotinas de leitura;
+* uma aplicação pública que comunica posicionamento profissional com clareza;
+* uma seção de projetos com Nexo 360 como projeto-âncora;
+* uma área de conteúdos editoriais sincronizados do repositório;
+* um bloco dinâmico de Learning in Public baseado em PRs merged;
+* deploy automatizado;
 * observabilidade mínima viável;
-* deploy automatizado.
+* operação documentada com runbooks, checklist de produção e estratégia de backup/restore.
 
-Ficam fora da v1:
+## Como o projeto melhora a vida da empresa
 
-* CMS completo;
-* painel administrativo completo;
-* workflow editorial complexo;
-* analytics avançado;
-* internacionalização;
-* múltiplas fontes dinâmicas além do escopo definido para o Learning in Public.
+O primeiro ganho está em **clareza de posicionamento**. O site passa a comunicar rapidamente quem é Diego profissionalmente, o que ele constrói, quais competências já estão demonstradas e como entrar em contato. Isso reduz ruído na avaliação inicial e melhora a qualidade da leitura por recrutadores e lideranças técnicas.
 
-## Arquitetura
+O segundo ganho está em **prova técnica pública**. Diferente de um portfólio estático, este projeto demonstra na prática backend real, modelagem de dados, separação entre serviços, CI/CD, banco, sincronização de conteúdo, observabilidade, segurança mínima e rotinas operacionais. O visitante não vê apenas “texto sobre engenharia”; ele vê um sistema construído com decisões coerentes de arquitetura e operação.
 
-A arquitetura da v1 foi definida para privilegiar:
+O terceiro ganho está em **evolução incremental sem reescrita total**. Como a aplicação foi desenhada com separação clara entre web-app, backend Java, banco, proxy e stack de observabilidade, ela pode crescer com previsibilidade. Isso permite ampliar conteúdo, sofisticar o Learning in Public, reforçar métricas e evoluir o modelo editorial sem comprometer a base do sistema.
 
-* separação de responsabilidades;
-* reprodutibilidade;
-* deploy controlado;
-* persistência explícita;
-* observabilidade;
-* evolução incremental.
+Há ainda um ganho importante de **coerência entre discurso e execução**. O projeto sustenta a narrativa de engenharia aplicada porque ele próprio incorpora preocupações com deploy automatizado, logs estruturados, healthchecks, backup, restore, segurança de segredos, persistência e troubleshooting. Em outras palavras, o portfólio não apenas fala sobre maturidade técnica; ele a encena operacionalmente.
 
-### Componentes principais
+## Fluxo da solução
 
-* `nginx`: entrada pública, TLS, redirecionamentos e reverse proxy;
-* `web-app`: aplicação web pública (Next.js);
-* `portfolio-api-java`: serviço backend real (Java 21 + Spring Boot), responsável pelo núcleo dinâmico do Learning in Public e endpoints internos;
-* `postgres`: persistência operacional;
-* `promtail`, `loki`, `prometheus`, `grafana`: stack de observabilidade.
+![Fluxo operacional do Stack de Observabilidade](/images/projects/portfolio-flow-v1.png)
 
-### Diretrizes principais
+O fluxo editorial e operacional do projeto foi desenhado em duas trilhas principais.
 
-* conteúdo editorial é editado em Markdown e sincronizado para o banco;
-* o banco é a fonte operacional de leitura da aplicação;
-* o Learning in Public não depende de chamadas em tempo real ao GitHub durante renderização da Home;
-* o deploy é automatizado a partir de merge na `main`.
+## Decisões de arquitetura
 
-## Stack
+Uma decisão central foi hospedar a v1 em **VPS própria da OVH**, com **Docker Compose** e **Nginx** como reverse proxy. Isso aumenta o controle operacional sobre deploy, logs, proxy, TLS, observabilidade e persistência, além de reforçar o valor do projeto como evidência de engenharia real, e não apenas de construção visual.
 
-### Aplicação Front/Web
+Outra decisão importante foi separar a aplicação em blocos explícitos: `web-app` em Next.js para a interface pública, `portfolio-api-java` para o backend dinâmico, PostgreSQL para persistência operacional, Nginx para entrada pública e uma stack de observabilidade com Promtail, Loki, Prometheus e Grafana. Essa separação reduz acoplamento, melhora troubleshooting e permite que falhas no processamento do Learning in Public não derrubem o site principal.
 
-* Next.js
-* React
-* TypeScript
+Também foi relevante adotar **PostgreSQL desde a v1**, em vez de depender apenas de arquivos estáticos. Isso sustenta controle de status, ordenação, publicação, sincronização editorial e rastreabilidade dos eventos dinâmicos. Ao mesmo tempo, o conteúdo continua versionado em Markdown, preservando revisão por Git e edição simples. Essa combinação equilibra flexibilidade editorial com disciplina operacional.
 
-### Serviço Backend
+Por fim, a funcionalidade **Learning in Public** foi desenhada com baixo acoplamento e escopo controlado: apenas PRs merged, poucos repositórios no início, persistência local, prevenção de duplicidade, revisão manual opcional e backend Java separado do app público. Isso evita transformar a Home em um feed social frágil e mantém a funcionalidade alinhada à ideia de evidência técnica séria.
 
-* Java 21
-* Spring Boot
-* Gradle
+## Indicadores que fazem sentido acompanhar
 
-### Persistência
+Os indicadores mais coerentes para acompanhar o sucesso desse projeto são:
 
-* PostgreSQL
+* tempo de leitura necessário para entender a proposta principal na Home;
+* taxa de navegação entre Home, Projetos e Contato;
+* quantidade de projetos e conteúdos publicados com status consistente;
+* volume de eventos do Learning in Public processados sem duplicidade;
+* taxa de sucesso das sincronizações editoriais;
+* taxa de sucesso das execuções do worker Java;
+* disponibilidade da aplicação pública;
+* taxa de erro e latência por rota;
+* falhas de deploy e tempo de recuperação;
+* consistência entre conteúdo versionado no repositório e conteúdo operacional no banco.
 
-### Runtime e entrega
+Esses indicadores fazem sentido porque medem tanto o objetivo editorial do portfólio quanto sua maturidade como sistema em produção.
 
-* Docker
-* Docker Compose
-* Nginx
-* GitHub Actions
+## Resultado do case
 
-### Observabilidade
+O principal resultado deste case é transformar o portfólio em um ativo duplo: **canal público de posicionamento profissional** e **projeto real de engenharia**. Isso muda completamente o valor percebido da aplicação. Ela deixa de ser apenas uma página para apresentar projetos e passa a ser, ela mesma, uma demonstração prática de arquitetura, backend, banco, automação, CI/CD, observabilidade e operação.
 
-* Promtail
-* Loki
-* Prometheus
-* Grafana
+Em termos de **produto**, o projeto cria uma experiência pública mais clara, editorialmente organizada e alinhada ao posicionamento profissional atual. Em termos de **engenharia**, demonstra separação de serviços, backend Java real, sincronização Markdown → banco, modelagem de dados, ingestão assíncrona, deploy automatizado e runbooks operacionais. Em termos de **portfólio**, cria coerência entre discurso e execução: o próprio site prova aquilo que ele comunica.
 
-### Integrações
-
-* GitHub API
-* provedor LLM para enriquecimento controlado do Learning in Public
-
-## Estrutura Conceitual
-
-A organização lógica da aplicação é composta por três núcleos:
-
-### 1. Núcleo editorial
-
-Responsável por projetos, conteúdos, links e metadados publicados.
-
-### 2. Núcleo dinâmico
-
-Responsável pelo Learning in Public a partir de PRs merged.
-
-### 3. Núcleo operacional
-
-Responsável por deploy, sincronização, observabilidade, backup e rastreabilidade mínima.
-
-## Learning in Public
-
-O bloco Learning in Public é uma funcionalidade editorial e operacional da v1.
-
-Ele segue as seguintes regras:
-
-* lê apenas pull requests merged;
-* começa com um ou poucos repositórios;
-* é executado por rotina agendada;
-* gera resumo curto, categoria técnica e link;
-* persiste os eventos processados no banco;
-* suporta publicação automática ou revisão manual por configuração.
-
-A Home exibe apenas itens publicados.
-
-O objetivo desse bloco é transformar atividade técnica real em evidência pública de execução, sem depender de linguagem promocional ou feed social.
-
-## Modelo de Dados
-
-O schema inicial da v1 cobre as seguintes entidades:
-
-* `projects`
-* `project_links`
-* `contents`
-* `content_links`
-* `learning_events`
-* `content_sync_runs`
-* `learning_sync_runs`
-
-Esse modelo sustenta:
-
-* publicação de projetos e conteúdos;
-* persistência do Learning in Public;
-* rastreamento de sincronização;
-* controle de status e visibilidade.
-
-## Deploy
-
-A estratégia de deploy da v1 segue o fluxo:
-
-1. alteração aprovada entra em `main`;
-2. GitHub Actions executa lint, testes, build e validações básicas de segurança;
-3. a imagem da aplicação é publicada em registry;
-4. a VPS atualiza os containers via Docker Compose;
-5. o ambiente é validado por healthchecks e checagem operacional mínima.
-
-### Regras operacionais
-
-* o servidor não é tratado como ambiente principal de build manual;
-* PostgreSQL não é exposto publicamente;
-* apenas o reverse proxy recebe tráfego externo;
-* observabilidade e backup fazem parte do desenho da v1.
-
-## Observabilidade
-
-A v1 inclui observabilidade mínima viável com:
-
-* logs estruturados;
-* coleta por Promtail;
-* consulta via Loki;
-* métricas via Prometheus;
-* dashboards via Grafana.
-
-Os sinais mínimos esperados incluem:
-
-* disponibilidade da aplicação (`web-app`);
-* taxa de erro;
-* latência;
-* execução e estabilidade do `portfolio-api-java`;
-* falhas de sincronização;
-* saúde dos serviços principais.
-
-## Segurança
-
-As regras mínimas do projeto são:
-
-* nenhum secret versionado no repositório;
-* configuração por variáveis de ambiente;
-* segredos reais apenas em ambiente seguro;
-* TLS obrigatório;
-* PostgreSQL sem exposição pública;
-* Grafana protegido;
-* deploy via SSH por chave;
-* validações de segurança básicas no pipeline.
-
-## Conteúdo e Edição
-
-A edição do conteúdo da v1 é feita em arquivos Markdown versionados no repositório.
-
-A aplicação não depende diretamente desses arquivos em runtime. O conteúdo é sincronizado para o PostgreSQL, que passa a ser a base operacional de leitura do front.
-
-Essa decisão foi adotada para manter:
-
-* edição simples;
-* versionamento por Git;
-* rastreabilidade;
-* controle editorial;
-* flexibilidade de renderização.
-
-## Documentação do Projeto
-
-A base documental da v1 está organizada nos seguintes artefatos:
-
-* `contexto.md`
-* `arquitetura.md`
-* `decisoes-arquiteturais.md`
-* `requisitos-funcionais.md`
-* `modelo-de-dados.md`
-* `topologia-deploy.md`
-* `runbook-deploy.md`
-* `runbook-backup-restore.md`
-* `adr-learning-in-public.md`
-* `checklist-producao-v1.md`
-* `migrations-iniciais.md`
-* `matriz-de-variaveis-de-ambiente.md`
-
-Esses documentos formam a referência técnica da v1.
-
-## Estado Atual
-
-Neste estágio, o repositório está organizado para:
-
-* consolidar a arquitetura da v1;
-* transformar documentação em artefatos executáveis;
-* preparar ambiente, schema, runtime e pipeline;
-* sustentar implementação incremental sem reescrita total.
-
-## Próximos Passos
-
-Os próximos passos naturais do projeto são:
-
-* definir `.env.example`;
-* montar o `docker-compose.yml` real da v1;
-* implementar schema e migrations reais;
-* estruturar o `web-app` (Next.js) e o `portfolio-api-java` (Spring Boot);
-* configurar pipeline de CI/CD para compilar ambas as stacks em containers;
-* validar deploy ponta a ponta na VPS.
-
-## Licença e Uso
-
-Este repositório é parte do portfólio profissional de Diego Santos e serve como ativo técnico público para demonstrar arquitetura, automação, operação e evolução de projeto.
+O case sustenta com honestidade benefícios claros: melhora da clareza de posicionamento, fortalecimento da prova técnica pública, criação de base arquitetural preparada para evolução incremental e aumento da aderência do portfólio ao tipo de maturidade valorizada em contextos corporativos.

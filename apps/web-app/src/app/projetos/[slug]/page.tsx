@@ -1,6 +1,7 @@
 import { getProjectData, getSortedProjectsMetadata } from '../../../lib/markdown';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import MarkdownContent from '../../../components/MarkdownContent';
 
 export async function generateStaticParams() {
   const projects = await getSortedProjectsMetadata();
@@ -61,7 +62,8 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         </p>
       </header>
 
-      <div
+      <MarkdownContent
+        html={project.contentHtml}
         className="markdown-content"
         style={{
           maxWidth: '850px',
@@ -69,7 +71,6 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           lineHeight: '1.8',
           color: 'var(--text-primary)',
         }}
-        dangerouslySetInnerHTML={{ __html: project.contentHtml }}
       />
 
       <div

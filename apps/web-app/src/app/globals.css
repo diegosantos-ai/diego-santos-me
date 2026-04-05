@@ -206,11 +206,58 @@ h6 {
   color: inherit;
 }
 
+.markdown-content pre:has(code.language-mermaid) {
+  display: none;
+}
+
+.markdown-content .mermaid-diagram {
+  margin: 3.5rem 0;
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-strong);
+  background:
+    radial-gradient(circle at top, rgba(229, 149, 0, 0.12), transparent 55%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(0, 0, 0, 0.08)), var(--bg-elevated);
+  box-shadow: var(--shadow-soft), var(--shadow-glow);
+  overflow-x: auto;
+}
+
+.markdown-content .mermaid-diagram svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-width: 680px;
+}
+
+.markdown-content .mermaid-diagram--error {
+  color: var(--text-muted);
+}
+
+.markdown-content .mermaid-diagram__message {
+  margin-bottom: 1rem;
+  color: var(--accent-amber);
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
 .markdown-content img {
   max-width: 100%;
   border-radius: var(--radius-md);
   margin: 4.5rem 0;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.markdown-content img[title='case-visual-wide'] {
+  width: min(1120px, calc(100vw - 2.5rem));
+  max-width: none;
+  margin-left: 50%;
+  transform: translateX(-50%);
+  border: 1px solid var(--border-strong);
+  background:
+    radial-gradient(circle at top, rgba(229, 149, 0, 0.08), transparent 55%), var(--bg-elevated);
+  box-shadow: var(--shadow-soft), var(--shadow-glow);
 }
 
 .markdown-content hr {

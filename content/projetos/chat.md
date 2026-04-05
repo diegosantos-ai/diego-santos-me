@@ -1,118 +1,76 @@
 ---
-title: "Chat Pref"
-description: "Plataforma de IA com RAG e auditoria para contextos institucionais."
+title: "Munio - IA Institucional para Atendimento Público"
+description: "Plataforma de atendimento com IA, RAG e auditoria para órgãos públicos que precisam responder com contexto, rastreabilidade e governança."
 slug: "chat"
 featured: true
 order: 4
 tags: ["Python", "FastAPI", "RAG", "LLM"]
 ---
 
-# Chat Pref
+# Munio
 
-### Plataforma de Atendimento Institucional: IA, RAG e Arquitetura Tenant-Aware
+### IA institucional com RAG, governança e controle de contexto para operações sensíveis
 
-![Python](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)
-![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688?logo=fastapi&logoColor=white)
-![ChromaDB](https://img.shields.io/badge/ChromaDB-RAG-7B61FF)
-![Docker](https://img.shields.io/badge/Docker-Execu%C3%A7%C3%A3o%20Local-2496ED?logo=docker&logoColor=white)
-![Telegram](https://img.shields.io/badge/Telegram-Canal%20de%20Demo-26A5E4?logo=telegram&logoColor=white)
-![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-CI%2FCD-2088FF?logo=githubactions&logoColor=white)
-![Terraform](https://img.shields.io/badge/Terraform-Infra%20as%20Code-844FBA?logo=terraform&logoColor=white)
-![AWS](https://img.shields.io/badge/AWS-Deploy%20Target-FF9900?logo=amazonaws&logoColor=white)
-![MLflow](https://img.shields.io/badge/MLflow-Experiment%20Tracking-0194E2)
-![OpenTelemetry](https://img.shields.io/badge/OpenTelemetry-Tracing%20%26%20Observability-6E43FF)
+O Munio nasceu de uma pergunta prática: como usar IA no atendimento público sem transformar velocidade em risco operacional? Em contextos como prefeituras, secretarias e centrais institucionais, uma resposta errada não gera apenas uma experiência ruim. Ela pode gerar retrabalho, dúvida para o cidadão, desgaste interno e perda de confiança no canal.
 
-O **Chat Pref** é uma base de engenharia projetada para demonstrar, de forma rastreável e auditável, como implantar fluxos de LLM aplicados (GenAI) em ambientes governamentais e institucionais, nos quais **latência**, **isolamento de dados** e **segurança de marca** não são opcionais.
+Por isso, a proposta do projeto não foi criar apenas um chatbot com LLM. O foco foi estruturar uma base de atendimento institucional capaz de operar com mais previsibilidade: cada requisição com contexto explícito, recuperação de informação via RAG, regras de validação antes e depois da geração e trilha de auditoria para diagnóstico e governança.
 
-⚠️ **Para fins de avaliação de arquitetura ou bancas técnicas, visite a home de Portfólio:**
-👉 [Acessar Estudo de Caso Principal](docs-fundacao-operacional/estudo_de_caso.md)
+Na prática, o Munio foi pensado para falar com dois públicos ao mesmo tempo. Para a operação, ele reduz ambiguidade e ajuda a responder com mais consistência. Para a gestão, ele cria uma base mais rastreável para adotar IA sem perder controle, visibilidade e capacidade de evolução.
 
----
+## O problema de negócio
 
-## 🏛 Principais Capacidades da Arquitetura
+- Levar IA para atendimento institucional sem abrir mão de governança
+- Evitar mistura de contexto entre áreas, órgãos ou fluxos distintos
+- Reduzir o risco de respostas sem base documental adequada
+- Criar uma operação auditável, observável e preparada para evoluir com segurança
 
-O foco deste repositório não é um front-end comercial, mas a solidez do **Backend GenAI** e sua **Fundação Operacional**:
+## O que a solução entrega
 
-- **Isolamento Tenant-Aware por Design:** O `tenant_id` é o guardrail absoluto. Nenhum documento se mistura na Collection Vetorial (ChromaDB) e nenhuma requisição segue no pipe sem seu contexto explícito.
-- **RAG Limpo e Boilerplate-Free:** Em vez de frameworks mágicos (`Langchain`/`LlamaIndex`), as injeções de embeddings são escritas proceduralmente em roteadores assíncronos do FastAPI, garantindo extrema baixa latência e observabilidade contínua.
-- **Políticas Restritivas (Guardrails):** Fluxos de validação de query (`policy_pre`) e resposta (`policy_post`) que abortam a emissão e disparam *fallbacks* determinísticos antes mesmo de onerar provedores comerciais.
-- **Observabilidade Estrutural:** Telemetria centralizada em `X-Request-ID`. Métricas via OpenTelemetry integradas em logs JSONL auditáveis.
-- **Dual Pipeline (Síncrono vs Experimentos):**
-  - **Fluxo Síncrono:** Focado em tempo de resposta da API na AWS (Terraform/EC2/Docker).
-  - **Fluxo Offline (LLMOps):** Focado em testes semânticos, drift e benchmark com MLflow executando pipelines separados.
+- Isolamento de contexto por tenant, para reduzir risco de vazamento ou mistura de informação
+- Recuperação de conhecimento via RAG, para responder com base documental em vez de improviso
+- Políticas de validação antes e depois da geração, para aumentar controle sobre a saída
+- Trilha de auditoria e observabilidade, para facilitar diagnóstico, revisão e melhoria contínua
 
-> *Para uma leitura executiva aprofundada dos limites deste sistema, consulte nossa documentação de [Decisões e Trade-Offs](docs-fundacao-operacional/tradeoffs_decisoes.md) e [Matrizes de Capacidade](docs-fundacao-operacional/matriz_capacidades.md).*
+## Como esse projeto melhora a vida da empresa
 
----
-## Fluxo end-to-end
+Em vez de posicionar IA como vitrine, o Munio trata IA como componente operacional. Isso muda a conversa dentro da organização:
 
-```mermaid
-flowchart LR
-    A[Canal] --> B[API]
-    B --> C[Tenant]
-    C --> D[Policy]
-    D --> E[Retrieval]
-    E --> F[(ChromaDB)]
-    E --> G[LLM]
-    G --> H[Response]
-    H --> I[Audit Evidence]
-    I --> J[(Auditoria)]
+- Para o time operacional: menos respostas soltas, mais consistência no atendimento e mais clareza sobre o que aconteceu em cada fluxo
+- Para lideranças e gestão: mais segurança para expandir o uso de IA, com evidências, controles e capacidade de auditoria
+- Para o cidadão ou usuário final: atendimento mais claro, com menor chance de receber informação fora de contexto
 
-    B -. traces .-> K[OpenTelemetry]
-    I -. decisão .-> K
-    E -. benchmark .-> L[Offline Eval]
-    G -. runs .-> M[MLflow]
-    M -. gate .-> N[CI]
-```
+## Fluxo da solução
 
-O fluxo principal começa no canal de entrada e segue pela API, que resolve o tenant, aplica as políticas de segurança, recupera contexto no RAG e aciona o adaptador LLM para compor a resposta. A saída é devolvida com trilha de auditoria e evidência operacional da decisão. Em paralelo, benchmark offline, tracking experimental em MLflow, observabilidade e CI permanecem separados do runtime transacional para preservar governança, reprodutibilidade e clareza arquitetural.
+![Fluxo operacional do Munio](/images/projects/munio-flow-v1.png "case-visual-wide")
 
----
+*Visão executiva do fluxo operacional do Munio, do canal de entrada à resposta com auditoria e observabilidade.*
 
-## 🔍 Onde Estão as Evidências do Projeto
 
-As evidências deste repositório não ficam condensadas num arquivo único, elas estão segmentadas por blocos funcionais para atestar cada face do ciclo de engenharia:
+## Decisões de arquitetura que sustentam o caso
 
-1. **[Evidência Operacional e de Runtime](app/audit/)**: Comprova que o fluxo transacional funciona. Inclui [auditoria por tenant](app/storage/audit_repository.py), `request_id`, *reason_codes*, e [traces/métricas OpenTelemetry](app/observability/). Mostra se a requisição sofreu fallback, bloqueio ou concluiu normalmente.
-2. **[Avaliação Offline e Tracking (LLMOps)](docs-LLMOps/)**: Comprova que a IA é validada com base metodológica. Inclui [datasets controlados de baseline](benchmark_datasets/), script de [avaliação formal Ragas](scripts/run_phase4_rag_evaluation.py) e tracking estruturado de parâmetros no MLflow.
-3. **[Documentação Técnica Consolidada](docs-fundacao-operacional/)**: Mostra que a base é clara e defensável. Abrange a [Arquitetura Ativa](docs-fundacao-operacional/arquitetura.md), o registro aberto de [Trade-offs](docs-fundacao-operacional/tradeoffs_decisoes.md), o [Estudo de Caso Principal](docs-fundacao-operacional/estudo_de_caso.md) e o [Roteiro de Demonstração (Walkthrough)](docs-fundacao-operacional/roteiro_demonstracao.md).
-4. **[CI e Validadores de Automação](.github/workflows/)**: Comprova repetibilidade de governança. Possui [pipelines de regressão GenAI](scripts/evaluate_genai_ci_gate.py) agindo como *hard-fails* do repositório, dry-runs e automação de qualidade de código.
-5. **[Este README](README.md)**: Opera como sua "Bússola de Navegação" global, servindo de ponto de salto para todo este corpo de trabalho, não substituindo as evidências, apenas indexando-as.
+Um ponto importante foi separar o que é runtime transacional do que é avaliação e evolução do sistema. Enquanto o fluxo principal prioriza resposta, controle e observabilidade, a trilha offline permite avaliar comportamento, comparar respostas e evoluir a solução sem comprometer a estabilidade da operação.
 
----
+Esse desenho foi escolhido para antecipar problemas antes que virem crise:
 
-## 💻 Como Explorar (Execução Local / Lab)
+- Se o contexto estiver errado, a resposta perde valor e o risco aumenta
+- Se não houver trilha de auditoria, fica difícil investigar incidente ou corrigir comportamento
+- Se avaliação e produção estiverem misturadas, a operação perde previsibilidade
+- Se a IA depender apenas do modelo, sem base documental e validação, a confiança do canal cai rápido
 
-O projeto requer um ambiente simples embasado em Docker para simular seu ambiente completo na sua máquina.
+## Indicadores que fazem sentido acompanhar
 
-Para um ensaio rápido dos fluxos, disponibilizamos um **workshop guiado**:
-👉 [Abrir Roteiro de Demonstração (Walkthrough Mínimo)](docs-fundacao-operacional/roteiro_demonstracao.md)
+Para orientar resultado sem inflar promessa, o Munio foi pensado para ser acompanhado por métricas operacionais como:
 
-### Subindo a Base
-Se apenas quiser visualizar o backend isolado operando local:
-```bash
-docker compose up -d --build
-```
-*A API será exposta em `http://localhost:8000`. Teste imediato em `/health`.*
+- taxa de respostas com fallback ou bloqueio por política
+- tempo médio de resposta por fluxo
+- volume de consultas por tenant ou área
+- ocorrências de erro de contexto ou inconsistência
+- cobertura documental do conteúdo recuperado via RAG
 
----
+Esses indicadores ajudam a traduzir software em impacto de negócio: menos retrabalho, mais previsibilidade e mais segurança para ampliar o uso da solução.
 
-## ⚙️ Stack Tecnológica Consolidada
+## Resultado do case
 
-- **Linguagem Principal:** Python 3.11+
-- **API Mínima e Assíncrona:** FastAPI (Pydantic / Uvicorn)
-- **Banco Vetorial:** ChromaDB embeddado (persistência em subpartições por tenant)
-- **Tracing, Logging e Métricas:** OpenTelemetry (`X-Request-ID` injetado na sessão)
-- **LLMs e IA:** Google Gemini (Opcional transacional) e Provedores Estocásticos Mockados (Usados ativamente em CI para economia de requests).
-- **LLMOps (Offline):** MLflow local para armazenar artefatos de testes de regressão semântica.
-- **Infra e Deploy:** Terraform na AWS (EC2/single-node), provisionado de forma segura e idempotente.
-- **Integração Externa:** Webhook Https para Telegram (Demonstrativo).
+O Munio mostra como IA generativa pode sair do campo da demonstração e entrar em um modelo mais sustentável de uso institucional. Mais do que responder perguntas, a solução foi desenhada para operar com contexto, evidência e responsabilidade.
 
----
-
-## 📂 Organização da Documentação Executiva
-
-O projeto divide historicamente as documentações pelos seus estágios de operação arquitetural:
-
-* [Docs da Fundação Operacional](docs-fundacao-operacional/) - Onde a base funcional garantidora (`chat`, `webhook`, `guardrails`, `rag`) foi firmada e registrada.
-* [Docs da Trilha de LLMOps](docs-LLMOps/) - Onde artefatos experimentais, avaliadores offline de drift semântico e pipelines com MLFlow são geridos sem impacto no servidor online.
+É um projeto que conecta backend, arquitetura, observabilidade e governança para resolver um problema real de atendimento. E, ao mesmo tempo, mostra a forma como eu gosto de construir tecnologia: entendendo a dor do processo, traduzindo isso em decisão técnica e entregando algo que faça sentido para quem opera, para quem decide e para quem precisa evoluir o sistema depois.

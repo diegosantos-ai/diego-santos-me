@@ -1,585 +1,85 @@
 ---
 title: "AWS Infrastructure (IaC)"
-description: "Provisionamento modular e automatizado de infraestrutura web na AWS com Terraform."
+description: "Infraestrutura web em AWS provisionada com Terraform, com foco em modularidade, repetibilidade e controle operacional."
 slug: "iac"
 featured: true
 order: 3
 tags: ["Terraform", "AWS", "IaC", "GitHub Actions"]
 ---
 
-# Projeto 02 — AWS Web Infrastructure with Terraform
+# AWS Infrastructure with Terraform
 
-Provisionamento de infraestrutura básica na AWS com Terraform para hospedagem de serviço web simples, aplicando práticas de IaC, organização progressiva, validação, automação e rastreabilidade.
+# AWS Infrastructure (IaC)
 
-![Terraform](https://img.shields.io/badge/Terraform-IaC-623CE4?style=for-the-badge&logo=terraform&logoColor=white)
-![AWS](https://img.shields.io/badge/AWS-Cloud-232F3E?style=for-the-badge&logo=amazonaws&logoColor=white)
-![EC2](https://img.shields.io/badge/Amazon_EC2-Compute-FF9900?style=for-the-badge&logo=amazon-ec2&logoColor=white)
-![VPC](https://img.shields.io/badge/Amazon_VPC-Networking-146EB4?style=for-the-badge&logo=amazonaws&logoColor=white)
-![Linux](https://img.shields.io/badge/Linux-Server-FCC624?style=for-the-badge&logo=linux&logoColor=black)
-![Git](https://img.shields.io/badge/Git-Versionamento-F05032?style=for-the-badge&logo=git&logoColor=white)
-![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-CI%2FCD-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)
-![Status](https://img.shields.io/badge/status-em%20valida%C3%A7%C3%A3o%20final-blue?style=for-the-badge)
+## Provisionamento declarativo de infraestrutura na AWS para publicar serviços com mais previsibilidade, rastreabilidade e controle operacional
 
-## Visão geral
-
-Este projeto provisiona, via Terraform, uma infraestrutura básica na AWS para hospedar um serviço web simples, aplicando práticas de Infraestrutura como Código (IaC), organização modular, gerenciamento de estado remoto, validação automatizada e entrega controlada.
-
-A proposta simula um cenário real em que uma equipe precisa publicar rapidamente um serviço web institucional de forma padronizada, reproduzível e rastreável, evitando a criação manual de recursos no console da AWS.
-
----
-
-## Objetivo principal
-
-Provisionar uma infraestrutura básica na AWS para hospedar um serviço web simples, demonstrando capacidade de:
-
-- modelar infraestrutura como código
-- organizar a solução por módulos
-- gerenciar state remoto com segurança
-- automatizar validações com CI
-- automatizar deploy com CD controlado
-
----
-
-## Case do projeto
-
-Uma equipe precisa publicar um serviço web institucional simples na AWS de forma rápida, padronizada e reproduzível.
-
-Em vez de criar manualmente VPC, subnets, regras de firewall e instâncias EC2 no console, a infraestrutura é provisionada integralmente com Terraform, permitindo versionamento, revisão, reaplicação e maior previsibilidade operacional.
-
----
-
-## Escopo do projeto
-
-A infraestrutura contempla:
-
-- VPC customizada
-- subnet pública
-- Internet Gateway
-- route table pública
-- rota default para internet
-- associação da route table à subnet pública
-- security group para serviço web
-- acesso HTTP público
-- acesso SSH restrito por IP
-- instância EC2 com IP público
-- `user_data` para publicação automática de serviço web simples
-- outputs para consulta e validação da infraestrutura
-
----
-
-## Tecnologias utilizadas
-
-- Terraform
-- AWS
-- Amazon VPC
-- Amazon EC2
-- Subnet
-- Internet Gateway
-- Route Table
-- Security Groups
-- Linux
-- HTTP
-- Git
-- GitHub
-- GitHub Actions
-
----
-
-## Região e convenções do projeto
-
-### Região AWS
-- `us-east-1`
-
-### Convenção de nomes
-- `p02-dev-<recurso>`
-
-### Tags padrão
-- `Project = projeto-02`
-- `Name = nome-do-recurso`
-- `Environment = dev`
-- `ManagedBy = Terraform`
-- `Owner = DiegoSantos`
-
----
-
-## Estrutura atual do projeto
-
-```text
-.
-├── backend.tf
-├── main.tf
-├── provider.tf
-├── variables.tf
-├── outputs.tf
-├── terraform.tfvars
-├── terraform.tfvars.example
-├── network.tf
-├── security.tf
-├── ec2.tf
-├── infra
-│   └── backend
-├── modules
-│   ├── network
-│   │   ├── main.tf
-│   │   ├── variables.tf
-│   │   └── outputs.tf
-│   ├── security
-│   │   ├── main.tf
-│   │   ├── variables.tf
-│   │   └── outputs.tf
-│   └── compute
-│       ├── main.tf
-│       ├── variables.tf
-│       └── outputs.tf
-├── .github
-│   └── workflows
-│       ├── terraform-ci.yml
-│       └── terraform-cd.yml
-├── README.md
-└── .gitignore
-```
-
-## Responsabilidade dos arquivos
-
-| Arquivo/Diretório | Descrição |
-|---|---|
-| `backend.tf` | Configuração do backend remoto S3 do Terraform. |
-| `main.tf` | Orquestra os módulos do projeto e registra os blocos `moved` da refatoração. |
-| `provider.tf` | Configuração do provider AWS. |
-| `variables.tf` | Declaração das variáveis de entrada do projeto no root module. |
-| `outputs.tf` | Saídas finais expostas pelo root module. |
-| `terraform.tfvars` | Valores locais reais utilizados na execução. |
-| `terraform.tfvars.example` | Exemplo de preenchimento das variáveis. |
-| `infra/backend` | Bootstrap do backend remoto do Terraform. |
-| `modules/network` | Recursos de rede: VPC, subnet pública, Internet Gateway, route table, rota default e associação. |
-| `modules/security` | Recursos de segurança: security group e regras de entrada e saída. |
-| `modules/compute` | Recursos de computação: busca de AMI e provisionamento da instância EC2. |
-| `.github/workflows/terraform-ci.yml` | Workflow de CI para `fmt`, `validate` e `plan`. |
-| `.github/workflows/terraform-cd.yml` | Workflow de CD para `terraform apply` controlado. |
-| `network.tf`, `security.tf`, `ec2.tf` | Arquivos legados mantidos apenas como referência da refatoração, com recursos migrados para módulos. |
-| `README.md` | Documentação principal do projeto. |
-
----
-
-## Arquitetura da solução
-
-A arquitetura do projeto foi estruturada para separar responsabilidades e permitir evolução progressiva da infraestrutura.
-
-O root module atua como camada de orquestração, concentrando:
-
-- chamadas dos módulos
-- variáveis globais
-- outputs finais
-- blocos `moved` utilizados na refatoração segura da infraestrutura
-
-A implementação foi dividida em três módulos:
-
-- `modules/network` — recursos de rede, como VPC, subnet pública, Internet Gateway, route table e associação
-- `modules/security` — security group da aplicação e regras de entrada e saída
-- `modules/compute` — consulta de AMI e provisionamento da instância EC2
-
-Além da estrutura modular, o projeto utiliza:
-
-- backend remoto em S3 para gerenciamento do state do Terraform
-- workflow de CI no GitHub Actions para `fmt`, `validate` e `plan`
-- workflow de CD no GitHub Actions para `terraform apply`
-- deploy controlado com gatilho manual (`workflow_dispatch`) e restrição à branch `main`
-
-Essa arquitetura foi adotada para melhorar organização, rastreabilidade, reprodutibilidade e segurança operacional do projeto.
-
----
-
-## Status do projeto
-
-### Fases concluídas
-
-- Fase 1 — Definição e base do projeto
-- Fase 2 — Estruturação base do Terraform
-- Fase 3 — Provisionamento da rede
-- Fase 4 — Segurança de acesso
-- Fase 5 — Provisionamento da EC2
-- Fase 6 — Refino do projeto
-- Fase 7 — Modularização
-- Fase 8 — Estado remoto
-- Fase 9 — CI/CD com GitHub Actions
-
-### Fase atual
-
-Fase 10 — Documentação e validação final
-
----
-
-## Infraestrutura provisionada até o momento
-
-### Rede
-
-- `aws_vpc.main`
-- `aws_subnet.public`
-- `aws_internet_gateway.main`
-- `aws_route_table.public`
-- `aws_route.public_internet_access`
-- `aws_route_table_association.public`
-
-### Segurança
-
-- `aws_security_group.web`
-- `aws_vpc_security_group_ingress_rule.web_http`
-- `aws_vpc_security_group_ingress_rule.web_ssh`
-- `aws_vpc_security_group_egress_rule.web_all_outbound`
-
-### Computação
-
-- `aws_instance.web`
-
----
-
-## Outputs disponíveis
-
-- `aws_region`
-- `environment`
-- `project_name`
-- `owner`
-- `vpc_id`
-- `public_subnet_id`
-- `internet_gateway_id`
-- `public_route_table_id`
-- `web_security_group_id`
-- `web_instance_id`
-- `web_instance_public_ip`
-- `web_instance_public_dns`
+## Introdução
 
----
+Quando uma equipe precisa colocar um serviço web no ar com velocidade, o caminho mais comum ainda é o console da cloud: criar rede, abrir portas, subir instância e ajustar regras manualmente. Esse processo até resolve o problema imediato, mas cria outro maior logo depois: baixa rastreabilidade, dificuldade de revisão, dependência de memória operacional e risco de divergência entre o que foi pensado e o que realmente ficou configurado.
 
-## Pré-requisitos
+Este projeto foi construído para demonstrar uma alternativa mais madura. Em vez de depender de criação manual no painel da AWS, toda a infraestrutura foi modelada com Terraform, versionada em Git e validada por pipeline. O foco não era apenas subir recursos em nuvem, mas mostrar capacidade de tratar infraestrutura como software: com organização modular, revisão de mudanças, backend remoto de state e deploy controlado.
 
-Antes de executar o projeto, é necessário ter:
+## Problema de negócio
 
-- Terraform instalado
-- AWS CLI instalada e configurada
-- credenciais AWS válidas no ambiente local
-- um Key Pair já existente na AWS na região `us-east-1`
-- permissões suficientes para criar recursos de rede, segurança e EC2
+O problema central aqui não é simplesmente “criar uma EC2”. O problema é como publicar um serviço de forma repetível, segura e governável. Em ambientes sem Infraestrutura como Código, recursos são criados por clique, ajustes ficam pouco documentados e a operação passa a depender de quem “lembra como foi feito”. Isso reduz previsibilidade, dificulta troubleshooting e complica qualquer tentativa de escalar ou reaplicar o ambiente em outro contexto.
 
----
+Nesse cenário, a necessidade era simular uma situação comum de engenharia: publicar rapidamente um serviço web institucional simples na AWS, mas fazer isso com padrões que suportassem manutenção, refatoração, validação e evolução. Ou seja, não bastava ter infraestrutura funcionando; era necessário ter infraestrutura gerenciável.
 
-## Configuração do projeto
+## Solução que entrega
 
-### 1. Clonar o repositório
+A solução foi estruturar uma infraestrutura básica na AWS inteiramente com Terraform, cobrindo rede, segurança, computação, state remoto e automação de validação e deploy. O projeto provisiona uma VPC customizada, subnet pública, Internet Gateway, route table pública, regras de firewall e uma instância EC2 com IP público, além de `user_data` para publicação automática de um serviço web simples.
 
-```bash
-git clone <url-do-repositorio>
-cd projeto-02-terraform-cloud
-```
+Além do provisionamento em si, a solução foi evoluída para uma arquitetura modular. O root module ficou responsável pela orquestração, enquanto rede, segurança e computação foram isoladas em módulos próprios. O projeto também passou a usar backend remoto em S3 para state do Terraform e pipelines no GitHub Actions para executar `fmt`, `validate`, `plan` e `apply` de forma controlada.
 
-### 2. Revisar o arquivo de exemplo
+Na prática, isso entrega mais do que uma infra simples na AWS. Entrega um fluxo de engenharia que permite criar, revisar, reaplicar e evoluir a infraestrutura com mais confiança, sem depender do console como fonte primária de operação.
 
-Use o arquivo `terraform.tfvars.example` como referência para preencher o `terraform.tfvars`.
+## Como o projeto melhora a vida da empresa
 
-### 3. Criar ou ajustar o `terraform.tfvars`
+O primeiro ganho está na **reprodutibilidade**. Com a infraestrutura descrita em código, a empresa deixa de depender de execução manual para reconstruir o ambiente. Isso facilita reaplicação, auditoria de mudanças e recuperação de contexto, além de reduzir o risco de configurações divergentes entre diferentes execuções. O uso de variáveis, outputs, módulos e backend remoto reforça esse caráter repetível e mais seguro da operação.
 
-Exemplo:
+O segundo ganho está na **produtividade operacional**. Em vez de recriar VPC, subnet, Internet Gateway, regras de acesso e instância manualmente, a infraestrutura pode ser inicializada e alterada por fluxo padronizado com `terraform init`, `fmt`, `validate`, `plan` e `apply`. Isso reduz tempo gasto com configuração manual, aumenta clareza sobre o que vai mudar antes da execução e melhora a disciplina operacional da equipe.
 
-```hcl
-aws_region         = "us-east-1"
-project_name       = "projeto-02"
-environment        = "dev"
-owner              = "DiegoSantos"
-vpc_cidr           = "10.0.0.0/16"
-public_subnet_cidr = "10.0.1.0/24"
-public_subnet_az   = "us-east-1a"
-ssh_allowed_cidr   = "SEU_IP_PUBLICO/32"
-instance_type      = "t3.micro"
-key_pair_name      = "diego-key"
-```
+O terceiro ganho está na **governança da mudança**. O projeto separa validação automática de deploy real, mantendo o `terraform apply` sob gatilho manual e restrito à branch principal. Essa decisão reduz risco operacional e mostra preocupação com controle de alteração em ambiente real, o que é importante em qualquer contexto onde cloud já não pode ser tratada como laboratório improvisado.
 
-> O valor de `key_pair_name` deve ser o nome exato de um Key Pair já existente na AWS na região `us-east-1`.
+Por fim, há um ganho claro de **escalabilidade arquitetural**. Embora o escopo atual seja uma infraestrutura simples, a base foi organizada para suportar crescimento: módulos reaproveitáveis, state remoto, possibilidade de ambientes separados e evolução futura do pipeline com aprovação por ambiente ou autenticação via OIDC. Isso transforma um laboratório em uma fundação plausível para cenários mais próximos do mundo corporativo.
 
----
+## Fluxo da solução
 
-## Fluxo de execução
+![Fluxo operacional do AWS Infrasctruture (IaC)](/images/projects/awsiac-flow-v1.png)
 
-A execução padrão do projeto segue esta ordem:
+O fluxo da solução foi desenhado para seguir uma lógica de engenharia e não apenas de execução técnica.
 
-```bash
-terraform init
-terraform fmt
-terraform validate
-terraform plan
-terraform apply
-terraform output
-terraform state list
-```
+## Decisões de arquitetura
 
----
+A principal decisão arquitetural foi sair de uma estrutura flat e evoluir para modularização por domínio funcional. Em vez de manter tudo concentrado no root module, o projeto passou a separar rede, segurança e computação em módulos específicos. Isso reduz acoplamento, melhora leitura, facilita troubleshooting e prepara o código para reuso e expansão.
 
-## Fluxo operacional recomendado
+Outra decisão relevante foi o uso de **backend remoto em S3** para state. Isso aumenta rastreabilidade, reduz fragilidade operacional do state local e aproxima o projeto de um padrão mais realista de colaboração e governança. O state deixa de ser um detalhe escondido na máquina do operador e passa a ser tratado como parte crítica da operação da infraestrutura.
 
-### Antes de alterar
+Também foi importante manter a separação entre **CI automático e CD controlado**. O CI verifica estrutura e impacto da mudança; o CD executa o deploy real apenas por gatilho manual. Essa escolha mostra preocupação com segurança operacional e com a diferença entre validar código e alterar ambiente produtivo, mesmo em um laboratório.
 
-- revisar contexto atual do projeto
-- confirmar branch correta
-- verificar `git status`
-- validar estado atual da infraestrutura
-- revisar impacto antes de aplicar mudanças
+Por fim, a refatoração foi feita com blocos `moved`, preservando state e evitando destruição e recriação desnecessária dos recursos. Isso é uma decisão madura porque mostra que modularizar não significa quebrar a infraestrutura existente; significa reorganizar com segurança.
 
-### Durante a execução
+## Indicadores que fazem sentido acompanhar
 
-- rodar `terraform fmt`
-- rodar `terraform validate`
-- ler o `terraform plan`
-- aplicar somente após validação do comportamento esperado
+Os indicadores mais úteis para acompanhar o sucesso dessa solução são:
 
-### Após a execução
+* tempo para provisionar o ambiente do zero;
+* taxa de sucesso dos workflows de CI e CD;
+* quantidade de mudanças identificadas no `terraform plan` antes do `apply`;
+* número de ajustes manuais necessários fora do Terraform;
+* tempo para reproduzir a infraestrutura em outra execução;
+* incidência de erros por configuração incorreta de rede ou segurança;
+* convergência entre state, código e recursos reais na AWS;
+* tempo de resposta para validação funcional do serviço web após o deploy.
 
-- revisar `terraform output`
-- revisar `terraform state list`
-- validar recursos no console AWS
-- validar entrega funcional do serviço
+Esses indicadores fazem sentido porque medem não só se a infraestrutura “subiu”, mas se ela está sendo operada com previsibilidade, controle e repetibilidade.
 
----
+## Resultado do case
 
-## CI/CD com GitHub Actions
+O resultado final do case foi a entrega de uma infraestrutura funcional na AWS, com VPC, subnet pública, Internet Gateway, route table, security group e instância EC2 com serviço web publicado, além de backend remoto para state e pipelines de CI/CD funcionando no GitHub Actions.
 
-A partir da Fase 9, o projeto passou a contar com automação de validação e entrega controlada usando GitHub Actions.
+Mais importante do que os recursos criados foi o padrão de engenharia demonstrado. O projeto provou capacidade de transformar um cenário simples de hospedagem em uma solução declarativa, modular, validável e automatizada. Isso gera valor direto em **reprodutibilidade**, porque a infraestrutura deixa de depender do console e passa a ser recriável por código; em **produtividade**, porque mudanças seguem um fluxo padronizado e revisável; e em **escalabilidade**, porque a base já foi preparada para módulos reaproveitáveis, backend remoto e evolução futura para múltiplos ambientes e controles mais avançados de deploy.
 
-### Workflow de CI
+O projeto também demonstrou convergência real entre código e ambiente provisionado. Na execução final do workflow de CD, o `terraform apply` retornou “0 added, 0 changed, 0 destroyed”, confirmando integridade do backend remoto, credenciais corretas e alinhamento entre o que estava versionado e o que existia na AWS. Isso é um sinal importante de maturidade porque mostra que a automação não apenas executa, mas mantém coerência do ambiente ao longo do tempo.
 
-O workflow de CI executa automaticamente em:
-
-- `push` para `main`
-- `push` para `feature/**`
-- `pull_request` para `main`
-
-Esse workflow realiza dois jobs:
-
-#### Terraform Validate
-Validação estrutural do projeto sem depender do backend remoto:
-
-```bash
-terraform init -backend=false
-terraform fmt -check -recursive
-terraform validate
-```
-
-#### Terraform Plan
-Validação da infraestrutura com backend remoto e provider AWS reais:
-
-```bash
-terraform init
-terraform plan -input=false
-```
-
-Esse job utiliza autenticação AWS e variáveis do projeto configuradas no GitHub Actions.
-
-### Workflow de CD
-
-O workflow de CD executa o deploy da infraestrutura com:
-
-```bash
-terraform init
-terraform apply -auto-approve -input=false
-```
-
-O deploy foi implementado com gatilho manual (`workflow_dispatch`) e restrição de execução apenas na branch `main`.
-
-Esse workflow não é executado automaticamente após o CI. O `terraform apply` foi mantido sob disparo manual para aumentar controle e reduzir risco operacional.
-
-Essa decisão foi adotada para manter o `terraform apply` sob controle humano explícito, reduzindo risco operacional em alterações reais na AWS.
-
-### Secrets utilizados
-
-- `AWS_ACCESS_KEY_ID`
-- `AWS_SECRET_ACCESS_KEY`
-
-### Variáveis utilizadas
-
-- `TF_VAR_aws_region`
-- `TF_VAR_project_name`
-- `TF_VAR_environment`
-- `TF_VAR_owner`
-- `TF_VAR_ssh_allowed_cidr`
-- `TF_VAR_key_pair_name`
-
-### Observação de manutenção
-
-Durante a execução dos workflows, o projeto apresentou warning relacionado ao uso de `hashicorp/setup-terraform@v3` por conta da transição de runtime do GitHub Actions de Node.js 20 para Node.js 24.
-
-Esse ponto não bloqueia a execução atual, mas deve ser acompanhado em futuras manutenções do projeto.
-
----
-
-## Evidências de execução
-
-Ao longo do projeto, a infraestrutura foi validada com execução real na AWS e com automação via GitHub Actions.
-
-### Evidências técnicas consolidadas
-
-- `terraform validate` executado com sucesso após refatorações e modularização
-- `terraform plan` final validando integridade da infraestrutura sem recriação indevida
-- backend remoto S3 inicializado e utilizado com sucesso
-- workflow de CI executando com sucesso:
-  - `terraform init -backend=false`
-  - `terraform fmt -check -recursive`
-  - `terraform validate`
-  - `terraform plan -input=false`
-- workflow de CD executando com sucesso:
-  - `terraform init`
-  - `terraform apply -auto-approve -input=false`
-
-### Evidência final do deploy automatizado
-
-Na execução final do workflow de CD, o `terraform apply` foi executado com sucesso no GitHub Actions e retornou:
-
-```bash
-Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
-```
-
-Esse resultado confirmou que:
-
-- o backend remoto estava íntegro
-- as credenciais AWS estavam corretas
-- a automação de deploy estava funcional
-- a infraestrutura provisionada estava convergente com a configuração do código
-
-### Evidências funcionais
-
-A entrega também foi validada por meio de:
-
-- outputs do Terraform
-- leitura do state
-- inspeção no console AWS
-- publicação do serviço web na instância EC2
-
----
-
-## Critérios de validação do projeto
-
-A validação do projeto não termina no `terraform apply`.
-
-Cada fase deve ser considerada concluída apenas quando houver evidência técnica e funcional da entrega.
-
-### Validações padrão
-
-- `terraform fmt`
-- `terraform validate`
-- `terraform plan`
-- `terraform apply`
-- `terraform output`
-- `terraform state list`
-- validação no console AWS
-
-### Validação funcional da EC2
-
-- instância criada com sucesso
-- subnet correta
-- security group correto
-- IP público atribuído
-- serviço web respondendo externamente
-
-### Exemplo de validação HTTP
-
-```bash
-curl http://IP_PUBLICO
-```
-
----
-
-## Exemplo de resultado esperado
-
-Após o provisionamento da EC2, espera-se que o serviço responda algo semelhante a:
-
-```html
-<html>
-  <head>
-    <title>Projeto 02</title>
-  </head>
-  <body>
-    <h1>Projeto 02 - AWS Web Infrastructure with Terraform</h1>
-    <p>Servico web publicado com sucesso via Terraform.</p>
-    <p>Environment: dev</p>
-    <p>Owner: DiegoSantos</p>
-  </body>
-</html>
-```
-
----
-
-## Decisão de arquitetura
-
-A principal decisão arquitetural do projeto foi evoluir de uma estrutura flat no root module para uma organização modular por domínio funcional.
-
-Essa mudança foi adotada para:
-
-- reduzir acoplamento entre componentes
-- melhorar legibilidade e manutenção
-- permitir reuso
-- preparar o projeto para backend remoto, CI/CD e colaboração futura
-
-A refatoração foi executada com preservação de state por meio de blocos `moved`, evitando destruição e recriação indevida dos recursos existentes.
-
-### Resultado da decisão
-
-- rede isolada em `module.network`
-- segurança isolada em `module.security`
-- computação isolada em `module.compute`
-- root module simplificado como camada de orquestração
-
----
-
-## Boas práticas aplicadas
-
-- provisionamento via Infraestrutura como Código
-- separação de responsabilidades por arquivo e por módulo
-- leitura de `terraform plan` antes de `apply`
-- uso de variáveis e outputs para legibilidade e reuso
-- controle de acesso SSH com restrição por IP
-- validação terminal + console AWS
-- versionamento por branch e fase
-- backend remoto para state
-- automação de validação com CI
-- automação de deploy com CD controlado
-- documentação contínua do projeto
-
----
-
-## Cuidados importantes
-
-- não versionar `terraform.tfvars`
-- não versionar arquivos de state
-- não armazenar credenciais AWS em arquivos do projeto
-- validar mudanças antes de aplicar em ambiente
-- tratar recursos de segurança com cuidado, especialmente SSH
-- destruir recursos ao final do uso se o objetivo for apenas laboratório, evitando custos desnecessários
-
----
-
-## Limpeza do ambiente
-
-Caso seja necessário remover os recursos provisionados:
-
-```bash
-terraform destroy
-```
-
-> Execute com atenção e somente quando tiver certeza de que o ambiente pode ser removido.
-
----
-
-## Próximos passos
-
-A próxima etapa do projeto é a **Fase 10 — Documentação e validação final**, com foco em:
-
-- consolidar a documentação técnica do projeto
-- registrar evidências da execução
-- revisar arquitetura, decisões e aprendizados
-- reforçar a apresentação do projeto como item de portfólio
-- validar reprodutibilidade e encerramento técnico
-- executar teardown controlado da infraestrutura
-
----
-
-## Autor
-
-**Diego Santos**
-
-Projeto desenvolvido como prática de portfólio com foco em evolução técnica em DevOps, Cloud e Infraestrutura como Código.
+Não há métricas quantitativas de economia de tempo ou custo no material disponível, então não é adequado afirmar ganhos numéricos. Ainda assim, o case sustenta com honestidade benefícios claros: menos dependência de criação manual, mais controle sobre mudanças, melhor capacidade de reaplicação e uma base mais sólida para operar infraestrutura em nuvem com método.

@@ -53,7 +53,7 @@ export default function ProjectCard({ title, description, slug, tags }: ProjectC
             letterSpacing: '0.5px',
           }}
         >
-          CAPACIDADES DEMONSTRADAS:
+          O que esse projeto demonstra
         </p>
         <div className="flex" style={{ flexWrap: 'wrap', gap: '0.6rem' }}>
           {tags.map((tag) => (
