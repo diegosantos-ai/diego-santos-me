@@ -1,7 +1,7 @@
 import { getProjectData, getSortedProjectsMetadata } from '../../../lib/markdown';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import MarkdownContent from '../../../components/MarkdownContent';
+import MarkdownContent from '../../../lib/components/MarkdownContent';
 
 export async function generateStaticParams() {
   const projects = await getSortedProjectsMetadata();

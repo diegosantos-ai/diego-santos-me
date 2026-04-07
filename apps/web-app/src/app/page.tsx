@@ -1,8 +1,8 @@
 import Link from 'next/link';
-import Hero from '../components/home/Hero';
-import CompetenceBlock from '../components/home/CompetenceBlock';
-import ProjectCard from '../components/home/ProjectCard';
-import LearningTable from '../components/home/LearningTable';
+import Hero from '../lib/components/home/Hero';
+import CompetenceBlock from '../lib/components/home/CompetenceBlock';
+import ProjectCard from '../lib/components/home/ProjectCard';
+import LearningTable from '../lib/components/home/LearningTable';
 import { getSortedProjectsMetadata } from '../lib/markdown';
 
 export default async function Home() {
