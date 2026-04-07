@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import ProjectCard from '../../components/home/ProjectCard';
+import ProjectCard from '../../lib/components/home/ProjectCard';
 import { getSortedProjectsMetadata } from '../../lib/markdown';
 
 export const metadata = {

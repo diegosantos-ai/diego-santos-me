@@ -1,5 +1,5 @@
 import { getLearningEvents } from '../../lib/api';
-import { LearningEventCard } from '../../components/LearningEventCard';
+import { LearningEventCard } from '../../lib/components/LearningEventCard';
 
 export const metadata = {
   title: 'Learning in Public | Diego Santos',
