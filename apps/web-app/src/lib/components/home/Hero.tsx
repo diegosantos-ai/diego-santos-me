@@ -38,8 +38,8 @@ export default function Hero() {
           <a href="#projects" className="button-primary">
             VER PROJETOS
           </a>
-          <Link href="/learning" className="link-accent">
-            EXPLORAR LEARNING IN PUBLIC
+          <Link href="/conteudos" className="link-accent">
+            EXPLORAR CONTEÚDO
             <span style={{ fontSize: '1.05rem' }}>→</span>
           </Link>
         </div>

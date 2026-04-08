@@ -1,4 +1,9 @@
 import Link from 'next/link';
+import KnowledgeHighlights from '@/features/knowledge/components/KnowledgeHighlights';
+import {
+  getFeaturedArticles,
+  getFeaturedStudyResources,
+} from '@/features/knowledge/content.server';
 import Hero from '../lib/components/home/Hero';
 import CompetenceBlock from '../lib/components/home/CompetenceBlock';
 import ProjectCard from '../lib/components/home/ProjectCard';
@@ -6,8 +11,14 @@ import LearningTable from '../lib/components/home/LearningTable';
 import { getSortedProjectsMetadata } from '../lib/markdown';
 
 export default async function Home() {
-  const allProjects = await getSortedProjectsMetadata();
+  const [allProjects, featuredArticles, featuredResources] = await Promise.all([
+    getSortedProjectsMetadata(),
+    getFeaturedArticles(1),
+    getFeaturedStudyResources(1),
+  ]);
   const featuredProjects = allProjects.filter((p) => p.featured);
+  const featuredArticle = featuredArticles[0];
+  const featuredResource = featuredResources[0];
 
   return (
     <>
@@ -65,6 +76,8 @@ export default async function Home() {
           </div>
         </div>
       </section>
+
+      <KnowledgeHighlights featuredArticle={featuredArticle} featuredResource={featuredResource} />
 
       <LearningTable />
 
