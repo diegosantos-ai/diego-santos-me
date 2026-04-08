@@ -43,6 +43,7 @@ Este documento serve como referência para:
 | `APP_LOG_LEVEL`        | Sim         |      Não | Nível de log da aplicação                                   | `info`                   |
 | `APP_ENABLE_DEBUG`     | Não         |      Não | Habilita comportamento de debug em ambientes não produtivos | `false`                  |
 | `APP_HEALTHCHECK_PATH` | Sim         |      Não | Caminho de healthcheck da app base (`web-app`)              | `/health`                |
+| `INTERNAL_API_URL`     | Não         |      Não | URL interna usada pelo `web-app` para consultar a API Java  | `http://portfolio-api-java:8080/api/v1` |
 | `JAVA_OPTS`            | Sim         |      Não | Flags de restrição e tuning de RAM para `portfolio-api-java`| `-Xms256m -Xmx256m`      |
 
 ---
