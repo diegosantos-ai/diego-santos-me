@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function Footer() {
   return (
     <footer className="site-footer">
@@ -15,6 +17,9 @@ export default function Footer() {
           © {new Date().getFullYear()} DIEGO SANTOS — PLATFORM ENGINEERING & DATA
         </p>
         <div className="flex" style={{ gap: '2rem' }}>
+          <Link href="/conteudos" style={{ fontSize: '0.75rem', fontWeight: 600 }}>
+            CONTEÚDO
+          </Link>
           <a
             href="https://github.com/diegosantos-ai"
             target="_blank"
