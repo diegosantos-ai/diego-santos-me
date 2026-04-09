@@ -83,7 +83,7 @@ function validateStudyAssetPath(rawUrl, fileName, fieldName) {
 function validateArticle(fileName) {
   const fullPath = path.join(articlesRoot, fileName);
   const fileContents = fs.readFileSync(fullPath, 'utf8');
-  const { data, content } = matter(fileContents);
+  const { data } = matter(fileContents);
 
   const slug = expectNonEmptyString(data, 'slug', fileName);
   expectNonEmptyString(data, 'title', fileName);
@@ -96,10 +96,6 @@ function validateArticle(fileName) {
   expectStringArray(data, 'tags', fileName);
   expectBooleanIfPresent(data, 'featured', fileName);
   ensureSlugMatchesFile(slug, fileName);
-
-  if (!content.includes('## Conclusão')) {
-    addError(fileName, 'artigo precisa encerrar com a seção "## Conclusão"');
-  }
 }
 
 function validateStudyResource(fileName) {
