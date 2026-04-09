@@ -3,6 +3,8 @@ import type { AuthorProfile, ContentTrack } from './types';
 export const authorProfile: AuthorProfile = {
   name: 'Diego Santos',
   role: 'IA aplicada, backend, automação e operação',
+  signatureLine:
+    'Escreve sobre engenharia, backend, automação, dados e IA aplicada com visão de negócio',
   bio: 'Aprendo com método, transformo estudo em ativo útil e organizo conhecimento técnico com foco em uso real.',
   portraitImage: '/images/perfil-diego.jpeg',
   editorialImage: '/images/body-diego.jpg',

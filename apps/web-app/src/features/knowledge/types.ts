@@ -40,6 +40,7 @@ export interface Article extends ArticleMetadata {
 export interface AuthorProfile {
   name: string;
   role: string;
+  signatureLine: string;
   bio: string;
   portraitImage: string;
   editorialImage: string;

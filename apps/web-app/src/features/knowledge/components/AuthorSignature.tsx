@@ -39,7 +39,7 @@ export default function AuthorSignature() {
           {authorProfile.name}
         </p>
         <p className="text-muted" style={{ lineHeight: '1.65' }}>
-          {authorProfile.role}
+          {authorProfile.signatureLine}
         </p>
       </div>
     </div>
