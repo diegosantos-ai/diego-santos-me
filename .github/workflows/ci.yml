@@ -3,8 +3,14 @@ name: CI — Build e Validação
 on:
   push:
     branches: [develop, main]
+    paths-ignore:
+      - 'content/**'
+      - 'apps/web-app/public/study-assets/**'
   pull_request:
     branches: [develop, main]
+    paths-ignore:
+      - 'content/**'
+      - 'apps/web-app/public/study-assets/**'
 
 permissions:
   contents: read

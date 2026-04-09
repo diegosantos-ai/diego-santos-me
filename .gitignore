@@ -5,4 +5,5 @@ content/profile/perfil.md
 content/profile/linkedin.md
 content/profile/linkedin.md
 readme-git.md
-apps/web-app/src/features/knowledge/study-materials/material.template.ts
+content/articles/article.template.md
+content/study-resources/material.template.md

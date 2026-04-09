@@ -20,6 +20,8 @@ jobs:
         with:
           sparse-checkout: |
             infra
+            content
+            apps/web-app/public/study-assets
 
       - name: Copiar docker-compose para a VPS
         uses: appleboy/scp-action@v0.1.7
@@ -30,6 +32,15 @@ jobs:
           source: "infra/"
           target: "~/portfolio-deploy/"
           strip_components: 1
+
+      - name: Copiar conteúdo editorial para staging na VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.OVH_VPS_HOST }}
+          username: ${{ secrets.OVH_VPS_USER }}
+          key: ${{ secrets.OVH_SSH_PRIVATE_KEY }}
+          source: "content/,apps/web-app/public/study-assets/"
+          target: "~/portfolio-deploy/runtime-content-staging/"
 
       - name: Executar docker compose pull e up
         uses: appleboy/ssh-action@v1.0.3
@@ -44,6 +55,16 @@ jobs:
             export DB_PASSWORD='${{ secrets.DB_PASSWORD }}'
             export GITHUB_TOKEN='${{ secrets.GITHUB_TOKEN }}'
             export LLM_API_KEY='${{ secrets.LLM_API_KEY }}'
+
+            mkdir -p ~/portfolio-deploy/runtime-content/content
+            mkdir -p ~/portfolio-deploy/runtime-content/study-assets
+
+            find ~/portfolio-deploy/runtime-content/content -mindepth 1 -maxdepth 1 -exec rm -rf {} +
+            find ~/portfolio-deploy/runtime-content/study-assets -mindepth 1 -maxdepth 1 -exec rm -rf {} +
+
+            cp -a ~/portfolio-deploy/runtime-content-staging/content/. ~/portfolio-deploy/runtime-content/content/
+            cp -a ~/portfolio-deploy/runtime-content-staging/apps/web-app/public/study-assets/. ~/portfolio-deploy/runtime-content/study-assets/
+            rm -rf ~/portfolio-deploy/runtime-content-staging
 
             # Autenticar no GHCR para puxar imagems mais recentes
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin

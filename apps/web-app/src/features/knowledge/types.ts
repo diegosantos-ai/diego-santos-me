@@ -19,15 +19,6 @@ export interface StudyResource extends StudyResourceMetadata {
   contentHtml: string;
 }
 
-export interface PublishedStudyMaterial {
-  id: string;
-  title: string;
-  description: string;
-  openUrl: string;
-  downloadUrl: string;
-  category?: string;
-}
-
 export interface ArticleMetadata {
   slug: string;
   title: string;

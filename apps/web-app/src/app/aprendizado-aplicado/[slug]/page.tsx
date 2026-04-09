@@ -3,16 +3,10 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import MarkdownContent from '@/lib/components/MarkdownContent';
 import StudyResourceActions from '@/features/knowledge/components/StudyResourceActions';
-import {
-  getStudyResourceBySlug,
-  getStudyResourcesMetadata,
-} from '@/features/knowledge/content.server';
+import { getStudyResourceBySlug } from '@/features/knowledge/content.server';
 import { formatLongDate } from '@/features/knowledge/utils';
 
-export async function generateStaticParams() {
-  const resources = await getStudyResourcesMetadata();
-  return resources.map((resource) => ({ slug: resource.slug }));
-}
+export const revalidate = 60;
 
 export default async function StudyResourcePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;

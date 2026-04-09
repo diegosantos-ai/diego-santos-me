@@ -1,14 +1,11 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import AuthorSignature from '@/features/knowledge/components/AuthorSignature';
-import { getArticleBySlug, getArticlesMetadata } from '@/features/knowledge/content.server';
+import { getArticleBySlug } from '@/features/knowledge/content.server';
 import { formatLongDate } from '@/features/knowledge/utils';
 import MarkdownContent from '@/lib/components/MarkdownContent';
 
-export async function generateStaticParams() {
-  const articles = await getArticlesMetadata();
-  return articles.map((article) => ({ slug: article.slug }));
-}
+export const revalidate = 60;
 
 export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
