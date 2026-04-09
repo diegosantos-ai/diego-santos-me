@@ -6,40 +6,49 @@ Esta feature foi organizada para separar claramente conteúdo, configuração e 
 
 - `content/articles/*.md`: artigos autorais da coluna técnica.
 - `content/study-resources/*.md`: conteúdo detalhado dos materiais já publicados.
-- `apps/web-app/src/features/knowledge/study-materials/*.ts`: itens publicados na listagem da página `Conteúdo`.
+- `apps/web-app/public/study-assets/*`: artefatos públicos dos materiais práticos.
 - `apps/web-app/src/features/knowledge/components/ContentMaterialCard.tsx`: card simples da biblioteca prática.
 - `apps/web-app/src/app/conteudos`: página pública enxuta da biblioteca.
 - `apps/web-app/src/app/aprendizado-aplicado`: alias redirecionado para `/conteudos`.
 - `apps/web-app/src/app/artigos`: página e detalhe dos artigos.
-- `apps/web-app/public/study-assets/*`: artefatos públicos dos materiais práticos.
 - `apps/web-app/public/images/body-diego.jpg`: retrato editorial da coluna.
 - `apps/web-app/public/images/perfil-diego.jpeg`: assinatura dos artigos.
+- `.github/workflows/editorial-content.yml`: validação e publicação leve do conteúdo editorial.
 
 ## Convenções principais
 
 - A página `Conteúdo` é propositalmente curta: título, subtítulo e grid de cards.
 - Cada card da biblioteca pública mostra apenas título, descrição curta, `Abrir material` e `Baixar`.
-- Os materiais publicados da listagem ficam em `src/features/knowledge/study-materials/`, desacoplados do JSX da página.
+- A listagem pública de materiais passa a ser lida diretamente dos arquivos em `content/study-resources/`.
 - Em `Artigos`, a navegação é separada de `Conteúdo` e os textos seguem uma hierarquia simples: `H1` + introdução curta + corpo com `H2/H3` + conclusão.
+- Em produção, `content/` e `study-assets/` são montados como volume no `web-app`, sem depender da imagem para atualizar texto ou material baixável.
 
 ## Como evoluir
 
 Para adicionar um novo artigo:
 
-1. criar um `.md` em `content/articles/`;
+1. criar um novo `.md` em `content/articles/` ou usar localmente o caminho ignorado `content/articles/article.template.md`;
 2. preencher frontmatter seguindo os campos dos arquivos existentes;
-3. o item passa a aparecer automaticamente em `/artigos` e nos destaques.
+3. ajustar o corpo com introdução, `H2/H3` e `## Conclusão`;
+4. o item passa a aparecer automaticamente em `/artigos` e nos destaques depois do fluxo editorial.
 
 Para adicionar um novo recurso:
 
-1. duplicar `apps/web-app/src/features/knowledge/study-materials/material.template.ts`;
-2. salvar a cópia com um nome previsível, por exemplo `meu-novo-material.ts`;
-3. preencher `id`, `title`, `description`, `openUrl`, `downloadUrl` e `category` se fizer sentido;
-4. exportar o novo item em `apps/web-app/src/features/knowledge/study-materials/index.ts`;
-5. subir o artefato público correspondente para `apps/web-app/public/study-assets/`;
-6. opcionalmente, criar o conteúdo detalhado em `content/study-resources/` se quiser manter uma página dedicada para o material.
+1. criar um novo `.md` em `content/study-resources/` ou usar localmente o caminho ignorado `content/study-resources/material.template.md`;
+2. preencher frontmatter e as seções do material;
+3. subir o arquivo público correspondente para `apps/web-app/public/study-assets/`;
+4. o card passa a aparecer automaticamente em `/conteudos` depois do fluxo editorial.
 
-## Template
+## Fluxo de publicação
 
-- O template fica em `apps/web-app/src/features/knowledge/study-materials/material.template.ts`.
-- Ele é ignorado no Git por uma entrada explícita no `.gitignore`.
+- Mudança de código, layout, componentes ou infraestrutura continua no CI/CD completo.
+- Mudança apenas em `content/**` ou `apps/web-app/public/study-assets/**` entra no workflow editorial leve.
+- O workflow editorial valida frontmatter, checa formatação e sincroniza o conteúdo para `~/portfolio-deploy/runtime-content/` na VPS.
+- Como o `web-app` monta essa pasta em runtime, artigos e materiais podem ser publicados sem rebuild completo da imagem.
+
+## Templates
+
+- Os caminhos reservados para templates locais são:
+- `content/articles/article.template.md`
+- `content/study-resources/material.template.md`
+- Ambos ficam ignorados no Git por entradas explícitas no `.gitignore`.

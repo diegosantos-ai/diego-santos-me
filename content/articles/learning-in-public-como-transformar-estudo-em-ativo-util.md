@@ -11,66 +11,30 @@ readTime: "5 min"
 featured: false
 ---
 
-Tenho interesse em learning in public, mas não no formato em que tudo vira postagem genérica sobre produtividade, motivação ou opinião rápida.
+Tenho interesse em learning in public, mas não no formato em que qualquer estudo vira postagem sobre produtividade, motivação ou opinião rápida.
 
-O que me interessa é outra coisa: transformar estudo e execução em material público que ajude a entender como o raciocínio técnico foi construído.
+O que me interessa é outra coisa. É transformar estudo e execução em material público que ajude a entender como um raciocínio técnico foi se formando.
 
-## Quando compartilhar perde valor
+Para mim, compartilhar perde força quando vira só registro sem contexto, autopromoção disfarçada de aprendizado ou uma sequência de publicações sem linha editorial. A pessoa aparece, mas o trabalho não fica mais claro. Quem lê até passa pelo texto, mas sai sem entender direito o problema, a decisão tomada ou o que mudou de fato ao longo do caminho.
 
-### Os formatos que mais esvaziam o conteúdo
+O tipo de material que mais me interessa é o que consegue deixar isso visível. O que estava sendo resolvido, por que a decisão foi tomada daquele jeito, que erro apareceu, o que precisou ser corrigido, o que aquela experiência muda no próximo passo. Quando um conteúdo entrega esse tipo de coisa, ele deixa de ser vitrine.
 
-Compartilhar perde muito valor quando vira uma dessas três coisas:
+Ele vira ativo.
 
-- registro sem contexto;
-- autopromoção disfarçada de aprendizado;
-- volume de conteúdo sem linha editorial.
+Pode servir depois como revisão, pode abrir conversa com outros profissionais, pode ajudar em entrevista, pode encurtar contexto, pode até influenciar como um projeto futuro vai ser pensado. O valor, para mim, está nisso. Não em marcar presença, mas em registrar algo que continua útil depois da publicação.
 
-Nesse formato, a pessoa até aparece, mas o trabalho não fica mais claro. O visitante consome o texto e ainda assim sai sem entender o problema, a decisão ou a evolução técnica envolvida.
+Foi por isso que eu quis ampliar o portfólio para além de estudos de caso fechados. Projeto pronto mostra resultado. Só que existe um espaço importante entre o projeto finalizado e o fluxo bruto da execução. É nesse espaço que entram materiais de estudo para consulta rápida, artigos que aprofundam decisões e registros curtos de evolução vindos do trabalho real.
 
-## O que considero mais útil
+Esse conjunto me interessa mais porque produz um retrato mais honesto da engenharia. Não mostra só o que foi entregue. Mostra como o repertório está sendo construído, testado, ajustado e reaproveitado.
 
-### Perguntas que o conteúdo precisa responder
+Também tem uma parte importante aí que é filtro.
 
-O tipo de registro que mais me interessa é o que consegue responder perguntas concretas:
+Nem todo estudo precisa virar publicação. Nem toda anotação interna merece virar artigo. Nem todo experimento precisa ser exposto. Curadoria faz parte do trabalho tanto quanto escrever.
 
-- o que estava sendo resolvido;
-- por que a decisão foi tomada daquele jeito;
-- que erro apareceu no caminho;
-- o que foi ajustado;
-- o que essa experiência ensina para o próximo passo.
+O critério que eu tento usar é simples: isso ajuda alguém a entender melhor um tema, um problema ou uma decisão? Se não ajuda, talvez ainda não tenha virado um ativo útil. Talvez ainda seja só material de processo, e tudo bem.
 
-Quando um conteúdo entrega isso, ele deixa de ser vitrine. Ele vira ativo.
+Para mim, learning in public faz sentido quando o conteúdo deixa rastro de raciocínio e aumenta a utilidade pública do trabalho técnico.
 
-Pode ajudar em revisão futura, em conversa com outros profissionais, em entrevista, em onboarding de contexto ou até no desenho de um novo projeto.
+Quando isso acontece, compartilhar deixa de ser só presença. Passa a ser evidência organizada.
 
-## O papel editorial do portfólio
-
-### O espaço entre projeto pronto e execução bruta
-
-Foi exatamente por isso que quis ampliar o portfólio para além de estudos de caso.
-
-Projetos explicam resultados. Mas existe um espaço importante entre projeto pronto e fluxo bruto de execução:
-
-- materiais de estudo para consulta rápida;
-- artigos que aprofundam a lógica das decisões;
-- registros curtos de evolução vindos do trabalho real.
-
-Essa combinação cria um retrato mais honesto da engenharia. Ela mostra não só o que foi entregue, mas como o repertório está sendo construído, refinado e aplicado.
-
-## Nem tudo precisa virar publicação
-
-### Curadoria também é parte do trabalho
-
-Outra parte importante dessa visão é filtro.
-
-Nem todo estudo merece publicação. Nem toda anotação interna merece virar artigo. Nem todo experimento precisa ser exposto.
-
-Curadoria é parte do processo.
-
-O critério que tento usar é simples: isso ajuda alguém a entender melhor um tema, um problema ou uma decisão? Se não ajuda, provavelmente ainda não virou ativo útil.
-
-## Conclusão
-
-Learning in public, para mim, faz sentido quando o conteúdo deixa rastro de raciocínio e melhora a utilidade pública do trabalho técnico.
-
-Quando isso acontece, o compartilhamento deixa de ser só presença. Ele passa a ser evidência organizada.
+Nesse segundo teste, o texto já veio mais maduro que o anterior. A intervenção aqui foi menor. O que mais pesava era a estrutura muito “por blocos nomeados”, que deixava a leitura um pouco mais previsível do que precisava.

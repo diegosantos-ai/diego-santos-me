@@ -6,8 +6,9 @@ interface LearningEventCardProps {
 }
 
 export function LearningEventCard({ event }: LearningEventCardProps) {
-  const formattedDate = event.createdAt
-    ? new Date(event.createdAt).toLocaleDateString('pt-BR', {
+  const referenceDate = event.eventDate ?? event.createdAt;
+  const formattedDate = referenceDate
+    ? new Date(referenceDate).toLocaleDateString('pt-BR', {
         day: '2-digit',
         month: 'short',
         year: 'numeric',
@@ -92,35 +93,50 @@ export function LearningEventCard({ event }: LearningEventCardProps) {
         {event.summary}
       </p>
 
-      <div className="flex" style={{ gap: '2rem' }}>
-        <a
-          href={event.pullRequestUrl}
-          target="_blank"
-          rel="noopener"
-          style={{
-            fontSize: '0.75rem',
-            fontWeight: 700,
-            letterSpacing: '1px',
-            color: 'var(--text-secondary)',
-            textDecoration: 'underline',
-            textUnderlineOffset: '4px',
-          }}
-        >
-          PR #{event.pullRequestNumber}
-        </a>
-        <a
-          href={event.repositoryUrl}
-          target="_blank"
-          rel="noopener"
-          style={{
-            fontSize: '0.75rem',
-            fontWeight: 700,
-            letterSpacing: '1px',
-            color: 'var(--accent-deep)',
-          }}
-        >
-          ACESSAR REPOSITÓRIO →
-        </a>
+      <div className="flex" style={{ gap: '2rem', flexWrap: 'wrap' }}>
+        {event.pullRequestUrl && event.pullRequestNumber ? (
+          <a
+            href={event.pullRequestUrl}
+            target="_blank"
+            rel="noopener"
+            style={{
+              fontSize: '0.75rem',
+              fontWeight: 700,
+              letterSpacing: '1px',
+              color: 'var(--text-secondary)',
+              textDecoration: 'underline',
+              textUnderlineOffset: '4px',
+            }}
+          >
+            PR #{event.pullRequestNumber}
+          </a>
+        ) : (
+          <span
+            style={{
+              fontSize: '0.75rem',
+              fontWeight: 700,
+              letterSpacing: '1px',
+              color: 'var(--text-secondary)',
+            }}
+          >
+            ENTRADA EDITORIAL
+          </span>
+        )}
+        {event.repositoryUrl && (
+          <a
+            href={event.repositoryUrl}
+            target="_blank"
+            rel="noopener"
+            style={{
+              fontSize: '0.75rem',
+              fontWeight: 700,
+              letterSpacing: '1px',
+              color: 'var(--accent-deep)',
+            }}
+          >
+            ACESSAR REPOSITÓRIO →
+          </a>
+        )}
       </div>
     </article>
   );

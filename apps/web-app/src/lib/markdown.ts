@@ -4,7 +4,14 @@ import matter from 'gray-matter';
 import { remark } from 'remark';
 import html from 'remark-html';
 
-const projectsDirectory = path.join(process.cwd(), '../../content/projetos');
+const projectDirectoryCandidates = [
+  path.join(process.cwd(), 'content/projetos'),
+  path.join(process.cwd(), '../../content/projetos'),
+];
+
+const projectsDirectory =
+  projectDirectoryCandidates.find((directory) => fs.existsSync(directory)) ??
+  projectDirectoryCandidates[0];
 
 export interface ProjectMetadata {
   title: string;

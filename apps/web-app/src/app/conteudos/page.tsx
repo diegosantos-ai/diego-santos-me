@@ -1,5 +1,5 @@
 import ContentMaterialCard from '@/features/knowledge/components/ContentMaterialCard';
-import { publishedStudyMaterials } from '@/features/knowledge/study-materials';
+import { getStudyResourcesMetadata } from '@/features/knowledge/content.server';
 
 export const metadata = {
   title: 'Conteúdo | Diego Santos',
@@ -7,7 +7,11 @@ export const metadata = {
     'Materiais práticos organizados para revisão rápida, retomada de contexto e redução de atrito no estudo técnico.',
 };
 
-export default function ContentsPage() {
+export const revalidate = 60;
+
+export default async function ContentsPage() {
+  const materials = await getStudyResourcesMetadata();
+
   return (
     <main className="container" style={{ padding: '8rem 0 10rem' }}>
       <header className="content-library-hero">
@@ -29,8 +33,8 @@ export default function ContentsPage() {
       </header>
 
       <section className="content-library-grid">
-        {publishedStudyMaterials.map((material) => (
-          <ContentMaterialCard key={material.id} material={material} />
+        {materials.map((material) => (
+          <ContentMaterialCard key={material.slug} material={material} />
         ))}
       </section>
     </main>

@@ -3,8 +3,14 @@ name: CI — Build e Validação
 on:
   push:
     branches: [develop, main]
+    paths-ignore:
+      - 'content/**'
+      - 'apps/web-app/public/study-assets/**'
   pull_request:
     branches: [develop, main]
+    paths-ignore:
+      - 'content/**'
+      - 'apps/web-app/public/study-assets/**'
 
 permissions:
   contents: read
@@ -52,7 +58,8 @@ jobs:
       - name: Build da imagem Docker
         uses: docker/build-push-action@v5
         with:
-          context: apps/web-app
+          context: .
+          file: apps/web-app/Dockerfile
           push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
           tags: |
             ghcr.io/${{ github.repository_owner }}/portfolio-web-app:latest

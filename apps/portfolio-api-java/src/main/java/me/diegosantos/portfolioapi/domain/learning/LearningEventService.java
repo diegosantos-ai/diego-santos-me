@@ -1,11 +1,13 @@
 package me.diegosantos.portfolioapi.domain.learning;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.List;
 import me.diegosantos.portfolioapi.integration.GitHubIntegrationService;
 import me.diegosantos.portfolioapi.integration.GitHubIntegrationService.PullRequestData;
 import me.diegosantos.portfolioapi.integration.LlmSummaryService;
+import me.diegosantos.portfolioapi.integration.LlmSummaryService.LearningEnrichment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,10 +43,15 @@ public class LearningEventService {
 
   @Transactional
   public LearningSyncRun executeSyncRun() {
+    return executeSyncRun("scheduled");
+  }
+
+  @Transactional
+  public LearningSyncRun executeSyncRun(String triggerType) {
     LearningSyncRun run = new LearningSyncRun();
     run.setStartedAt(LocalDateTime.now());
     run.setStatus("running");
-    run.setTriggerType("scheduled");
+    run.setTriggerType(triggerType);
     run = syncRunRepository.save(run);
 
     int created = 0;
@@ -58,6 +65,13 @@ public class LearningEventService {
             .filter(r -> !r.isBlank())
             .toList();
 
+    if (repos.isEmpty()) {
+      run.setFinishedAt(LocalDateTime.now());
+      run.setStatus("success");
+      run.setLogSummary("Nenhum repositório configurado em learning.repositories.");
+      return syncRunRepository.save(run);
+    }
+
     for (String repo : repos) {
       reposChecked++;
       try {
@@ -65,11 +79,21 @@ public class LearningEventService {
         prsFound += prs.size();
 
         for (PullRequestData pr : prs) {
+          if (!hasRequiredFields(pr)) {
+            log.warn("PR ignorado por dados obrigatórios ausentes no repositório {}.", repo);
+            failed++;
+            continue;
+          }
+
           if (eventRepository.existsByExternalId(pr.externalId())) {
             continue;
           }
+
           try {
-            String summary = llmService.summarize(pr.title(), pr.body());
+            LearningEnrichment enrichment = llmService.enrich(pr.title(), pr.body());
+            LocalDateTime processedAt = LocalDateTime.now();
+            LocalDateTime eventDate = parseMergedAt(pr.mergedAt());
+            boolean shouldAutoPublish = autoPublish && !enrichment.needsReview();
 
             LearningEvent event = new LearningEvent();
             event.setExternalId(pr.externalId());
@@ -78,17 +102,23 @@ public class LearningEventService {
             event.setPullRequestNumber(pr.pullRequestNumber());
             event.setPullRequestUrl(pr.pullRequestUrl());
             event.setTitle(pr.title());
-            event.setSummary(summary);
+            event.setSummary(enrichment.summary());
+            event.setTechnicalCategory(enrichment.technicalCategory());
+            event.setEventDate(eventDate != null ? eventDate : processedAt);
             event.setRawSourceReference(pr.body());
-            event.setProcessedAt(LocalDateTime.now());
+            event.setProcessedAt(processedAt);
 
             LearningEventStatus status =
-                autoPublish ? LearningEventStatus.PUBLISHED : LearningEventStatus.PENDING;
+                shouldAutoPublish ? LearningEventStatus.PUBLISHED : LearningEventStatus.PENDING;
             event.setStatus(status);
-            event.setIsAutoPublished(autoPublish);
+            event.setIsAutoPublished(shouldAutoPublish);
 
-            if (autoPublish) {
-              event.setPublishedAt(LocalDateTime.now());
+            if (shouldAutoPublish) {
+              event.setPublishedAt(eventDate != null ? eventDate : processedAt);
+            } else if (enrichment.needsReview()) {
+              log.info(
+                  "LearningEvent criado como PENDING por falta de contexto suficiente: {}",
+                  pr.title());
             }
 
             eventRepository.save(event);
@@ -112,6 +142,40 @@ public class LearningEventService {
     run.setPullRequestsFound(prsFound);
     run.setItemsCreated(created);
     run.setItemsFailed(failed);
+    run.setLogSummary(
+        "Repos verificados: "
+            + reposChecked
+            + ", PRs encontrados: "
+            + prsFound
+            + ", criados: "
+            + created
+            + ", falhas: "
+            + failed);
     return syncRunRepository.save(run);
+  }
+
+  private LocalDateTime parseMergedAt(String mergedAt) {
+    if (mergedAt == null || mergedAt.isBlank()) {
+      return null;
+    }
+
+    try {
+      return OffsetDateTime.parse(mergedAt).toLocalDateTime();
+    } catch (Exception e) {
+      log.warn("Falha ao converter merged_at '{}'. Usando processedAt como fallback.", mergedAt);
+      return null;
+    }
+  }
+
+  private boolean hasRequiredFields(PullRequestData pr) {
+    return pr != null
+        && hasText(pr.externalId())
+        && hasText(pr.repositoryName())
+        && hasText(pr.title())
+        && hasText(pr.pullRequestUrl());
+  }
+
+  private boolean hasText(String value) {
+    return value != null && !value.isBlank();
   }
 }

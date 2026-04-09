@@ -19,8 +19,9 @@ export default async function LearningEventPage({ params }: Props) {
     notFound();
   }
 
-  const formattedDate = event.createdAt
-    ? new Date(event.createdAt).toLocaleDateString('pt-BR', {
+  const referenceDate = event.eventDate ?? event.createdAt;
+  const formattedDate = referenceDate
+    ? new Date(referenceDate).toLocaleDateString('pt-BR', {
         day: '2-digit',
         month: 'long',
         year: 'numeric',
@@ -55,7 +56,7 @@ export default async function LearningEventPage({ params }: Props) {
                 letterSpacing: '0.08em',
               }}
             >
-              {event.repositoryName.toUpperCase()}
+              {(event.repositoryName ?? 'registro editorial').toUpperCase()}
             </span>
             {event.technicalCategory && (
               <span
@@ -119,34 +120,50 @@ export default async function LearningEventPage({ params }: Props) {
             display: 'flex',
             gap: '3rem',
             alignItems: 'center',
+            flexWrap: 'wrap',
           }}
         >
-          <a
-            href={event.pullRequestUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              fontSize: '0.9rem',
-              fontWeight: 700,
-              letterSpacing: '0.08em',
-              color: 'var(--accent-deep)',
-            }}
-          >
-            VER PR #{event.pullRequestNumber} NO GITHUB
-          </a>
-          <a
-            href={event.repositoryUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              fontSize: '0.85rem',
-              fontWeight: 700,
-              letterSpacing: '1px',
-              color: 'var(--text-muted)',
-            }}
-          >
-            ACESSAR REPOSITÓRIO →
-          </a>
+          {event.pullRequestUrl && event.pullRequestNumber ? (
+            <a
+              href={event.pullRequestUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                fontSize: '0.9rem',
+                fontWeight: 700,
+                letterSpacing: '0.08em',
+                color: 'var(--accent-deep)',
+              }}
+            >
+              VER PR #{event.pullRequestNumber} NO GITHUB
+            </a>
+          ) : (
+            <span
+              style={{
+                fontSize: '0.85rem',
+                fontWeight: 700,
+                letterSpacing: '0.08em',
+                color: 'var(--text-secondary)',
+              }}
+            >
+              REGISTRO EDITORIAL
+            </span>
+          )}
+          {event.repositoryUrl && (
+            <a
+              href={event.repositoryUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                fontSize: '0.85rem',
+                fontWeight: 700,
+                letterSpacing: '1px',
+                color: 'var(--text-muted)',
+              }}
+            >
+              ACESSAR REPOSITÓRIO →
+            </a>
+          )}
         </footer>
       </article>
     </main>

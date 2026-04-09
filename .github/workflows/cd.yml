@@ -20,6 +20,8 @@ jobs:
         with:
           sparse-checkout: |
             infra
+            content
+            apps/web-app/public/study-assets
 
       - name: Copiar docker-compose para a VPS
         uses: appleboy/scp-action@v0.1.7
@@ -30,6 +32,15 @@ jobs:
           source: "infra/"
           target: "~/portfolio-deploy/"
           strip_components: 1
+
+      - name: Copiar conteúdo editorial para staging na VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.OVH_VPS_HOST }}
+          username: ${{ secrets.OVH_VPS_USER }}
+          key: ${{ secrets.OVH_SSH_PRIVATE_KEY }}
+          source: "content/,apps/web-app/public/study-assets/"
+          target: "~/portfolio-deploy/runtime-content-staging/"
 
       - name: Executar docker compose pull e up
         uses: appleboy/ssh-action@v1.0.3
@@ -45,10 +56,44 @@ jobs:
             export GITHUB_TOKEN='${{ secrets.GITHUB_TOKEN }}'
             export LLM_API_KEY='${{ secrets.LLM_API_KEY }}'
 
+            mkdir -p ~/portfolio-deploy/runtime-content/content
+            mkdir -p ~/portfolio-deploy/runtime-content/study-assets
+
+            find ~/portfolio-deploy/runtime-content/content -mindepth 1 -maxdepth 1 -exec rm -rf {} +
+            find ~/portfolio-deploy/runtime-content/study-assets -mindepth 1 -maxdepth 1 -exec rm -rf {} +
+
+            cp -a ~/portfolio-deploy/runtime-content-staging/content/. ~/portfolio-deploy/runtime-content/content/
+            cp -a ~/portfolio-deploy/runtime-content-staging/apps/web-app/public/study-assets/. ~/portfolio-deploy/runtime-content/study-assets/
+            rm -rf ~/portfolio-deploy/runtime-content-staging
+
             # Autenticar no GHCR para puxar imagems mais recentes
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
             # Sincronizar container e limpar imagens antigas
             docker compose -f docker-compose.yml -f docker-compose.prod.yml pull
             docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --remove-orphans
+            docker compose -f docker-compose.yml -f docker-compose.prod.yml ps
+
+            echo "Aguardando healthchecks dos servicos principais..."
+            for attempt in $(seq 1 18); do
+              WEB_STATUS=$(docker inspect --format='{{if .State.Health}}{{.State.Health.Status}}{{else}}no-healthcheck{{end}}' portfolio_web_app 2>/dev/null || echo "missing")
+              API_STATUS=$(docker inspect --format='{{if .State.Health}}{{.State.Health.Status}}{{else}}no-healthcheck{{end}}' portfolio_api_java 2>/dev/null || echo "missing")
+              POSTGRES_STATUS=$(docker inspect --format='{{if .State.Health}}{{.State.Health.Status}}{{else}}no-healthcheck{{end}}' portfolio_postgres 2>/dev/null || echo "missing")
+
+              echo "Tentativa ${attempt}: web=${WEB_STATUS} api=${API_STATUS} postgres=${POSTGRES_STATUS}"
+
+              if [ "${WEB_STATUS}" = "healthy" ] && [ "${API_STATUS}" = "healthy" ] && [ "${POSTGRES_STATUS}" = "healthy" ]; then
+                break
+              fi
+
+              if [ "${attempt}" -eq 18 ]; then
+                echo "Servicos nao ficaram saudaveis dentro da janela esperada."
+                docker compose -f docker-compose.yml -f docker-compose.prod.yml logs --tail=120 nginx web-app portfolio-api-java postgres
+                exit 1
+              fi
+
+              sleep 10
+            done
+
+            docker compose -f docker-compose.yml -f docker-compose.prod.yml logs --tail=40 nginx web-app portfolio-api-java
             docker system prune -f

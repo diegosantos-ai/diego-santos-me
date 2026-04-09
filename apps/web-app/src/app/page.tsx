@@ -10,6 +10,8 @@ import ProjectCard from '../lib/components/home/ProjectCard';
 import LearningTable from '../lib/components/home/LearningTable';
 import { getSortedProjectsMetadata } from '../lib/markdown';
 
+export const revalidate = 300;
+
 export default async function Home() {
   const [allProjects, featuredArticles, featuredResources] = await Promise.all([
     getSortedProjectsMetadata(),

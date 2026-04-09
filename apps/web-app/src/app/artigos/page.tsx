@@ -8,6 +8,8 @@ export const metadata = {
     'Coluna técnica autoral para aprofundar raciocínio de engenharia, pesquisa aplicada e direção técnica.',
 };
 
+export const revalidate = 60;
+
 export default async function ArticlesPage() {
   const articles = await getArticlesMetadata();
   const articleTags = Array.from(new Set(articles.flatMap((article) => article.tags))).slice(0, 6);
