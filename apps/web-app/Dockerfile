@@ -35,6 +35,7 @@ RUN apk add --no-cache wget && \
     adduser --system --uid 1001 nextjs
 
 COPY --from=builder /app/content ./content
+COPY --from=builder /app/content ./content-bundled
 COPY --from=builder /app/apps/web-app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web-app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web-app/.next/static ./.next/static
