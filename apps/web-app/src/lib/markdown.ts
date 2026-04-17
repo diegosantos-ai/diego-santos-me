@@ -20,6 +20,10 @@ export interface ProjectMetadata {
   featured: boolean;
   order: number;
   tags: string[];
+  heroImage?: string;
+  heroImageAlt?: string;
+  heroImageWidth?: number;
+  heroImageHeight?: number;
 }
 
 export interface ProjectData extends ProjectMetadata {
@@ -46,6 +50,11 @@ export async function getSortedProjectsMetadata(): Promise<ProjectMetadata[]> {
         featured: data.featured || false,
         order: data.order || 99,
         tags: data.tags || [],
+        heroImage: typeof data.heroImage === 'string' ? data.heroImage : undefined,
+        heroImageAlt: typeof data.heroImageAlt === 'string' ? data.heroImageAlt : undefined,
+        heroImageWidth: typeof data.heroImageWidth === 'number' ? data.heroImageWidth : undefined,
+        heroImageHeight:
+          typeof data.heroImageHeight === 'number' ? data.heroImageHeight : undefined,
       } as ProjectMetadata;
     });
 
@@ -70,6 +79,10 @@ export async function getProjectData(slug: string): Promise<ProjectData | null> 
     featured: data.featured || false,
     order: data.order || 99,
     tags: data.tags || [],
+    heroImage: typeof data.heroImage === 'string' ? data.heroImage : undefined,
+    heroImageAlt: typeof data.heroImageAlt === 'string' ? data.heroImageAlt : undefined,
+    heroImageWidth: typeof data.heroImageWidth === 'number' ? data.heroImageWidth : undefined,
+    heroImageHeight: typeof data.heroImageHeight === 'number' ? data.heroImageHeight : undefined,
     contentHtml,
   };
 }
