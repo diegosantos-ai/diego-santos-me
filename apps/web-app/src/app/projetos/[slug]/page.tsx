@@ -1,6 +1,7 @@
 import { getProjectData, getSortedProjectsMetadata } from '../../../lib/markdown';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import MarkdownContent from '../../../lib/components/MarkdownContent';
 
 export async function generateStaticParams() {
@@ -51,6 +52,24 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         >
           {project.title}
         </h1>
+        {project.heroImage && (
+          <Image
+            src={project.heroImage}
+            alt={project.heroImageAlt ?? `Imagem de destaque do projeto ${project.title}`}
+            width={project.heroImageWidth ?? 1536}
+            height={project.heroImageHeight ?? 1024}
+            sizes="(max-width: 980px) 100vw, 980px"
+            style={{
+              display: 'block',
+              width: 'min(100%, 980px)',
+              height: 'auto',
+              marginBottom: '2rem',
+              borderRadius: 'var(--radius-md)',
+              border: '1px solid var(--border-soft)',
+              boxShadow: 'var(--shadow-soft)',
+            }}
+          />
+        )}
         <p className="lead-bar" style={{ maxWidth: '850px' }}>
           {project.description}
         </p>

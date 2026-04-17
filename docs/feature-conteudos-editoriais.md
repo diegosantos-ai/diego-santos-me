@@ -20,7 +20,7 @@ Esta feature foi organizada para separar claramente conteúdo, configuração e 
 - A página `Conteúdo` é propositalmente curta: título, subtítulo e grid de cards.
 - Cada card da biblioteca pública mostra apenas título, descrição curta, `Abrir material` e `Baixar`.
 - A listagem pública de materiais passa a ser lida diretamente dos arquivos em `content/study-resources/`.
-- Em `Artigos`, a navegação é separada de `Conteúdo` e os textos seguem uma hierarquia simples: `H1` + introdução curta + corpo com `H2/H3` + conclusão.
+- Em `Artigos`, a navegação é separada de `Conteúdo` e o texto pode ser corrido, sem subcategorias, desde que mantenha clareza, progressão e boa leitura.
 - Em produção, `content/` e `study-assets/` são montados como volume no `web-app`, sem depender da imagem para atualizar texto ou material baixável.
 
 ## Como evoluir
@@ -29,7 +29,7 @@ Para adicionar um novo artigo:
 
 1. criar um novo `.md` em `content/articles/` ou usar localmente o caminho ignorado `content/articles/article.template.md`;
 2. preencher frontmatter seguindo os campos dos arquivos existentes;
-3. ajustar o corpo com introdução, `H2/H3` e `## Conclusão`;
+3. ajustar o corpo no formato que melhor servir ao texto, com prioridade para clareza, ritmo e unidade;
 4. o item passa a aparecer automaticamente em `/artigos` e nos destaques depois do fluxo editorial.
 
 Para adicionar um novo recurso:
@@ -45,6 +45,7 @@ Para adicionar um novo recurso:
 - Mudança apenas em `content/**` ou `apps/web-app/public/study-assets/**` entra no workflow editorial leve.
 - O workflow editorial valida frontmatter, checa formatação e sincroniza o conteúdo para `~/portfolio-deploy/runtime-content/` na VPS.
 - Como o `web-app` monta essa pasta em runtime, artigos e materiais podem ser publicados sem rebuild completo da imagem.
+- Em produção, se o volume editorial estiver vazio por algum motivo, o `web-app` usa o conteúdo empacotado na imagem como fallback para evitar páginas vazias.
 
 ## Templates
 
