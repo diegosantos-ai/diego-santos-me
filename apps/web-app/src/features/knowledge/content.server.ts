@@ -6,11 +6,39 @@ import html from 'remark-html';
 import { authorProfile, getSourceCodeUrl } from './config';
 import type { Article, ArticleMetadata, StudyResource, StudyResourceMetadata } from './types';
 
-const contentDirectory = path.join(process.cwd(), '../../content');
-const articlesDirectory = path.join(contentDirectory, 'articles');
-const studyResourcesDirectory = path.join(contentDirectory, 'study-resources');
+const contentRootCandidates = Array.from(
+  new Set(
+    [
+      process.env.CONTENT_ROOT,
+      path.join(process.cwd(), 'content'),
+      path.join(process.cwd(), '../../content'),
+      '/app/content',
+      '/app/content-bundled',
+    ].filter((value): value is string => Boolean(value))
+  )
+);
 
 type Frontmatter = Record<string, unknown>;
+
+function resolveContentDirectory(section: 'articles' | 'study-resources'): string {
+  const candidates = contentRootCandidates.map((root) => path.join(root, section));
+
+  const directoryWithMarkdown = candidates.find((directory) => {
+    if (!fs.existsSync(directory)) {
+      return false;
+    }
+
+    return fs.readdirSync(directory).some((fileName) => fileName.endsWith('.md'));
+  });
+
+  if (directoryWithMarkdown) {
+    return directoryWithMarkdown;
+  }
+
+  const firstExistingDirectory = candidates.find((directory) => fs.existsSync(directory));
+
+  return firstExistingDirectory ?? candidates[0];
+}
 
 function getMarkdownFiles(directory: string): string[] {
   if (!fs.existsSync(directory)) {
@@ -114,6 +142,7 @@ function mapArticleMetadata(
 }
 
 export async function getStudyResourcesMetadata(): Promise<StudyResourceMetadata[]> {
+  const studyResourcesDirectory = resolveContentDirectory('study-resources');
   const resources = getMarkdownFiles(studyResourcesDirectory).map((fileName) => {
     const { data } = getFileFrontmatter(studyResourcesDirectory, fileName);
     return mapStudyResourceMetadata(fileName, data);
@@ -123,6 +152,7 @@ export async function getStudyResourcesMetadata(): Promise<StudyResourceMetadata
 }
 
 export async function getStudyResourceBySlug(slug: string): Promise<StudyResource | null> {
+  const studyResourcesDirectory = resolveContentDirectory('study-resources');
   const fullPath = path.join(studyResourcesDirectory, `${slug}.md`);
 
   if (!fs.existsSync(fullPath)) {
@@ -144,6 +174,7 @@ export async function getFeaturedStudyResources(limit = 2): Promise<StudyResourc
 }
 
 export async function getArticlesMetadata(): Promise<ArticleMetadata[]> {
+  const articlesDirectory = resolveContentDirectory('articles');
   const articles = getMarkdownFiles(articlesDirectory).map((fileName) => {
     const { data, content } = getFileFrontmatter(articlesDirectory, fileName);
     return mapArticleMetadata(fileName, data, content);
@@ -153,6 +184,7 @@ export async function getArticlesMetadata(): Promise<ArticleMetadata[]> {
 }
 
 export async function getArticleBySlug(slug: string): Promise<Article | null> {
+  const articlesDirectory = resolveContentDirectory('articles');
   const fullPath = path.join(articlesDirectory, `${slug}.md`);
 
   if (!fs.existsSync(fullPath)) {
