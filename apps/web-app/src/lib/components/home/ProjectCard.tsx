@@ -5,9 +5,10 @@ interface ProjectCardProps {
   description: string;
   slug: string;
   tags: string[];
+  kpis?: Array<{ label: string; value: string }>;
 }
 
-export default function ProjectCard({ title, description, slug, tags }: ProjectCardProps) {
+export default function ProjectCard({ title, description, slug, tags, kpis }: ProjectCardProps) {
   return (
     <article
       className="glass interactive-card"
@@ -27,9 +28,10 @@ export default function ProjectCard({ title, description, slug, tags }: ProjectC
       </p>
       <h3
         style={{
+          fontFamily: 'var(--font-display)',
           fontSize: '1.45rem',
           marginBottom: '1rem',
-          fontWeight: 700,
+          fontWeight: 600,
           color: 'var(--accent-deep)',
           lineHeight: '1.25',
           letterSpacing: '-0.03em',
@@ -48,6 +50,17 @@ export default function ProjectCard({ title, description, slug, tags }: ProjectC
       >
         {description}
       </p>
+
+      {kpis && kpis.length > 0 && (
+        <div className="project-kpi-row">
+          {kpis.slice(0, 3).map((kpi, idx) => (
+            <div className="project-kpi" key={idx}>
+              <div className="project-kpi-label">{kpi.label}</div>
+              <div className="project-kpi-value">{kpi.value}</div>
+            </div>
+          ))}
+        </div>
+      )}
 
       <div style={{ marginBottom: '2rem' }}>
         <p
@@ -79,7 +92,7 @@ export default function ProjectCard({ title, description, slug, tags }: ProjectC
       </div>
 
       <Link href={`/projetos/${slug}`} className="link-accent" style={{ marginTop: 'auto' }}>
-        VER ESTUDO DE CASO
+        Ver estudo de caso
         <span style={{ fontSize: '1.1rem' }}>→</span>
       </Link>
     </article>

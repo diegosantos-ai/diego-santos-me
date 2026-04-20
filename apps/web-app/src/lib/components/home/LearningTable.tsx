@@ -125,24 +125,10 @@ export default async function LearningTable() {
                     marginBottom: '1rem',
                   }}
                 >
-                  <span
-                    style={{
-                      fontSize: '0.72rem',
-                      fontWeight: 800,
-                      color: 'var(--accent-solar)',
-                      letterSpacing: '0.08em',
-                      fontFamily: 'var(--font-geist-mono)',
-                    }}
-                  >
+                  <span className="learning-date">
                     {new Date(getReferenceDate(event)).toLocaleDateString('pt-BR')}
                   </span>
-                  <span
-                    className="badge"
-                    style={{
-                      fontSize: '0.58rem',
-                      color: 'var(--text-secondary)',
-                    }}
-                  >
+                  <span className="learning-category">
                     {(event.technicalCategory ?? 'engineering').toUpperCase()}
                   </span>
                   {!event.pullRequestUrl && (
@@ -160,15 +146,7 @@ export default async function LearningTable() {
                   )}
                 </div>
 
-                <h3
-                  style={{
-                    fontSize: '1.15rem',
-                    lineHeight: '1.4',
-                    letterSpacing: '-0.02em',
-                    marginBottom: '0.9rem',
-                    color: 'var(--accent-deep)',
-                  }}
-                >
+                <h3 className="learning-title">
                   <Link href={`/learning/${event.id}`} style={{ color: 'inherit' }}>
                     {event.title}
                   </Link>

@@ -8,6 +8,62 @@ Ele existe para reduzir ambiguidade, evitar decisões implícitas e manter coer�
 
 Todo agente que atuar neste projeto deve tratar este arquivo como referência obrigatória antes de sugerir código, estrutura, automação, documentação ou comandos de operação.
 
+## Regras globais para qualquer prompt
+
+Cole este bloco no início de qualquer sessão de Copilot Chat. Ele funciona como contrato operacional. Se o Copilot sugerir algo que viole estas regras, rejeite a proposta e refaça o prompt.
+
+### Regra 01. Apenas camada de apresentação
+
+As alterações devem ficar restritas a:
+
+* `globals.css`;
+* `layout.tsx` quando envolver fontes;
+* componentes `.tsx`, limitados a JSX, `className` e `style` inline;
+* pasta `public/`.
+
+### Regra 02. Dados intocáveis
+
+Não alterar:
+
+* `content/`;
+* `content.server.ts`;
+* `lib/markdown.ts`;
+* `lib/api.ts`;
+* `app/api/*`;
+* rotas dinâmicas;
+* frontmatter de arquivos `.md`.
+
+### Regra 03. Paleta inalterada
+
+Todas as variáveis de cor declaradas em `:root` devem permanecer.
+
+Se houver necessidade de novas cores, usar apenas alias que apontem para variáveis já existentes.
+
+### Regra 04. Sem novas dependências
+
+Não executar `npm install`.
+
+A exceção válida é `next/font/google`, por já fazer parte do Next.
+
+### Regra 05. Retrocompatibilidade
+
+Novas props em componentes devem ser opcionais.
+
+Chamadas antigas devem continuar renderizando sem quebra.
+
+### Regra 06. Commits atômicos
+
+Uma tarefa corresponde a um commit.
+
+Usar o formato:
+
+```text
+style(escopo): descrição curta
+```
+
+Isso facilita o revert.
+
+
 ---
 
 ## 1. Natureza do Repositório

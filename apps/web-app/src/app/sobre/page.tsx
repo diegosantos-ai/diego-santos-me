@@ -1,28 +1,45 @@
 const academicBackground = [
   {
     institution: 'Anhanguera Educacional',
+    degree: 'Pós-graduação Lato Sensu / Especialização em DevOps',
+    period: '2026 – 2027',
+    summary:
+      'Especialização voltada à aplicação de DevOps em desenvolvimento e operação. Foco em automação, CI/CD, containers, infraestrutura como código, observabilidade e boas práticas para ganho de eficiência, qualidade e confiabilidade de entregas de software.',
+  },
+  {
+    institution: 'Anhanguera Educacional',
     degree: 'Pós-graduação Lato Sensu em Ciência de Dados e Inteligência Artificial',
     period: '2025 – 2026',
+    summary:
+      'Pós-graduação focada no ciclo completo de projetos de IA. Formação prática em ciência de dados (Python/Spark), analytics, modelagem preditiva, processamento de linguagem natural e governança para a arquitetura de soluções inteligentes e escaláveis.',
   },
   {
     institution: 'Pontifícia Universidade Católica do Paraná (PUCPR)',
     degree: 'Pós-graduação Lato Sensu em Liderança Ágil: Pessoas, Projetos e Inovação',
     period: '2024 – 2025',
+    summary:
+      'Especialização focada em frameworks modernos de gestão e no lado humano da transformação digital. O curso proporcionou conhecimento aprofundado em metodologias ágeis para liderar equipes de alta performance em ambientes dinâmicos e distribuídos.',
   },
   {
     institution: 'Centro Universitário FAG',
     degree: 'CST em Análise e Desenvolvimento de Sistemas',
     period: '2022 – 2024',
+    summary:
+      'Formação tecnológica voltada à construção de soluções e ao atendimento das demandas de TI. Foco prático no desenvolvimento de aplicações web/mobile, engenharia de software, modelagem de arquitetura, integração e inovações sob medida para negócios.',
   },
   {
     institution: 'Centro Universitário FAG',
     degree: 'Bacharelado em Administração',
     period: '2019 – 2022',
+    summary:
+      'Bacharelado voltado à gestão executiva e evolução de negócios e segmentos institucionais. Desenvolvimento de competências em planejamento corporativo, liderança de times, decisões focadas em sustentabilidade e melhoria da qualidade de vida coletiva.',
   },
   {
     institution: 'Univel',
     degree: 'MBA em Gestão Empresarial',
     period: '2018 – 2020',
+    summary:
+      'MBA baseado no desenvolvimento de uma visão estratégica corporativa. Aperfeiçoamento gerencial estruturado em análise de mercado, tomada de decisão orientada a dados, cadeia de suprimentos fluida, mitigação de riscos e resultados sustentáveis práticos.',
   },
 ];
 
@@ -76,9 +93,9 @@ export default function SobrePage() {
         <h1
           style={{
             fontSize: 'clamp(2.5rem, 8vw, 3.5rem)',
-            fontWeight: 800,
+            fontWeight: 600,
             marginBottom: '2rem',
-            letterSpacing: '-0.06em',
+            letterSpacing: '-0.025em',
             color: 'var(--accent-deep)',
           }}
         >
@@ -201,15 +218,15 @@ export default function SobrePage() {
         <h2
           style={{
             fontSize: '2rem',
-            fontWeight: 800,
+            fontWeight: 600,
             marginBottom: '1.5rem',
-            letterSpacing: '-0.5px',
+            letterSpacing: '-0.025em',
           }}
         >
           Formação Acadêmica
         </h2>
         <p
-          className="text-muted"
+          className="text-muted lead-bar"
           style={{
             fontSize: '1.1rem',
             lineHeight: '1.8',
@@ -233,7 +250,7 @@ export default function SobrePage() {
             <article
               key={`${item.institution}-${item.degree}`}
               className="glass interactive-card"
-              style={{ padding: '2rem' }}
+              style={{ padding: '2rem', display: 'flex', flexDirection: 'column' }}
             >
               <p
                 style={{
@@ -257,7 +274,18 @@ export default function SobrePage() {
               >
                 {item.degree}
               </h3>
-              <p className="text-muted" style={{ fontSize: '0.95rem', lineHeight: '1.6' }}>
+              {item.summary && (
+                <p
+                  className="text-muted"
+                  style={{ fontSize: '0.95rem', lineHeight: '1.6', marginBottom: '1rem' }}
+                >
+                  {item.summary}
+                </p>
+              )}
+              <p
+                className="text-muted"
+                style={{ fontSize: '0.95rem', lineHeight: '1.6', marginTop: 'auto' }}
+              >
                 {item.period}
               </p>
             </article>
@@ -269,15 +297,15 @@ export default function SobrePage() {
         <h2
           style={{
             fontSize: '2rem',
-            fontWeight: 800,
+            fontWeight: 600,
             marginBottom: '1.5rem',
-            letterSpacing: '-0.5px',
+            letterSpacing: '-0.025em',
           }}
         >
           Experiência Profissional
         </h2>
         <p
-          className="text-muted"
+          className="text-muted lead-bar"
           style={{
             fontSize: '1.1rem',
             lineHeight: '1.8',
@@ -344,15 +372,15 @@ export default function SobrePage() {
         <h2
           style={{
             fontSize: '2rem',
-            fontWeight: 800,
+            fontWeight: 600,
             marginBottom: '2.5rem',
-            letterSpacing: '-0.04em',
+            letterSpacing: '-0.025em',
             color: 'var(--accent-deep)',
           }}
         >
           O que eu busco agora
         </h2>
-        <p className="text-muted" style={{ fontSize: '1.2rem', lineHeight: '1.8' }}>
+        <p className="text-muted lead-bar" style={{ fontSize: '1.2rem', lineHeight: '1.8' }}>
           Estou aprofundando minha transição para contextos de engenharia mais maduros, com mais
           ênfase em arquitetura modular, qualidade de software, automação e backend corporativo.
           Tenho interesse especial em ecossistemas Java/Spring e em produtos que exigem
