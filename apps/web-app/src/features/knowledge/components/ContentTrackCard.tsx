@@ -74,7 +74,7 @@ export default function ContentTrackCard({
       )}
 
       <Link href={href} className="link-accent" style={{ marginTop: 'auto' }}>
-        {hrefLabel.toUpperCase()}
+        {hrefLabel}
         <span style={{ fontSize: '1rem' }}>→</span>
       </Link>
     </article>

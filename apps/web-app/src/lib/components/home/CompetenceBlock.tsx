@@ -39,9 +39,10 @@ export default function CompetenceBlock() {
           </p>
           <h2
             style={{
+              fontFamily: 'var(--font-display)',
               fontSize: 'clamp(2rem, 4vw, 2.8rem)',
-              fontWeight: 800,
-              letterSpacing: '-0.04em',
+              fontWeight: 600,
+              letterSpacing: '-0.025em',
               marginBottom: '1.25rem',
               color: 'var(--accent-deep)',
             }}
@@ -73,10 +74,11 @@ export default function CompetenceBlock() {
             >
               <h3
                 style={{
+                  fontFamily: 'var(--font-display)',
+                  fontWeight: 600,
                   marginBottom: '1.25rem',
                   color: 'var(--accent-deep)',
                   fontSize: '1.12rem',
-                  fontWeight: 700,
                   letterSpacing: '-0.02em',
                 }}
               >

@@ -48,7 +48,7 @@ export default function KnowledgeHighlights({
           </div>
 
           <Link href="/conteudos" className="link-accent">
-            VER NÚCLEO COMPLETO
+            Ver núcleo completo
             <span style={{ fontSize: '1.05rem' }}>→</span>
           </Link>
         </div>

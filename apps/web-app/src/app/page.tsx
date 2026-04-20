@@ -22,6 +22,44 @@ export default async function Home() {
   const featuredArticle = featuredArticles[0];
   const featuredResource = featuredResources[0];
 
+  const projectKpis: Record<string, Array<{ label: string; value: string }>> = {
+    nexo360: [
+      { label: 'Arquitetura', value: 'Hexagonal' },
+      { label: 'Modelo', value: 'Multi-tenant' },
+      { label: 'Domínio', value: 'PMEs' },
+    ],
+    'dev-workspace': [
+      { label: 'Abordagem', value: 'Declarativa' },
+      { label: 'Escopo', value: 'Multi-OS' },
+      { label: 'Entrega', value: 'Make targets' },
+    ],
+    iac: [
+      { label: 'Cloud', value: 'AWS' },
+      { label: 'IaC', value: 'Terraform' },
+      { label: 'CI/CD', value: 'GH Actions' },
+    ],
+    chat: [
+      { label: 'Arquitetura', value: 'RAG' },
+      { label: 'Audiência', value: 'Setor público' },
+      { label: 'Foco', value: 'Governança' },
+    ],
+    observabilidade: [
+      { label: 'Stack', value: '3 camadas' },
+      { label: 'Provisioning', value: 'IaC' },
+      { label: 'Escopo', value: 'End-to-end' },
+    ],
+    portifolio: [
+      { label: 'Stack', value: 'Next + Java' },
+      { label: 'Entrega', value: 'CI/CD' },
+      { label: 'Foco', value: 'Produto real' },
+    ],
+    'mini-erp': [
+      { label: 'Arquitetura', value: 'Monólito modular' },
+      { label: 'Auth', value: 'JWT' },
+      { label: 'Migrations', value: 'Flyway' },
+    ],
+  };
+
   return (
     <>
       <Hero />
@@ -73,6 +111,7 @@ export default async function Home() {
                 description={project.description}
                 slug={project.slug}
                 tags={project.tags}
+                kpis={projectKpis[project.slug]}
               />
             ))}
           </div>
@@ -123,7 +162,7 @@ export default async function Home() {
               operacional.
             </p>
             <Link href="/sobre" className="link-accent">
-              CONHECER TRAJETÓRIA COMPLETA
+              Conhecer trajetória completa
               <span style={{ fontSize: '1.05rem' }}>→</span>
             </Link>
           </div>

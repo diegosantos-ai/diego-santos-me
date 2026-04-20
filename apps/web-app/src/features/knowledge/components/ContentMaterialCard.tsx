@@ -15,9 +15,11 @@ export default function ContentMaterialCard({ material }: ContentMaterialCardPro
         {material.category && <p className="content-library-category">{material.category}</p>}
         <h2
           style={{
+            fontFamily: 'var(--font-display)',
+            fontWeight: 600,
             fontSize: '1.85rem',
             lineHeight: '1.2',
-            letterSpacing: '-0.04em',
+            letterSpacing: '-0.025em',
             marginBottom: '1rem',
             color: 'var(--accent-deep)',
           }}
